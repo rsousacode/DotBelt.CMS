@@ -1,0 +1,29 @@
+﻿services:
+  postgres:
+    container_name: "postgres"
+    build:
+      context: ./Docker/Postgres
+      dockerfile: Postgres.Dockerfile
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=Meteo
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5435:5432
+  apache:
+    build:
+      context: ./Docker/Apache
+      dockerfile: Apache.Dockerfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - SERVER_NAME=www.boilerplate.com
+      - SERVER_ALIAS=*.boilerplate.com
+#  boilerplatessr:
+#    image: boilerplatessr
+#    build:
+#      context: .
+#      dockerfile: BoilerPlateSSR/Dockerfile

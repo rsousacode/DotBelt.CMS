@@ -1,0 +1,10 @@
+{
+  "name": "boilerplatessr",
+  "version": "1.0.0",
+  "scripts": {
+    "docker-up": "docker compose up --build"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
