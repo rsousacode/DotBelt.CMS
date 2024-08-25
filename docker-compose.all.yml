@@ -24,7 +24,7 @@ services:
   ssr:
     image: boilerplate-ssr
     environment:
-      - ConnectionStrings_DefaultConnection="Server=postgres;Port=5432;Database=Boilerplate;User Id=postgres;Password=postgres;"
+      - ConnectionStrings__DefaultConnection=Server=postgres;Port=5432;Database=Boilerplate;User Id=postgres;Password=postgres;
       - ASPNETCORE_URLS=http://0.0.0.0:5000
     build:
       context: .
