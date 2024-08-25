@@ -2,7 +2,8 @@
   "name": "boilerplatessr",
   "version": "1.0.0",
   "scripts": {
-    "docker-up": "docker compose up --build"
+    "docker-up": "docker compose up --build",
+    "docker-preview": "docker compose -f docker-compose.all.yml up  --build --remove-orphans"
   },
   "author": "",
   "license": "ISC",

@@ -5,6 +5,7 @@
 Description: The backend is a .NET project using Minimal API with Identity pre-configured.
 
 
+
 ## Development
 
 Add in the hosts file
@@ -15,14 +16,23 @@ Run docker compose:
 
 `docker compose up --build`
 
-It will:
+OR
+
+`npm run docker-up`
+
+This does the following:
 * Instantiate Postgres database
 * Reverse proxy
   * Frontend will be in: boilerplate.com
   * API will be in: boilerplate.com/api
 
 
-## All containers running
+## Preview all containers running
 
+Run docker compose:
 
 `docker compose -f docker-compose.all.yml up  --build`
+
+OR
+
+`npm run docker-preview`

@@ -18,14 +18,19 @@ services:
       - API_URL=http://ssr:5000/api
       - SERVER_NAME=www.boilerplate.com
       - SERVER_ALIAS=*.boilerplate.com
-      - FRONTEND_URL=http://host.docker.internal:5173/
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - FRONTEND_URL=http://frontend:3000/
   ssr:
     image: boilerplate-ssr
     environment:
       - ConnectionStrings__DefaultConnection=Server=postgres;Port=5432;Database=Boilerplate;User Id=postgres;Password=postgres;
       - ASPNETCORE_URLS=http://0.0.0.0:5000
+      - Logging__LogLevel__Default=Warning
     build:
       context: .
       dockerfile: ./Docker/Dotnet/Dockerfile
+  frontend:
+    image: boilerplate-ssr-frontend
+    build:
+      context: .
+      dockerfile: ./Docker/Frontend/Dockerfile
+
