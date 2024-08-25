@@ -68,8 +68,6 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 
-app.UseStaticFiles("/static");
-
 app.UseAuthentication();
 
 app.UseAuthorization();

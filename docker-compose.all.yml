@@ -7,6 +7,13 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=Boilerplate
       - POSTGRES_PASSWORD=postgres
+    #volumes:
+    #  - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
   apache:
     build:
       context: ./Docker/Apache
@@ -19,6 +26,9 @@ services:
       - SERVER_NAME=www.boilerplate.com
       - SERVER_ALIAS=*.boilerplate.com
       - FRONTEND_URL=http://frontend:3000/
+    depends_on:
+      ssr:
+        condition: service_healthy
   ssr:
     image: boilerplate-ssr
     environment:
@@ -28,9 +38,18 @@ services:
     build:
       context: .
       dockerfile: ./Docker/Dotnet/Dockerfile
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/users"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      - postgres
   frontend:
     image: boilerplate-ssr-frontend
     build:
       context: .
       dockerfile: ./Docker/Frontend/Dockerfile
 
+#volumes:
+#  pgdata:
