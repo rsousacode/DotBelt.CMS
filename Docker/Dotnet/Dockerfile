@@ -4,7 +4,7 @@ RUN adduser -u 1000 --disabled-password --gecos "" appuser && chown -R appuser /
 USER appuser
 
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0-preview-alpine3.20 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0.401-alpine3.20 AS build
 RUN apk update && apk upgrade
 RUN apk add --no-cache clang build-base zlib-dev
 
