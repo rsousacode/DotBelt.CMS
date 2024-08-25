@@ -23,8 +23,8 @@
       - API_URL=http://host.docker.internal:5044/api
       - SERVER_NAME=www.boilerplate.com
       - SERVER_ALIAS=*.boilerplate.com
-#  boilerplatessr:
-#    image: boilerplatessr
-#    build:
-#      context: .
-#      dockerfile: BoilerPlateSSR/Dockerfile
+  BoilerplateSSR:
+    image: boilerplate-ssr
+    build:
+      context: ./Docker/Dotnet
+      dockerfile: BoilerPlateSSR/Dockerfile
