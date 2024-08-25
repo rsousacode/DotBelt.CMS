@@ -12,5 +12,5 @@ jobs:
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: List files in the repository
         run: |
-          docker build -t ${{ env.REGISTRY }}/boilerplate-frontend:latest -f Docker/Frontend/Dockerfile .
+          docker build -t gitea.local:3000/boilerplate-frontend:latest -f Docker/Frontend/Dockerfile .
       - run: echo "🍏 This job's status is ${{ job.status }}."
