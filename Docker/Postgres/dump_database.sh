@@ -1,13 +1,13 @@
 #!/bin/bash
-echo -n "Type 'a' to use container ID or type 'b' to use image name: "
-read choice
-echo -n "Type image name or container ID: "
-read name
 
-
-if [[ "$choice" == "a" ]]; then
-    docker exec -t $name pg_dump -d postgres://postgres@localhost:5432/Meteo --no-owner  > init.sql
-else 
-    docker exec -t $(docker ps | grep $name | awk '{ print $1 }') pg_dump -d postgres://postgres@localhost:5432/Meteo --no-owner   > init.sql
+# Check if both arguments are provided
+if [ $# -ne 2 ]; then
+  echo "Usage: $0 <container_id> <database_name>"
+  exit 1
 fi
 
+CONTAINER_ID=$1
+DB_NAME=$2
+
+# Execute the docker command
+docker exec -t $CONTAINER_ID pg_dump -d postgres://postgres@localhost:5432/$DB_NAME --no-owner > init.sql

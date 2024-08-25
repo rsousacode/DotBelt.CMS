@@ -1,0 +1,31 @@
+services:
+  postgres:
+    build:
+      context: ./Docker/Postgres
+      dockerfile: Postgres.Dockerfile
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=Boilerplate
+      - POSTGRES_PASSWORD=postgres
+  apache:
+    build:
+      context: ./Docker/Apache
+      dockerfile: Apache.Dockerfile
+    ports:
+      - 80:80
+      - 443:443
+    environment:
+      - API_URL=http://ssr:5000/api
+      - SERVER_NAME=www.boilerplate.com
+      - SERVER_ALIAS=*.boilerplate.com
+      - FRONTEND_URL=http://host.docker.internal:5173/
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  ssr:
+    image: boilerplate-ssr
+    environment:
+      - ConnectionStrings_DefaultConnection="Server=postgres;Port=5432;Database=Boilerplate;User Id=postgres;Password=postgres;"
+      - ASPNETCORE_URLS=http://0.0.0.0:5000
+    build:
+      context: .
+      dockerfile: ./Docker/Dotnet/Dockerfile

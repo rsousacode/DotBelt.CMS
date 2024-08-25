@@ -43,7 +43,6 @@ services.AddScoped<ApplicationDbContext>(serviceProvider =>
     return dbContextFactory.CreateDbContext();
 });
 
-services.ConfigureApplicationCookie(options => options.Cookie.Name = "BoilerPlate");
 
 services
     .AddIdentityApiEndpoints<ApplicationUser>(options =>
@@ -52,7 +51,6 @@ services
     })
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-services.AddHttpContextAccessor();
 services.AddEndpointsApiExplorer();
 
 

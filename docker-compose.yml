@@ -1,16 +1,15 @@
 ﻿services:
-  postgres:
-    container_name: "postgres"
+  postgres_dev:
     build:
       context: ./Docker/Postgres
       dockerfile: Postgres.Dockerfile
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_DB=Meteo
+      - POSTGRES_DB=Boilerplate
       - POSTGRES_PASSWORD=postgres
     ports:
       - 5435:5432
-  apache:
+  apache_dev:
     build:
       context: ./Docker/Apache
       dockerfile: Apache.Dockerfile
@@ -23,8 +22,4 @@
       - API_URL=http://host.docker.internal:5044/api
       - SERVER_NAME=www.boilerplate.com
       - SERVER_ALIAS=*.boilerplate.com
-  BoilerplateSSR:
-    image: boilerplate-ssr
-    build:
-      context: ./Docker/Dotnet
-      dockerfile: BoilerPlateSSR/Dockerfile
+      - FRONTEND_URL=http://host.docker.internal:5173/

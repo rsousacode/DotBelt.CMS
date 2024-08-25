@@ -5,7 +5,8 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>true</InvariantGlobalization>
-        <PublishAot>true</PublishAot>
+        <!--<PublishAot>true</PublishAot>-->
+        <!--<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>        -->
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <RootNamespace>BoilerPlateSSR</RootNamespace>
     </PropertyGroup>
