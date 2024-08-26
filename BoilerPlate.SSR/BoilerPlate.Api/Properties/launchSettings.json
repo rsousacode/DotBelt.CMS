@@ -5,7 +5,7 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "api/users",
+      "launchUrl": "https://boilerplate.com",
       "applicationUrl": "http://0.0.0.0:5044",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
