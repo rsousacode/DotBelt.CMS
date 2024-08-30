@@ -19,7 +19,9 @@
       - 80:80
       - 443:443
     environment:
+      - SWAGER_URL=http://host.docker.internal:5044/swagger
       - API_URL=http://host.docker.internal:5044/api
       - SERVER_NAME=www.boilerplate.com
       - SERVER_ALIAS=*.boilerplate.com
-      - FRONTEND_URL=http://host.docker.internal:5173/
+      - FRONTEND_URL=http://host.docker.internal:5173
+      - WEB_SOCKET_URL=ws://host.docker.internal:5173

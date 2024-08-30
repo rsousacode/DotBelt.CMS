@@ -23,6 +23,100 @@ namespace BoilerPlate.Shared.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("BoilerPlate.Shared.CMS.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ContentHtml")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("ModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("ParentPostId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PostType")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("PublishDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UrlName")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("ParentPostId");
+
+                    b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("BoilerPlate.Shared.CMS.Taxonomy", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AuthorId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("ModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("ParentTaxonomyId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("PublishDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UrlName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("ParentTaxonomyId");
+
+                    b.ToTable("Taxonomies");
+                });
+
             modelBuilder.Entity("BoilerPlate.Shared.ManualMigrations.ManualMigration", b =>
                 {
                     b.Property<int>("Id")
@@ -236,6 +330,55 @@ namespace BoilerPlate.Shared.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PostTaxonomy", b =>
+                {
+                    b.Property<int>("PostsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TaxonomiesId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("PostsId", "TaxonomiesId");
+
+                    b.HasIndex("TaxonomiesId");
+
+                    b.ToTable("PostTaxonomy");
+                });
+
+            modelBuilder.Entity("BoilerPlate.Shared.CMS.Post", b =>
+                {
+                    b.HasOne("BoilerPlate.Shared.Users.ApplicationUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BoilerPlate.Shared.CMS.Post", "ParentPost")
+                        .WithMany("ChildrenPosts")
+                        .HasForeignKey("ParentPostId");
+
+                    b.Navigation("Author");
+
+                    b.Navigation("ParentPost");
+                });
+
+            modelBuilder.Entity("BoilerPlate.Shared.CMS.Taxonomy", b =>
+                {
+                    b.HasOne("BoilerPlate.Shared.Users.ApplicationUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BoilerPlate.Shared.CMS.Taxonomy", "ParentTaxonomy")
+                        .WithMany("ChildrenTaxonomies")
+                        .HasForeignKey("ParentTaxonomyId");
+
+                    b.Navigation("Author");
+
+                    b.Navigation("ParentTaxonomy");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -285,6 +428,31 @@ namespace BoilerPlate.Shared.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PostTaxonomy", b =>
+                {
+                    b.HasOne("BoilerPlate.Shared.CMS.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BoilerPlate.Shared.CMS.Taxonomy", null)
+                        .WithMany()
+                        .HasForeignKey("TaxonomiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BoilerPlate.Shared.CMS.Post", b =>
+                {
+                    b.Navigation("ChildrenPosts");
+                });
+
+            modelBuilder.Entity("BoilerPlate.Shared.CMS.Taxonomy", b =>
+                {
+                    b.Navigation("ChildrenTaxonomies");
                 });
 #pragma warning restore 612, 618
         }

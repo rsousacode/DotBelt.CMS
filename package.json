@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "npm run docker-up-detached; npm run frontend;",
     "docker-up": "docker compose up --build",
+    "docker-down": "docker compose down",
     "docker-up-detached": "docker compose up --build -d",
     "frontend": "cd BoilerPlate.Frontend && npm run dev",
     "docker-preview": "docker compose -f docker-compose.all.yml up  --build --remove-orphans"

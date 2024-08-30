@@ -3,12 +3,14 @@ using BoilerPlate.Shared;
 using BoilerPlate.Shared.ManualMigrations;
 using BoilerPlate.Shared.Users;
 using BoilerPlateSSR.Endpoints;
+using BoilerPlateSSR.QueriesMutations;
+using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
-var builder = WebApplication.CreateSlimBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
 
@@ -43,6 +45,15 @@ services.AddScoped<ApplicationDbContext>(serviceProvider =>
     return dbContextFactory.CreateDbContext();
 });
 
+services
+    .AddGraphQLServer()
+    .AddProjections()
+    .AddFiltering()
+    .AddSorting()
+    .AddMutationConventions()
+    .AddQueryType<GraphQLQuery>()
+    .AddMutationType<GraphQLMutation>()
+    .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled);
 
 services
     .AddIdentityApiEndpoints<ApplicationUser>(options =>
@@ -51,18 +62,24 @@ services
     })
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-services.AddEndpointsApiExplorer();
 
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
+services.AddEndpointsApiExplorer();
 
-
+#if DEBUG
+services.AddSwaggerGen();
+#endif
 var app = builder.Build();
 
-
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -72,9 +89,19 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.MapGraphQL("/api/graphql").WithOptions(new GraphQLServerOptions()
+{
+    EnableSchemaRequests = builder.Environment.IsDevelopment(),
+    AllowedGetOperations = AllowedGetOperations.Query,
+    Tool =
+    {
+        Enable = builder.Environment.IsDevelopment(),
+    }
+});
 
+app.MapBananaCakePop("/api/banana", relativeRequestPath:"/api/graphql");
 
-app.MapGroup("/auth")
+app.MapGroup("/api/auth")
     .MapIdentityApi<ApplicationUser>();
 
 app.RegisterRootEndpointHandler();

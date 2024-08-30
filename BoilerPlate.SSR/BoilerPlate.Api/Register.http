@@ -1,0 +1,3 @@
+@BoilerPlateSSR_HostAddress = http://localhost:5044
+
+POST {{BoilerPlateSSR_HostAddress}}/auth/register

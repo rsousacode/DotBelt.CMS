@@ -1,3 +1,4 @@
+using BoilerPlate.Shared.CMS;
 using BoilerPlate.Shared.ManualMigrations;
 using BoilerPlate.Shared.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -14,10 +15,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.HasPostgresExtension("uuid-ossp");        
 
     }
-
- 
-
+    
     public DbSet<ManualMigration> ManualMigrations { get; set; }
+    
+    public DbSet<Post> Posts { get; set; } 
+    public DbSet<Taxonomy> Taxonomies { get; set; }
+    
 
     
 }
