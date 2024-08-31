@@ -3,12 +3,17 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "ORIGIN=https://boilerplate.com PUBLIC_BASE_URL=https://boilerplate.com NODE_TLS_REJECT_UNAUTHORIZED=0 vite dev",
-		"build": "ORIGIN=https://boilerplate.com PUBLIC_BASE_URL=https://boilerplate.com vite build",
+		"dev": "ADDRESS_HEADER=True-Client-IP  PORT_HEADER=x-forwarded-port PROTOCOL_HEADER=x-forwarded-proto HOST_HEADER=x-forwarded-host ORIGIN=https://boilerplate.com PUBLIC_BASE_URL=https://boilerplate.com NODE_TLS_REJECT_UNAUTHORIZED=0 vite dev",
+		"build": "ADDRESS_HEADER=True-Client-IP  PORT_HEADER=x-forwarded-port PROTOCOL_HEADER=x-forwarded-proto HOST_HEADER=x-forwarded-host ORIGIN=https://boilerplate.com PUBLIC_BASE_URL=https://boilerplate.com vite build",
 		"build-prod": "ORIGIN=https://boilerplate.com PUBLIC_BASE_URL=http://ssr:5000 vite build",
-		"preview": "PUBLIC_BASE_URL=https://boilerplate.com vite preview",
+		"preview": "ORIGIN=https://boilerplate.com PUBLIC_BASE_URL=https://boilerplate.com vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"codegen": "graphql-codegen"
+
+	},
+	"dependencies": {
+		"@apollo/client": "^3.10.5"
 	},
 	"devDependencies": {
 		"@calumk/editorjs-codecup": "^1.2.0",
@@ -26,7 +31,10 @@
 		"svelte-check": "^3.6.0",
 		"typescript": "^5.0.0",
 		"vite": "^5.0.3",
-		"yup": "^1.4.0"
+		"yup": "^1.4.0",
+		"@graphql-codegen/cli": "4.0.1",
+		"@graphql-codegen/typescript": "4.0.1",
+		"@graphql-codegen/typescript-operations": "4.0.1"
 	},
 	"type": "module"
 }

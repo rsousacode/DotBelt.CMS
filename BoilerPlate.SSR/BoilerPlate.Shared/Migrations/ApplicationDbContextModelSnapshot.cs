@@ -32,11 +32,10 @@ namespace BoilerPlate.Shared.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AuthorId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Content")
-                        .HasColumnType("text");
+                        .HasColumnType("jsonb");
 
                     b.Property<string>("ContentHtml")
                         .HasColumnType("text");
@@ -45,7 +44,7 @@ namespace BoilerPlate.Shared.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("ModifiedDate")
+                    b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int?>("ParentPostId")
@@ -81,14 +80,13 @@ namespace BoilerPlate.Shared.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AuthorId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("ModifiedDate")
+                    b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int?>("ParentTaxonomyId")
@@ -349,9 +347,7 @@ namespace BoilerPlate.Shared.Migrations
                 {
                     b.HasOne("BoilerPlate.Shared.Users.ApplicationUser", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AuthorId");
 
                     b.HasOne("BoilerPlate.Shared.CMS.Post", "ParentPost")
                         .WithMany("ChildrenPosts")
@@ -366,9 +362,7 @@ namespace BoilerPlate.Shared.Migrations
                 {
                     b.HasOne("BoilerPlate.Shared.Users.ApplicationUser", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AuthorId");
 
                     b.HasOne("BoilerPlate.Shared.CMS.Taxonomy", "ParentTaxonomy")
                         .WithMany("ChildrenTaxonomies")

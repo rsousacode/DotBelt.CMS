@@ -1,0 +1,324 @@
+﻿schema {
+  query: GraphQLQuery
+  mutation: GraphQLMutation
+}
+
+type ApplicationUser {
+  id: String!
+  userName: String
+  normalizedUserName: String
+  email: String
+  normalizedEmail: String
+  emailConfirmed: Boolean!
+  passwordHash: String
+  securityStamp: String
+  concurrencyStamp: String
+  phoneNumber: String
+  phoneNumberConfirmed: Boolean!
+  twoFactorEnabled: Boolean!
+  lockoutEnd: DateTime
+  lockoutEnabled: Boolean!
+  accessFailedCount: Int!
+}
+
+type CreatePostPayload {
+  post: Post
+}
+
+type GraphQLMutation {
+  createPost(payload: CreatePostInput!): CreatePostPayload!
+}
+
+type GraphQLQuery {
+  posts("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: PostFilterInput order: [PostSortInput!]): PostsConnection
+  postById(id: Int!): [Post!]!
+  taxonomies("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: TaxonomyFilterInput order: [TaxonomySortInput!]): TaxonomiesConnection
+  taxonomyById(id: Int!): [Taxonomy!]!
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+}
+
+type Post {
+  id: Int!
+  title: String
+  description: String!
+  urlName: String
+  content: String
+  contentHtml: String
+  publishDate: DateTime!
+  modifiedDate: DateTime
+  author: ApplicationUser
+  authorId: String
+  postType: PostTypeEnum!
+  parentPost: Post
+  childrenPosts: [Post!]!
+  taxonomies: [Taxonomy!]!
+}
+
+"A connection to a list of items."
+type PostsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [PostsEdge!]
+  "A flattened list of the nodes."
+  nodes: [Post!]
+}
+
+"An edge in a connection."
+type PostsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Post!
+}
+
+"A connection to a list of items."
+type TaxonomiesConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [TaxonomiesEdge!]
+  "A flattened list of the nodes."
+  nodes: [Taxonomy!]
+}
+
+"An edge in a connection."
+type TaxonomiesEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: Taxonomy!
+}
+
+type Taxonomy {
+  id: Int!
+  title: String!
+  urlName: String!
+  publishDate: DateTime!
+  modifiedDate: DateTime
+  description: String!
+  author: ApplicationUser
+  authorId: String
+  type: TaxonomyTypeEnum!
+  parentTaxonomy: Taxonomy
+  childrenTaxonomies: [Taxonomy!]!
+  posts: [Post!]!
+}
+
+input ApplicationUserFilterInput {
+  and: [ApplicationUserFilterInput!]
+  or: [ApplicationUserFilterInput!]
+  id: StringOperationFilterInput
+  userName: StringOperationFilterInput
+  normalizedUserName: StringOperationFilterInput
+  email: StringOperationFilterInput
+  normalizedEmail: StringOperationFilterInput
+  emailConfirmed: BooleanOperationFilterInput
+  passwordHash: StringOperationFilterInput
+  securityStamp: StringOperationFilterInput
+  concurrencyStamp: StringOperationFilterInput
+  phoneNumber: StringOperationFilterInput
+  phoneNumberConfirmed: BooleanOperationFilterInput
+  twoFactorEnabled: BooleanOperationFilterInput
+  lockoutEnd: DateTimeOperationFilterInput
+  lockoutEnabled: BooleanOperationFilterInput
+  accessFailedCount: IntOperationFilterInput
+}
+
+input ApplicationUserSortInput {
+  id: SortEnumType
+  userName: SortEnumType
+  normalizedUserName: SortEnumType
+  email: SortEnumType
+  normalizedEmail: SortEnumType
+  emailConfirmed: SortEnumType
+  passwordHash: SortEnumType
+  securityStamp: SortEnumType
+  concurrencyStamp: SortEnumType
+  phoneNumber: SortEnumType
+  phoneNumberConfirmed: SortEnumType
+  twoFactorEnabled: SortEnumType
+  lockoutEnd: SortEnumType
+  lockoutEnabled: SortEnumType
+  accessFailedCount: SortEnumType
+}
+
+input BooleanOperationFilterInput {
+  eq: Boolean
+  neq: Boolean
+}
+
+input CreatePostInput {
+  title: String
+  description: String!
+  urlName: String
+  content: String
+}
+
+input DateTimeOperationFilterInput {
+  eq: DateTime
+  neq: DateTime
+  in: [DateTime]
+  nin: [DateTime]
+  gt: DateTime
+  ngt: DateTime
+  gte: DateTime
+  ngte: DateTime
+  lt: DateTime
+  nlt: DateTime
+  lte: DateTime
+  nlte: DateTime
+}
+
+input IntOperationFilterInput {
+  eq: Int
+  neq: Int
+  in: [Int]
+  nin: [Int]
+  gt: Int
+  ngt: Int
+  gte: Int
+  ngte: Int
+  lt: Int
+  nlt: Int
+  lte: Int
+  nlte: Int
+}
+
+input ListFilterInputTypeOfPostFilterInput {
+  all: PostFilterInput
+  none: PostFilterInput
+  some: PostFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfTaxonomyFilterInput {
+  all: TaxonomyFilterInput
+  none: TaxonomyFilterInput
+  some: TaxonomyFilterInput
+  any: Boolean
+}
+
+input PostFilterInput {
+  and: [PostFilterInput!]
+  or: [PostFilterInput!]
+  id: IntOperationFilterInput
+  title: StringOperationFilterInput
+  description: StringOperationFilterInput
+  urlName: StringOperationFilterInput
+  content: StringOperationFilterInput
+  contentHtml: StringOperationFilterInput
+  publishDate: DateTimeOperationFilterInput
+  modifiedDate: DateTimeOperationFilterInput
+  author: ApplicationUserFilterInput
+  authorId: StringOperationFilterInput
+  postType: PostTypeEnumOperationFilterInput
+  parentPost: PostFilterInput
+  childrenPosts: ListFilterInputTypeOfPostFilterInput
+  taxonomies: ListFilterInputTypeOfTaxonomyFilterInput
+}
+
+input PostSortInput {
+  id: SortEnumType
+  title: SortEnumType
+  description: SortEnumType
+  urlName: SortEnumType
+  content: SortEnumType
+  contentHtml: SortEnumType
+  publishDate: SortEnumType
+  modifiedDate: SortEnumType
+  author: ApplicationUserSortInput
+  authorId: SortEnumType
+  postType: SortEnumType
+  parentPost: PostSortInput
+}
+
+input PostTypeEnumOperationFilterInput {
+  eq: PostTypeEnum
+  neq: PostTypeEnum
+  in: [PostTypeEnum!]
+  nin: [PostTypeEnum!]
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String
+  neq: String
+  contains: String
+  ncontains: String
+  in: [String]
+  nin: [String]
+  startsWith: String
+  nstartsWith: String
+  endsWith: String
+  nendsWith: String
+}
+
+input TaxonomyFilterInput {
+  and: [TaxonomyFilterInput!]
+  or: [TaxonomyFilterInput!]
+  id: IntOperationFilterInput
+  title: StringOperationFilterInput
+  urlName: StringOperationFilterInput
+  publishDate: DateTimeOperationFilterInput
+  modifiedDate: DateTimeOperationFilterInput
+  description: StringOperationFilterInput
+  author: ApplicationUserFilterInput
+  authorId: StringOperationFilterInput
+  type: TaxonomyTypeEnumOperationFilterInput
+  parentTaxonomy: TaxonomyFilterInput
+  childrenTaxonomies: ListFilterInputTypeOfTaxonomyFilterInput
+  posts: ListFilterInputTypeOfPostFilterInput
+}
+
+input TaxonomySortInput {
+  id: SortEnumType
+  title: SortEnumType
+  urlName: SortEnumType
+  publishDate: SortEnumType
+  modifiedDate: SortEnumType
+  description: SortEnumType
+  author: ApplicationUserSortInput
+  authorId: SortEnumType
+  type: SortEnumType
+  parentTaxonomy: TaxonomySortInput
+}
+
+input TaxonomyTypeEnumOperationFilterInput {
+  eq: TaxonomyTypeEnum
+  neq: TaxonomyTypeEnum
+  in: [TaxonomyTypeEnum!]
+  nin: [TaxonomyTypeEnum!]
+}
+
+enum PostTypeEnum {
+  UNDEFINED
+  POST
+  PAGE
+}
+
+enum SortEnumType {
+  ASC
+  DESC
+}
+
+enum TaxonomyTypeEnum {
+  UNDEFINED
+  CATEGORY
+  TAG
+}
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")

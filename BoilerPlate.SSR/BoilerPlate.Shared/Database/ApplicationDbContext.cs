@@ -13,7 +13,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.HasPostgresExtension("uuid-ossp");        
-
+        
     }
     
     public DbSet<ManualMigration> ManualMigrations { get; set; }

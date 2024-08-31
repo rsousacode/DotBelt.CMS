@@ -3,6 +3,7 @@ using BoilerPlate.Shared;
 using BoilerPlate.Shared.ManualMigrations;
 using BoilerPlate.Shared.Users;
 using BoilerPlateSSR.Endpoints;
+using BoilerPlateSSR.Queries;
 using BoilerPlateSSR.QueriesMutations;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -36,7 +37,7 @@ services
                 npgsqlOptions.MigrationsAssembly("BoilerPlate.Shared");
             });
 
-        options.UseModel(MyCompiledModels.ApplicationDbContextModel.Instance);
+        //options.UseModel(MyCompiledModels.ApplicationDbContextModel.Instance);
     });
 
 services.AddScoped<ApplicationDbContext>(serviceProvider =>
@@ -52,7 +53,10 @@ services
     .AddSorting()
     .AddMutationConventions()
     .AddQueryType<GraphQLQuery>()
+    .AddTypeExtension<PostsQueries>()
+    .AddTypeExtension<TaxonomiesQueries>()
     .AddMutationType<GraphQLMutation>()
+    .AddTypeExtension<CreatePostMutation>()
     .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled);
 
 services
@@ -111,6 +115,7 @@ await using (var scope = app.Services.CreateAsyncScope())
     var migrator = scope.ServiceProvider.GetService<ManualMigrator>();
     await migrator!.DoInitialMigration();
 }
+await app.RunWithGraphQLCommandsAsync(args);
 
 
 app.Run();

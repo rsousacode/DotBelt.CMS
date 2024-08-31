@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BoilerPlate.Shared.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -173,6 +173,92 @@ namespace BoilerPlate.Shared.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Posts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    UrlName = table.Column<string>(type: "text", nullable: true),
+                    Content = table.Column<string>(type: "jsonb", nullable: true),
+                    ContentHtml = table.Column<string>(type: "text", nullable: true),
+                    PublishDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    AuthorId = table.Column<string>(type: "text", nullable: true),
+                    PostType = table.Column<int>(type: "integer", nullable: false),
+                    ParentPostId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Posts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Posts_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Posts_Posts_ParentPostId",
+                        column: x => x.ParentPostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Taxonomies",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    UrlName = table.Column<string>(type: "text", nullable: false),
+                    PublishDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    AuthorId = table.Column<string>(type: "text", nullable: true),
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    ParentTaxonomyId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Taxonomies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Taxonomies_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Taxonomies_Taxonomies_ParentTaxonomyId",
+                        column: x => x.ParentTaxonomyId,
+                        principalTable: "Taxonomies",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostTaxonomy",
+                columns: table => new
+                {
+                    PostsId = table.Column<int>(type: "integer", nullable: false),
+                    TaxonomiesId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostTaxonomy", x => new { x.PostsId, x.TaxonomiesId });
+                    table.ForeignKey(
+                        name: "FK_PostTaxonomy_Posts_PostsId",
+                        column: x => x.PostsId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostTaxonomy_Taxonomies_TaxonomiesId",
+                        column: x => x.TaxonomiesId,
+                        principalTable: "Taxonomies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -209,6 +295,31 @@ namespace BoilerPlate.Shared.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_AuthorId",
+                table: "Posts",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_ParentPostId",
+                table: "Posts",
+                column: "ParentPostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostTaxonomy_TaxonomiesId",
+                table: "PostTaxonomy",
+                column: "TaxonomiesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Taxonomies_AuthorId",
+                table: "Taxonomies",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Taxonomies_ParentTaxonomyId",
+                table: "Taxonomies",
+                column: "ParentTaxonomyId");
         }
 
         /// <inheritdoc />
@@ -233,7 +344,16 @@ namespace BoilerPlate.Shared.Migrations
                 name: "ManualMigrations");
 
             migrationBuilder.DropTable(
+                name: "PostTaxonomy");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "Taxonomies");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

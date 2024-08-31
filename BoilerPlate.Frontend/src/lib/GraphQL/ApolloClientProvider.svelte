@@ -1,0 +1,27 @@
+<script lang="ts">
+    import {onMount} from "svelte";
+    import {getApolloClient} from "$lib/GraphQL/apolloClient";
+    import type {ApolloClient, NormalizedCache} from "@apollo/client/core/index.js";
+
+    let client : ApolloClient<NormalizedCache> | null = null;
+
+    onMount(() => {
+      if(client === null) {
+        initializeClient();
+      }
+    });
+
+    function initializeClient() {
+      client = getApolloClient();
+    }
+
+    export function GetApolloSvelteClient() {
+      if(client === null) {
+        initializeClient();
+      }
+      return client;
+    }
+
+</script>
+
+<slot/>

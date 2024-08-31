@@ -4,7 +4,7 @@
 
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand"  href="/">WebAuth</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -24,14 +24,14 @@
         </div>
     </nav>
 </header>
-<div class="container">
+<div class="container-fluid">
     <main class="pb-3">
         <slot />
     </main>
 </div>
 
 <footer class="border-top footer text-muted">
-    <div class="container">
+    <div class="container-fluid">
         &copy; 2024 - WebAuth - <a href="/Privacy">Privacy</a>
     </div>
 </footer>

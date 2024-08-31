@@ -1,6 +1,17 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using BoilerPlate.Shared.Users;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BoilerPlate.Shared.CMS;
+
+public class PostTypeConfiguration : IEntityTypeConfiguration<Post> 
+{
+    public void Configure(EntityTypeBuilder<Post> builder)
+    {
+        builder.Property(x => x.Content).HasColumnType("jsonb");
+    }
+}
 
 public class Post : IContent
 {
@@ -8,14 +19,16 @@ public class Post : IContent
     public string? Title { get; set; }
     public string Description { get; set; }
     public string? UrlName { get; set; }
+    
+    [Column(TypeName = "jsonb")]
     public string? Content { get; set; }
     public string? ContentHtml { get; set; }
     
     public DateTimeOffset PublishDate { get; set; }
-    public DateTimeOffset ModifiedDate { get; set; }
+    public DateTimeOffset? ModifiedDate { get; set; }
     
-    public ApplicationUser Author { get; set; }
-    public string AuthorId { get; set; }
+    public ApplicationUser? Author { get; set; }
+    public string? AuthorId { get; set; }
     public PostTypeEnum PostType { get; set; }
     
     public Post? ParentPost { get; set; }
