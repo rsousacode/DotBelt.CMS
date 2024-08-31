@@ -79,10 +79,7 @@ export type BooleanOperationFilterInput = {
 };
 
 export type CreatePostInput = {
-  content?: InputMaybe<Scalars['String']['input']>;
-  description: Scalars['String']['input'];
-  title?: InputMaybe<Scalars['String']['input']>;
-  urlName?: InputMaybe<Scalars['String']['input']>;
+  payload: EditablePostInput;
 };
 
 export type CreatePostPayload = {
@@ -105,14 +102,37 @@ export type DateTimeOperationFilterInput = {
   nlte?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
+export type EditPostInput = {
+  payload: EditablePostInput;
+  postId: Scalars['Int']['input'];
+};
+
+export type EditPostPayload = {
+  __typename?: 'EditPostPayload';
+  boolean?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type EditablePostInput = {
+  content?: InputMaybe<Scalars['String']['input']>;
+  description: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+  urlName?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type GraphQlMutation = {
   __typename?: 'GraphQLMutation';
   createPost: CreatePostPayload;
+  editPost: EditPostPayload;
 };
 
 
 export type GraphQlMutationCreatePostArgs = {
-  payload: CreatePostInput;
+  input: CreatePostInput;
+};
+
+
+export type GraphQlMutationEditPostArgs = {
+  input: EditPostInput;
 };
 
 export type GraphQlQuery = {

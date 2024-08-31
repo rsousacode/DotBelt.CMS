@@ -1,4 +1,4 @@
-schema {
+﻿schema {
   query: GraphQLQuery
   mutation: GraphQLMutation
 }
@@ -25,8 +25,13 @@ type CreatePostPayload {
   post: Post
 }
 
+type EditPostPayload {
+  boolean: Boolean
+}
+
 type GraphQLMutation {
-  createPost(payload: CreatePostInput!): CreatePostPayload!
+  createPost(input: CreatePostInput!): CreatePostPayload!
+  editPost(input: EditPostInput!): EditPostPayload!
 }
 
 type GraphQLQuery {
@@ -160,10 +165,7 @@ input BooleanOperationFilterInput {
 }
 
 input CreatePostInput {
-  title: String
-  description: String!
-  urlName: String
-  content: String
+  payload: EditablePostInput!
 }
 
 input DateTimeOperationFilterInput {
@@ -179,6 +181,18 @@ input DateTimeOperationFilterInput {
   nlt: DateTime
   lte: DateTime
   nlte: DateTime
+}
+
+input EditPostInput {
+  postId: Int!
+  payload: EditablePostInput!
+}
+
+input EditablePostInput {
+  title: String
+  description: String!
+  urlName: String
+  content: String
 }
 
 input IntOperationFilterInput {

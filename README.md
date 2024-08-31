@@ -18,7 +18,7 @@ Run docker compose:
 
 OR
 
-`npm run docker-up`
+`just docker-up`
 
 This does the following:
 * Instantiate Postgres database
@@ -35,4 +35,4 @@ Run docker compose:
 
 OR
 
-`npm run docker-preview`
+`just docker-preview`
