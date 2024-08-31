@@ -57,6 +57,7 @@ services
     .AddTypeExtension<TaxonomiesQueries>()
     .AddMutationType<GraphQLMutation>()
     .AddTypeExtension<CreatePostMutation>()
+    .AddTypeExtension<EditPostMutation>()
     .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled);
 
 services
@@ -115,10 +116,12 @@ await using (var scope = app.Services.CreateAsyncScope())
     var migrator = scope.ServiceProvider.GetService<ManualMigrator>();
     await migrator!.DoInitialMigration();
 }
+
+
 await app.RunWithGraphQLCommandsAsync(args);
 
 
-app.Run();
+//app.Run();
 
 
 [JsonSerializable(typeof(UserResponse[]))]

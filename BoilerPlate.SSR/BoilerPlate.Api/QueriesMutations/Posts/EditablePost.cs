@@ -1,6 +1,6 @@
 namespace BoilerPlateSSR.Queries;
 
-public class CreatePost
+public class EditablePost
 {
     public string? Title { get; set; }
     public string Description { get; set; }

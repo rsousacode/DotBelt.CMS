@@ -9,6 +9,7 @@ export async function createPost(client : ApolloClient<NormalizedCacheObject>, i
             createPost(payload: $input) {
                 post {
                     id
+                    urlName
                     content
                     description
                 }

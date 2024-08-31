@@ -7,7 +7,9 @@ export async function getPostById(client : ApolloClient<NormalizedCacheObject>, 
     const query = gql`
         query postById($id: Int!) {
             postById(id: $id) {
-                content
+                content,
+                title,
+                urlName
             }
         }
     `
