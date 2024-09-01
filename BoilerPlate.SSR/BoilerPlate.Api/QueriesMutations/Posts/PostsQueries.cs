@@ -31,6 +31,21 @@ public class PostsQueries
             .Posts
             .Where(x => x.Id == id);
     }
+  
+    [UseProjection]
+
+    public IQueryable<Post> GetPostByUrl(string url, ApplicationDbContext context)
+    {
+        var p = context
+            .Posts
+            .Where(x => x.UrlName == url)
+            .FirstOrDefault();
+       
+        
+        return context
+            .Posts
+            .Where(x => x.UrlName == url);
+    }
 
 
 }

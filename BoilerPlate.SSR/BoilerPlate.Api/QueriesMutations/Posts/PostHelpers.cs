@@ -67,7 +67,7 @@ public static class PostHelpers
                 var paragraphData = data.Deserialize<ParagraphData>(jsonSerializerOptions);
                 if (paragraphData != null !)
                 {
-                    htmlToGenerate.Append(paragraphData.Text);
+                    htmlToGenerate.Append($"<p>{paragraphData.Text}</p>");
 
                 }
 

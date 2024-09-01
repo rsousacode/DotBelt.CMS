@@ -37,7 +37,7 @@
         event.preventDefault();
 
         let editorData = await editorJs.getData();
-        console.log(editorData);
+
         post.content = JSON.stringify(editorData);
         post.title = post.title;
         post.description = post.description;

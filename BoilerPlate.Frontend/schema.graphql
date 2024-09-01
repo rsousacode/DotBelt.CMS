@@ -26,7 +26,11 @@ type CreatePostPayload {
 }
 
 type EditPostPayload {
-  boolean: Boolean
+  editPostResult: EditPostResult
+}
+
+type EditPostResult {
+  success: Boolean!
 }
 
 type GraphQLMutation {
@@ -37,6 +41,7 @@ type GraphQLMutation {
 type GraphQLQuery {
   posts("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: PostFilterInput order: [PostSortInput!]): PostsConnection
   postById(id: Int!): [Post!]!
+  postByUrl(url: String!): [Post!]!
   taxonomies("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: TaxonomyFilterInput order: [TaxonomySortInput!]): TaxonomiesConnection
   taxonomyById(id: Int!): [Taxonomy!]!
 }

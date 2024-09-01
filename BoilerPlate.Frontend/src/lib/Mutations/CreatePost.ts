@@ -1,12 +1,12 @@
-import type {CreatePostInput, GraphQlMutation} from '$lib/GraphQL/generated'
+import type {EditablePostInput, GraphQlMutation} from '$lib/GraphQL/generated'
 import type {ApolloClient, NormalizedCacheObject} from "@apollo/client/core/index.js";
 import {gql} from "@apollo/client/core/index.js";
 
-export async function createPost(client : ApolloClient<NormalizedCacheObject>, input: CreatePostInput) {
+export async function createPost(client : ApolloClient<NormalizedCacheObject>, input: EditablePostInput) {
 
     const mutation = gql`
-        mutation createPost($input: CreatePostInput!) {
-            createPost(payload: $input) {
+        mutation createPost($input: EditablePostInput!) {
+            createPost(input: {payload: $input}) {
                 post {
                     id
                     urlName
@@ -25,7 +25,7 @@ export async function createPost(client : ApolloClient<NormalizedCacheObject>, i
     if(data) {
         return data.createPost?.post;
 
+    } else {
+        throw "Error processing request";
     }
-
-    return 500;
 }

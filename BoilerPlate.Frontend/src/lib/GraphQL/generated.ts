@@ -109,7 +109,12 @@ export type EditPostInput = {
 
 export type EditPostPayload = {
   __typename?: 'EditPostPayload';
-  boolean?: Maybe<Scalars['Boolean']['output']>;
+  editPostResult?: Maybe<EditPostResult>;
+};
+
+export type EditPostResult = {
+  __typename?: 'EditPostResult';
+  success: Scalars['Boolean']['output'];
 };
 
 export type EditablePostInput = {
@@ -138,6 +143,7 @@ export type GraphQlMutationEditPostArgs = {
 export type GraphQlQuery = {
   __typename?: 'GraphQLQuery';
   postById: Array<Post>;
+  postByUrl: Array<Post>;
   posts?: Maybe<PostsConnection>;
   taxonomies?: Maybe<TaxonomiesConnection>;
   taxonomyById: Array<Taxonomy>;
@@ -146,6 +152,11 @@ export type GraphQlQuery = {
 
 export type GraphQlQueryPostByIdArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type GraphQlQueryPostByUrlArgs = {
+  url: Scalars['String']['input'];
 };
 
 
