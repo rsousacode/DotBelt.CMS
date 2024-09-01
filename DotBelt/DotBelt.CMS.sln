@@ -1,0 +1,28 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotBelt.CMS.API", "DotBelt.CMS.API\DotBelt.CMS.API.csproj", "{9B2BDF41-753B-4F44-BB08-1588A9446C95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotBelt.CMS.Shared", "DotBelt.CMS.Shared\DotBelt.CMS.Shared.csproj", "{0C30F64A-A55A-4576-83C9-18DC71CECBE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAuth", "..\WebAuth\WebAuth.csproj", "{89B620F5-2002-496A-90EC-ED62AF696E20}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B2BDF41-753B-4F44-BB08-1588A9446C95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B2BDF41-753B-4F44-BB08-1588A9446C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B2BDF41-753B-4F44-BB08-1588A9446C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B2BDF41-753B-4F44-BB08-1588A9446C95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C30F64A-A55A-4576-83C9-18DC71CECBE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C30F64A-A55A-4576-83C9-18DC71CECBE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C30F64A-A55A-4576-83C9-18DC71CECBE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C30F64A-A55A-4576-83C9-18DC71CECBE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89B620F5-2002-496A-90EC-ED62AF696E20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89B620F5-2002-496A-90EC-ED62AF696E20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89B620F5-2002-496A-90EC-ED62AF696E20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89B620F5-2002-496A-90EC-ED62AF696E20}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
