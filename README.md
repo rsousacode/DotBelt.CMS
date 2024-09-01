@@ -1,7 +1,5 @@
 # .Belt CMS
 
-### Warning: This project was moved to another repository: https://github.com/rsousacode/DotBelt.CMS.git
-
 ## Overview
 
 Experimental Content Management System (CMS) boilerplate that heavily uses EditorJS for building content blocks.
