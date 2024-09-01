@@ -6,6 +6,8 @@
     import type {Post} from "$lib/GraphQL/generated";
     import EditorJS from "$lib/CMS/EditorJS.svelte";
     import ApolloClientProvider from "$lib/GraphQL/ApolloClientProvider.svelte";
+    import AceEditor from "$lib/CMS/AceEditor/AceEditor.svelte";
+
 
     let {post = $bindable({content: "{}", urlName: ""})}: { post: Post } = $props();
 
@@ -13,7 +15,10 @@
 
     type EditorMode = 'editor' | 'code';
 
-    let currentMode: EditorMode = $state('editor')
+    let currentMode: EditorMode = $state('editor');
+
+    let aceEditorElement: HTMLElement;
+
 
     function sanitizePermalink(permalink: string) {
         // Replace spaces with hyphens
@@ -37,9 +42,6 @@
     async function createPost(event) {
         event.preventDefault();
 
-        let editorData = await editorJs.getData();
-
-        post.content = JSON.stringify(editorData);
         post.title = post.title;
         post.description = post.description;
         post.urlName = post.urlName;
@@ -98,10 +100,11 @@
 
           </div>
           {#if currentMode === 'editor'}
-            <EditorJS bind:this={editorJs} content={post.content}/>
+            <EditorJS bind:this={editorJs} bind:content={post.content}/>
           {:else}
-            <textarea style="width: 100%" rows="10" bind:value={post.content}></textarea>
+            <AceEditor bind:code={post.content} />
           {/if}
+
         </div>
       </div>
       <div class="col-sm-2">

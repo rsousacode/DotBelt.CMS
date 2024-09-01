@@ -3,7 +3,7 @@
     import {onDestroy, onMount, setContext} from "svelte";
     import Repeater from "$lib/EditorJS/repeater/index.svelte";
 
-  let { content } = $props();
+  let { content = $bindable() } = $props();
 
   let editor : any = undefined;
 
@@ -30,6 +30,10 @@
 
       editor = new EditorJS({
           logLevel: 'ERROR',
+
+          onChange: async (api, event) => {
+              content = JSON.stringify(await getData(), undefined, 2);
+          },
 
           /**
            * Id of Element that should contain the Editor

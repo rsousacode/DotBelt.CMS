@@ -7,10 +7,10 @@ FROM node:22-alpine as build
 
 WORKDIR /app
 
-COPY ../../BoilerPlate.Frontend/package.json ../../BoilerPlate.Frontend/package-lock.json ./
+COPY ../../DotBelt.Frontend/package.json ../../DotBelt.Frontend/package-lock.json ./
 RUN npm ci
 
-COPY BoilerPlate.Frontend/ .
+COPY DotBelt.Frontend/ .
 
 RUN npm run build-prod
 

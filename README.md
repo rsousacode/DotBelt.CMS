@@ -1,8 +1,16 @@
-# dotBelt CMS
+# .Belt CMS
+
+### Warning: This project was moved to another repository: https://github.com/rsousacode/DotBelt.CMS.git
 
 ## Overview
 
-This project is a Content Management System (CMS) that uses EditorJS for building content blocks.
+Experimental Content Management System (CMS) boilerplate that heavily uses EditorJS for building content blocks.
+
+Current supported blocks:
+* Heading
+* Paragraph
+* List
+* Repeater (WIP)
 
 ## Backend
 
@@ -47,7 +55,7 @@ just docker-up
 just frontend
 ```
 
-4. Run the BoilerPlate.Api project to run the Api
+4. Run the DotBelt.CMS.API project to run the Api
 
 ## Justfile Overview
 
@@ -62,8 +70,8 @@ This project uses just for task management. Below are the available commands def
 
 ### Frontend Commands
 
-- `just frontend`: Change directory to BoilerPlate.Frontend and run npm dev.
+- `just frontend`: Change directory to DotBelt.Frontend and run npm dev.
 - `just generate-schema`: Generates the GraphQL schema used by the graphql codegen in the frontend project.
-- `just frontend-codegen`: Change directory to BoilerPlate.Frontend and run npm run codegen to generate TypeScript types for GraphQL.
+- `just frontend-codegen`: Change directory to DotBelt.Frontend and run npm run codegen to generate TypeScript types for GraphQL.
 - `just graphql-update` Run both generate-schema and frontend-codegen to update the GraphQL schema and generate TypeScript types.
 

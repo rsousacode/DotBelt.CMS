@@ -1,4 +1,4 @@
-﻿FROM alpine:3.20 AS prepare
+FROM alpine:3.20 AS prepare
 RUN apk add --no-cache libgcc gcc clang build-base zlib-dev
 WORKDIR /app
 RUN adduser -u 1000 --disabled-password --gecos "" appuser && chown -R appuser /app
@@ -11,16 +11,16 @@ RUN apk add --no-cache libgcc gcc clang build-base zlib-dev
 
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ../../BoilerPlate.SSR/. .
+COPY ../../DotBelt/. .
 
 RUN dotnet restore -r linux-musl-x64
 
-WORKDIR "/src/BoilerPlate.Api"
-#RUN dotnet build "BoilerPlate.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/DotBelt.CMS.API"
+#RUN dotnet build "DotBelt.CMS.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "BoilerPlate.Api.csproj" --no-restore -c $BUILD_CONFIGURATION -o /app/publish  -r linux-musl-x64 --self-contained
+RUN dotnet publish "DotBelt.CMS.API.csproj" --no-restore -c $BUILD_CONFIGURATION -o /app/publish  -r linux-musl-x64 --self-contained
 
 FROM prepare AS final
 COPY --chown=appuser --from=build /app/publish .
-ENTRYPOINT ["./BoilerPlate.Api"]
+ENTRYPOINT ["./DotBelt.CMS.API"]
