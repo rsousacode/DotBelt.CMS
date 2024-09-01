@@ -22,11 +22,16 @@ public class EditPostMutation
             .FirstOrDefaultAsync();
 
         if (post == null) return new EditPostResult() { Success = false };;
+        
+        var urlName = PostHelpers.SanitizePermalink(payload.UrlName);
 
         post.ModifiedDate = DateTime.UtcNow;
         post.Title = payload.Title; 
         post.Content = payload.Content;
         post.Description = payload.Description;
+        post.UrlName = urlName;
+        
+        post.FullUrl = urlName;
 
         if (payload.Content != null)
         {

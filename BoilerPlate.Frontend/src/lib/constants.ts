@@ -1,1 +1,1 @@
-export const SITE_NAME = "Boilerplate";
+export const SITE_NAME = ".Belt CMS";

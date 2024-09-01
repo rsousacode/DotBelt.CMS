@@ -5,7 +5,7 @@
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
-            <a class="navbar-brand"  href="/">WebAuth</a>
+            <a class="navbar-brand"  href="/">.Belt CMS</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -32,7 +32,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container-fluid">
-        &copy; 2024 - WebAuth - <a href="/Privacy">Privacy</a>
+        &copy; 2024 - .Belt CMS - <a href="/Privacy">Privacy</a>
     </div>
 </footer>
 

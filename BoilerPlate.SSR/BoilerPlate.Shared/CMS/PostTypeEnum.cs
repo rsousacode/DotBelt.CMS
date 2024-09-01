@@ -4,5 +4,6 @@ public enum PostTypeEnum
 {
     Undefined,
     Post,
-    Page
+    Page,
+    MenuItem
 }

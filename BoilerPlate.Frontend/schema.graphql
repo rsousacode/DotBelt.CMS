@@ -63,6 +63,7 @@ type Post {
   title: String
   description: String!
   urlName: String
+  fullUrl: String
   content: String
   contentHtml: String
   publishDate: DateTime!
@@ -83,6 +84,8 @@ type PostsConnection {
   edges: [PostsEdge!]
   "A flattened list of the nodes."
   nodes: [Post!]
+  "Identifies the total count of items in the connection."
+  totalCount: Int!
 }
 
 "An edge in a connection."
@@ -170,6 +173,7 @@ input BooleanOperationFilterInput {
 }
 
 input CreatePostInput {
+  type: PostTypeEnum!
   payload: EditablePostInput!
 }
 
@@ -236,6 +240,7 @@ input PostFilterInput {
   title: StringOperationFilterInput
   description: StringOperationFilterInput
   urlName: StringOperationFilterInput
+  fullUrl: StringOperationFilterInput
   content: StringOperationFilterInput
   contentHtml: StringOperationFilterInput
   publishDate: DateTimeOperationFilterInput
@@ -253,6 +258,7 @@ input PostSortInput {
   title: SortEnumType
   description: SortEnumType
   urlName: SortEnumType
+  fullUrl: SortEnumType
   content: SortEnumType
   contentHtml: SortEnumType
   publishDate: SortEnumType
@@ -326,6 +332,7 @@ enum PostTypeEnum {
   UNDEFINED
   POST
   PAGE
+  MENU_ITEM
 }
 
 enum SortEnumType {

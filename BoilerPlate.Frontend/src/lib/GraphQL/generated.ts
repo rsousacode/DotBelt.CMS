@@ -80,6 +80,7 @@ export type BooleanOperationFilterInput = {
 
 export type CreatePostInput = {
   payload: EditablePostInput;
+  type: PostTypeEnum;
 };
 
 export type CreatePostPayload = {
@@ -234,6 +235,7 @@ export type Post = {
   content?: Maybe<Scalars['String']['output']>;
   contentHtml?: Maybe<Scalars['String']['output']>;
   description: Scalars['String']['output'];
+  fullUrl?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   parentPost?: Maybe<Post>;
@@ -252,6 +254,7 @@ export type PostFilterInput = {
   content?: InputMaybe<StringOperationFilterInput>;
   contentHtml?: InputMaybe<StringOperationFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
+  fullUrl?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<IntOperationFilterInput>;
   modifiedDate?: InputMaybe<DateTimeOperationFilterInput>;
   or?: InputMaybe<Array<PostFilterInput>>;
@@ -269,6 +272,7 @@ export type PostSortInput = {
   content?: InputMaybe<SortEnumType>;
   contentHtml?: InputMaybe<SortEnumType>;
   description?: InputMaybe<SortEnumType>;
+  fullUrl?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   modifiedDate?: InputMaybe<SortEnumType>;
   parentPost?: InputMaybe<PostSortInput>;
@@ -279,6 +283,7 @@ export type PostSortInput = {
 };
 
 export enum PostTypeEnum {
+  MenuItem = 'MENU_ITEM',
   Page = 'PAGE',
   Post = 'POST',
   Undefined = 'UNDEFINED'
@@ -300,6 +305,8 @@ export type PostsConnection = {
   nodes?: Maybe<Array<Post>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
+  /** Identifies the total count of items in the connection. */
+  totalCount: Scalars['Int']['output'];
 };
 
 /** An edge in a connection. */

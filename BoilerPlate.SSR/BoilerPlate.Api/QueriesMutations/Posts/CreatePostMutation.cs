@@ -7,17 +7,21 @@ namespace BoilerPlateSSR.Queries;
 [ExtendObjectType(typeof(GraphQLMutation))]
 public class CreatePostMutation
 {
-    public async Task<Post> CreatePostAsync( ApplicationDbContext dbContext, EditablePost payload )
+    public async Task<Post> CreatePostAsync( ApplicationDbContext dbContext, PostTypeEnum type, EditablePost payload )
     {
+        var urlName = PostHelpers.SanitizePermalink(payload.UrlName);
+        
+        
         var post = new Post()
         {
             Title = payload.Title,
             Content = payload.Content,
-            UrlName = PostHelpers.SanitizePermalink(payload.UrlName),
+            PostType = type,
+            UrlName = urlName,
+            FullUrl = urlName,
             Description = payload.Description,
         };
 
-        post.PostType = PostTypeEnum.Post;
         post.PublishDate = DateTime.UtcNow;
 
         if (payload.Content != null)

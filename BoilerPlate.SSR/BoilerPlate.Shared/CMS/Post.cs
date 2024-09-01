@@ -9,7 +9,17 @@ public class PostTypeConfiguration : IEntityTypeConfiguration<Post>
 {
     public void Configure(EntityTypeBuilder<Post> builder)
     {
-        builder.Property(x => x.Content).HasColumnType("jsonb");
+        builder
+            .Property(x => x.Content)
+            .HasColumnType("jsonb");
+        
+        builder
+            .Property(x => x.PostType)
+            .HasConversion<string>();
+
+        builder
+            .HasIndex(x => x.FullUrl)
+            .IsUnique();
     }
 }
 
@@ -20,7 +30,8 @@ public class Post : IContent
     public string Description { get; set; }
     public string? UrlName { get; set; }
     
-    [Column(TypeName = "jsonb")]
+    public string? FullUrl { get; set; }
+    
     public string? Content { get; set; }
     public string? ContentHtml { get; set; }
     

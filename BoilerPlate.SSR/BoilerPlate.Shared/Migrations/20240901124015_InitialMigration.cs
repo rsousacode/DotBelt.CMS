@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BoilerPlate.Shared.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -182,7 +182,8 @@ namespace BoilerPlate.Shared.Migrations
                     Title = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: false),
                     UrlName = table.Column<string>(type: "text", nullable: true),
-                    Content = table.Column<string>(type: "jsonb", nullable: true),
+                    FullUrl = table.Column<string>(type: "text", nullable: true),
+                    Content = table.Column<string>(type: "text", nullable: true),
                     ContentHtml = table.Column<string>(type: "text", nullable: true),
                     PublishDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),

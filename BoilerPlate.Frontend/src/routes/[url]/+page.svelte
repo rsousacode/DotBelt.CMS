@@ -12,9 +12,16 @@
 </script>
 
 <svelte:head>
-  <title>Post- {SITE_NAME} </title>
+  <title>{post.title} - {SITE_NAME} </title>
 </svelte:head>
 
-<h2>Post should show here</h2>
+<div class="post-content-container container-fluid">
+  <div class="post-title-section">
+    <h1>{post.title}</h1>
+  </div>
 
-{@html post.contentHtml}
+  <div class="post-content">
+    {@html post.contentHtml}
+  </div>
+
+</div>

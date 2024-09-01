@@ -10,12 +10,12 @@ public class PostsQueries
 {
     // TODO: Use DTOs
     
-    [UsePaging]
+    [UsePaging(IncludeTotalCount = true)]
     [UseProjection]
     [UseFiltering]
     [UseSorting]
 
-    public IQueryable<Post> GetPosts([Service(ServiceKind.Pooled)] ApplicationDbContext context)
+    public IQueryable<Post> GetPosts(ApplicationDbContext context)
     {
         return context
             .Posts;

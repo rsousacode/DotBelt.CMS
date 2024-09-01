@@ -35,13 +35,16 @@ namespace BoilerPlate.Shared.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Content")
-                        .HasColumnType("jsonb");
+                        .HasColumnType("text");
 
                     b.Property<string>("ContentHtml")
                         .HasColumnType("text");
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FullUrl")
                         .HasColumnType("text");
 
                     b.Property<DateTimeOffset?>("ModifiedDate")

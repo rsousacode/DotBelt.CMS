@@ -1,4 +1,4 @@
-# Boilerplate SSR Version
+# dotBelt CMS
 
 ## Overview
 
