@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  llama-server:
+    
+    image: ghcr.io/ggerganov/llama.cpp:server
+    volumes:
+      - ./AI/models/7B:/models
+    ports:
+      - "8000:8000"
+    command: ["-m", "/models/mistral-7b-instruct-v0.2.Q8_0.gguf", "--port", "8000", "--host", "0.0.0.0", "-n", "512"]

@@ -4,3 +4,9 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 .idea/
+
+# Ignore everything in the AI/models directory
+AI/models/*
+
+# Except the .gitkeep file
+!AI/models/.gitkeep
