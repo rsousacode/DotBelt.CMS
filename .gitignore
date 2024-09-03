@@ -6,7 +6,7 @@ riderModule.iml
 .idea/
 
 # Ignore everything in the AI/models directory
-AI/models/*
+AI/models/7B/*
 
 # Except the .gitkeep file
-!AI/models/.gitkeep
+!AI/models/7B/.gitkeep
