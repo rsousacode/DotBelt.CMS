@@ -1,5 +1,5 @@
 <script>
-    import PostsIcon from "$lib/CMS/Icones/PostsIcon.svelte";
+    import PostsIcon from "$lib/CMS/Icons/PostsIcon.svelte";
     import PostsMenu from "$lib/CMS/Dashboard/MenuItems/PostsMenu.svelte";
     import PagesMenu from "$lib/CMS/Dashboard/MenuItems/PagesMenu.svelte";
     import SettingsMenu from "$lib/CMS/Dashboard/MenuItems/SettingsMenu.svelte";

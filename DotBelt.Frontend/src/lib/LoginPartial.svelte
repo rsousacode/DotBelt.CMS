@@ -1,7 +1,7 @@
 <script>
-    import SignUpIcon from "$lib/CMS/Icones/SignUpIcon.svelte";
-    import LoginIcon from "$lib/CMS/Icones/LoginIcon.svelte";
-    import DashboardIcon from "$lib/CMS/Icones/DashboardIcon.svelte";
+    import SignUpIcon from "$lib/CMS/Icons/SignUpIcon.svelte";
+    import LoginIcon from "$lib/CMS/Icons/LoginIcon.svelte";
+    import DashboardIcon from "$lib/CMS/Icons/DashboardIcon.svelte";
 </script>
 
 <ul class="navbar-nav">

@@ -1,5 +1,5 @@
 <script>
-    import PostsIcon from "$lib/CMS/Icones/PostsIcon.svelte";
+    import PostsIcon from "$lib/CMS/Icons/PostsIcon.svelte";
     import {dashboardData} from "$lib/CMS/Dashboard/DashboardStore.svelte";
 
     let renderFragment;
@@ -32,9 +32,7 @@
   </div>
 
   <div class="right-section">
-    {#if $dashboardData.dashboardFragment}
-      {@render $dashboardData.dashboardFragment()}
-    {/if}
+      {@render $dashboardData?.dashboardFragment()}
   </div>
 
 </div>

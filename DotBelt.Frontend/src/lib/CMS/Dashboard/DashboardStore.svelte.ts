@@ -1,9 +1,7 @@
 // src/stores/dashboardStore.ts
 
-import { writable } from 'svelte/store';
+import {writable} from 'svelte/store';
 
-
-export let dashData : DashboardData = $state({ title: '', subtitle: '', dashboardFragment: null })
 
 interface DashboardData {
     title: string;
@@ -13,17 +11,26 @@ interface DashboardData {
 
 const dashboardData = writable<DashboardData>({ title: '', subtitle: '', dashboardFragment: null });
 
-function setDashboardData(data: { title: string; subtitle: string; }) {
+function updateDashboardData(data: { title: string; subtitle: string; }) {
     dashboardData.update(currentData => {
-        let newData = {
+        return {
             ...currentData,
             title: data.title,
             subtitle: data.subtitle
         };
-        return newData;
     });
 }
-function setDashboardFragment(fragment: any) {
+
+function setDashboardData(data: { title: string; subtitle: string; }) {
+    dashboardData.set({
+            dashboardFragment: undefined,
+            title: data.title,
+            subtitle: data.subtitle
+    });
+}
+
+
+function updateDashboardFragment(fragment: any) {
     dashboardData.update(currentData => {
         let newData = {
             ...currentData,
@@ -35,4 +42,4 @@ function setDashboardFragment(fragment: any) {
 }
 
 // Export the store and the methods
-export { dashboardData, setDashboardData, setDashboardFragment};
+export { dashboardData, updateDashboardData, setDashboardData, updateDashboardFragment};

@@ -1,8 +1,8 @@
 <script lang="ts">
-    import PostsIcon from "$lib/CMS/Icones/PostsIcon.svelte";
+    import PostsIcon from "$lib/CMS/Icons/PostsIcon.svelte";
     import {quadInOut} from "svelte/easing";
     import {slide} from "svelte/transition";
-    import SettingsIcon from "$lib/CMS/Icones/SettingsIcon.svelte";
+    import SettingsIcon from "$lib/CMS/Icons/SettingsIcon.svelte";
 
     let hovering : boolean = false;
 

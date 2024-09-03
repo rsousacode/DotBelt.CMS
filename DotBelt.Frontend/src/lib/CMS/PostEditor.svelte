@@ -7,12 +7,12 @@
     import ApolloClientProvider from "$lib/GraphQL/ApolloClientProvider.svelte";
     import AceEditor from "$lib/CMS/AceEditor/AceEditor.svelte";
     import {createRawSnippet, onMount} from "svelte";
-    import {setDashboardFragment} from "$lib/CMS/Dashboard/DashboardStore.svelte";
-    import SaveIcon from "$lib/CMS/Icones/SaveIcon.svelte";
-    import TransitionalIcon from "$lib/CMS/Icones/TransitionalIcon.svelte";
-    import SuccessIcon from "$lib/CMS/Icones/SuccessIcon.svelte";
-    import JsonIcon from "$lib/CMS/Icones/JsonIcon.svelte";
-    import BlocksIcon from "$lib/CMS/Icones/BlocksIcon.svelte";
+    import {updateDashboardFragment} from "$lib/CMS/Dashboard/DashboardStore.svelte";
+    import SaveIcon from "$lib/CMS/Icons/SaveIcon.svelte";
+    import TransitionalIcon from "$lib/CMS/Icons/TransitionalIcon.svelte";
+    import SuccessIcon from "$lib/CMS/Icons/SuccessIcon.svelte";
+    import JsonIcon from "$lib/CMS/Icons/JsonIcon.svelte";
+    import BlocksIcon from "$lib/CMS/Icons/BlocksIcon.svelte";
 
 
     let {post = $bindable({content: "{}", urlName: ""})}: { post: Post } = $props();
@@ -23,11 +23,7 @@
 
     let successFeedbackIcon : TransitionalIcon;
     onMount(() => {
-
-
-        setDashboardFragment(saveButton);
-
-
+        updateDashboardFragment(saveButton);
     })
 
 

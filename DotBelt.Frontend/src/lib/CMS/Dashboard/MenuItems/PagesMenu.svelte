@@ -1,7 +1,7 @@
 <script lang="ts">
     import {quadInOut} from "svelte/easing";
     import {slide} from "svelte/transition";
-    import PageIcon from "$lib/CMS/Icones/PageIcon.svelte";
+    import PageIcon from "$lib/CMS/Icons/PageIcon.svelte";
 
     let hovering: boolean = false;
 
