@@ -3,11 +3,14 @@
   import {page} from "$app/stores";
   import PostEditor from "$lib/CMS/PostEditor.svelte";
   import {SITE_NAME} from "$lib/constants";
+  import DashboardContainer from "$lib/CMS/Dashboard/DashboardContainer.svelte";
+  import {setDashboardData} from "$lib/CMS/Dashboard/DashboardStore.svelte";
 
   let { data: { post } } = $page;
 
+
   onMount(() => {
-      console.log(post);
+      setDashboardData({title: "Edit post", subtitle: ""})
   })
 </script>
 
@@ -15,5 +18,6 @@
   <title>Edit post - {SITE_NAME} </title>
 </svelte:head>
 
-
-<PostEditor post={post}/>
+<DashboardContainer>
+  <PostEditor post={post}/>
+</DashboardContainer>

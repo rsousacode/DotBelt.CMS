@@ -1,5 +1,5 @@
 import {getApolloClient} from "$lib/GraphQL/apolloClient";
-import type { PageServerLoad } from './$types'
+import type { PageServerLoad } from '../../../../.svelte-kit/types/src/routes'
 import type { Post } from "$lib/GraphQL/generated";
 
 import {getPostByUrl} from "$lib/Queries/GetPostByUrl";

@@ -1,7 +1,7 @@
-import type { Actions } from './$types';
 import { getApolloClient } from "$lib/GraphQL/apolloClient";
 import { createPost } from "$lib/Mutations/CreatePost";
 import type {CreatePostInput, EditablePostInput} from "$lib/GraphQL/generated";
+import type {Actions} from "@sveltejs/kit";
 
 export const actions = {
     default: async (event) => {

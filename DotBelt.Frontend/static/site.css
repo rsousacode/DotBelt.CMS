@@ -14,10 +14,71 @@ html {
 
 html {
     position: relative;
-    min-height: 100%;
 }
 
-body {
-    margin-bottom: 60px;
+.bg-primary-header {
+    background: #5d36b1;
 }
 
+.header-icon {
+    font-size: 24px;
+}
+
+.nm {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+html, body, main {
+    height: 100%;
+    background-color: #f2f3f9;
+}
+
+.dashboard-item-container:hover {
+    background: #211154;
+}
+
+.dashboard-item-container {
+    padding-left: 20px;
+}
+
+.dashboard-item-container {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.panel-list-item > a {
+    text-decoration: none;
+    color: white;
+}
+
+.panel-list {
+    list-style-type: none;
+    padding: 0;
+
+}
+.panel-list.dropdown > .panel-list-item .dashboard-item-container {
+    padding-left: 25px;
+
+}
+
+.panel-list-item {
+    background: #291569;
+}
+
+.dashboard-icon {
+    background: transparent;
+    border: none;
+    font-size: 32px;
+    color: #ffffff;
+}
+
+
+.dashboard-icon:hover {
+    color: #ff0000;
+}
+
+.ce-block__content,
+.ce-toolbar__content {
+    max-width: unset;
+}

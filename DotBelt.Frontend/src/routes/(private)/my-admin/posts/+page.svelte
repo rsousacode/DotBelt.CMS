@@ -1,5 +1,5 @@
 <script lang="ts">
-    import DashboardContainer from "$lib/CMS/DashboardContainer.svelte";
+    import DashboardContainer from "$lib/CMS/Dashboard/DashboardContainer.svelte";
     import {SITE_NAME} from "$lib/constants";
     import ApolloClientProvider from "$lib/GraphQL/ApolloClientProvider.svelte";
     import {getPosts} from "$lib/Queries/GetPosts";
@@ -10,11 +10,16 @@
     import {page} from "$app/stores";
     import {afterNavigate} from "$app/navigation";
     import type {PaginationQuery} from "$lib/GraphQL/PaginationQuery";
+    import {onMount} from "svelte";
+    import {setDashboardData} from "$lib/CMS/Dashboard/DashboardStore.svelte";
 
     let apolloClientProvider: ApolloClientProvider;
     let postsResult: Maybe<PostsConnection> | undefined = $state(undefined);
     let postsPerPage = $state(5);
 
+    onMount(() => {
+        setDashboardData({title: "Posts", subtitle: ""})
+    })
     async function fetchPosts(postType: string, variables: PaginationQuery) {
         const apolloClient = apolloClientProvider.GetApolloSvelteClient();
         if (!apolloClient) {

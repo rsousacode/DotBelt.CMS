@@ -1,5 +1,4 @@
 <script lang="ts">
-    import {getContext, onMount} from "svelte";
     import {applyAction, deserialize, enhance} from '$app/forms';
     import {goto, invalidateAll} from "$app/navigation";
     import type {ActionResult} from "@sveltejs/kit";
@@ -7,17 +6,29 @@
     import EditorJS from "$lib/CMS/EditorJS.svelte";
     import ApolloClientProvider from "$lib/GraphQL/ApolloClientProvider.svelte";
     import AceEditor from "$lib/CMS/AceEditor/AceEditor.svelte";
+    import {createRawSnippet, onMount} from "svelte";
+    import {setDashboardFragment} from "$lib/CMS/Dashboard/DashboardStore.svelte";
+    import SaveIcon from "$lib/CMS/Icones/SaveIcon.svelte";
+    import TransitionalIcon from "$lib/CMS/Icones/TransitionalIcon.svelte";
+    import SuccessIcon from "$lib/CMS/Icones/SuccessIcon.svelte";
+    import JsonIcon from "$lib/CMS/Icones/JsonIcon.svelte";
+    import BlocksIcon from "$lib/CMS/Icones/BlocksIcon.svelte";
 
 
     let {post = $bindable({content: "{}", urlName: ""})}: { post: Post } = $props();
-
-    let editorJs;
 
     type EditorMode = 'editor' | 'code';
 
     let currentMode: EditorMode = $state('editor');
 
-    let aceEditorElement: HTMLElement;
+    let successFeedbackIcon : TransitionalIcon;
+    onMount(() => {
+
+
+        setDashboardFragment(saveButton);
+
+
+    })
 
 
     function sanitizePermalink(permalink: string) {
@@ -39,12 +50,11 @@
         console.log(post.urlName)
     }
 
-    async function createPost(event) {
-        event.preventDefault();
+    async function createPost() {
 
-        post.title = post.title;
-        post.description = post.description;
-        post.urlName = post.urlName;
+        post.title = post.title ?? "";
+        post.description = post.description ?? "";
+        post.urlName = post.urlName ?? "";
 
         const formData = new FormData();
 
@@ -52,7 +62,7 @@
             formData.append(key, value);
         });
 
-        const response = await fetch(event.currentTarget.action, {
+        const response = await fetch("", {
             method: 'POST',
             body: formData,
         });
@@ -60,10 +70,15 @@
         const result: ActionResult = deserialize(await response.text());
         console.log(result);
 
+
         if (result.type === 'success') {
-            // rerun all `load` functions, following the successful update
-            await invalidateAll();
-            await goto("/my-admin/posts/" + result.data.id);
+
+            successFeedbackIcon.triggerComponent2();
+
+            if(result.data) {
+                await invalidateAll();
+                await goto("/my-admin/posts/" + result.data.id);
+            }
         }
 
         await applyAction(result);
@@ -77,47 +92,51 @@
         }
     }
 
-    async function handleSubmit(event) {
+    async function handleSubmit() {
         if (!post.id) {
-            await createPost(event);
+            await createPost();
         }
     }
 </script>
 
+{#snippet saveButton()}
+  <button class="dashboard-icon" type="button" onclick={handleSubmit}>
+    <TransitionalIcon
+        bind:this={successFeedbackIcon}
+      component1={SaveIcon}
+      component2={SuccessIcon}/>
+  </button>
+  <button class="dashboard-icon" onclick={onSwitchMode}>
+    {#if currentMode === 'editor'}
+      <JsonIcon/>
+    {:else}
+      <BlocksIcon/>
+    {/if}
+  </button>
+{/snippet}
 <ApolloClientProvider>
-  <form method="POST" action="" onsubmit={handleSubmit}>
+  <form method="POST" action=""  onsubmit={handleSubmit}>
     <div class="row">
       <div class="col">
         <div class="editor-container">
-          <div>
-            <span>url: </span>
-            <input class="classy-input permalink-input" onchange={handlePermalinkChanged} type="text"
-                   style="color: #494949" placeholder="Permalink here" bind:value={post.urlName}>
-          </div>
-          <div>
-            <input class="classy-input" type="text" style="color: #494949" placeholder="Write your title here"
-                   bind:value={post.title}>
+          <div class="editor-container-header">
+            <div class="permalink-editor-container">
+              <span style="color: #919191;">https://my-website.com/</span>
+              <input class="classy-input permalink-input" onchange={handlePermalinkChanged} type="text" placeholder="write-your-url" bind:value={post.urlName}>
+            </div>
+            <div>
+              <input class="classy-input" type="text" style="color: #494949" placeholder="Write your title here"
+                     bind:value={post.title}>
 
+            </div>
           </div>
+
           {#if currentMode === 'editor'}
-            <EditorJS bind:this={editorJs} bind:content={post.content}/>
+            <EditorJS  bind:content={post.content}/>
           {:else}
             <AceEditor bind:code={post.content} />
           {/if}
 
-        </div>
-      </div>
-      <div class="col-sm-2">
-
-        <button class="btn btn-primary" type="submit">Save</button>
-        <button class="btn btn-primary" type="button"
-                onclick={onSwitchMode}>{currentMode === 'editor' ? 'Code Editor' : 'Visual Editor'}</button>
-
-        <div class="input-area mt-4">
-          <div class="input-group">
-            <label class="form-label" for="">Description</label>
-            <textarea bind:value={post.description}></textarea>
-          </div>
         </div>
       </div>
     </div>
@@ -132,14 +151,28 @@
         outline: none;
     }
 
+    .permalink-input::placeholder {
+        color: #b8b8b8
+
+    }
     .permalink-input {
         font-size: 16px;
+        margin-left: -5px;
+        color: #8f8f8f
+    }
+
+    .permalink-editor-container {
+        margin-bottom: 20px;
+    }
+
+    .editor-container-header {
+        margin-bottom: 16px;
     }
 
     .editor-container {
-        max-width: 650px;
-        margin: auto;
+        margin-left: 30px;
     }
+
 
     .editor-js {
     }

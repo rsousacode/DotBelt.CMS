@@ -1,4 +1,4 @@
-import type { PageServerLoad } from './$types';
+import type { PageServerLoad } from '../../../.svelte-kit/types/src/routes';
 import { PUBLIC_BASE_URL } from '$env/static/public'
 
 type OutputType = { users: [] }

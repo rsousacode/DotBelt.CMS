@@ -27,6 +27,6 @@
    })
 </script>
 
-<div id="editor" style="width: 600px; height: 500px; margin-top: 30px;" bind:this={aceEditorElement}>{code}</div>
+<div id="editor" style="width: 100%; height: 500px; margin-top: 30px;" bind:this={aceEditorElement}>{code}</div>
 
 
