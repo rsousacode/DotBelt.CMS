@@ -1,3 +1,4 @@
+using System.Reflection;
 using DotBelt.CMS.Shared.CMS;
 using DotBelt.CMS.Shared.ManualMigrations;
 using DotBelt.CMS.Shared.Users;
@@ -12,7 +13,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        modelBuilder.ApplyConfiguration(new PostTypeConfiguration());
         modelBuilder.HasPostgresExtension("uuid-ossp");        
         
     }

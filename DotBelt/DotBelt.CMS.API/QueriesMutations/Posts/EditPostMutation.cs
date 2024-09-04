@@ -1,6 +1,8 @@
 using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.CMS;
 using BoilerPlateSSR.QueriesMutations;
+using DotBelt.CMS.Shared.CMS.Blocks.Parser;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BoilerPlateSSR.Queries;
@@ -14,7 +16,9 @@ public class EditPostResult
 
 public class EditPostMutation
 {
-    public async Task<EditPostResult> EditPostAsync( ApplicationDbContext dbContext, int postId, EditablePost payload )
+    public async Task<EditPostResult> EditPostAsync( ApplicationDbContext dbContext,
+        [FromServices] BlockParser blockParser,
+        int postId, EditablePost payload )
     {
         var post = await dbContext
             .Posts
@@ -35,7 +39,7 @@ public class EditPostMutation
 
         if (payload.Content != null)
         {
-            post.ContentHtml = PostHelpers.GetHtmlFromContent(payload.Content);
+            post.ContentHtml = blockParser.GetHtmlFromContent(payload.Content);
         }
                 
         return new EditPostResult() { Success = await dbContext.SaveChangesAsync() >= 0 };

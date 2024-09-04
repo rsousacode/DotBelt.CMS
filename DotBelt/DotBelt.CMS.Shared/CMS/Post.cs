@@ -27,8 +27,8 @@ public class Post : IContent
 {
     public int Id { get; set; }
     public string? Title { get; set; }
-    public string Description { get; set; }
-    public string? UrlName { get; set; }
+    public required string? Description { get; set; }
+    public required string UrlName { get; set; }
     
     public string? FullUrl { get; set; }
     
@@ -43,9 +43,8 @@ public class Post : IContent
     public PostTypeEnum PostType { get; set; }
     
     public Post? ParentPost { get; set; }
-    public Post[] ChildrenPosts { get; set; }
+    public Post[] ChildrenPosts { get; set; } = null!;
     
     
-    public Taxonomy[] Taxonomies { get; set; }
-    
+    public Taxonomy[] Taxonomies { get; set; } = null!;
 }

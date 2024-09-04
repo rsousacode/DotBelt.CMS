@@ -7,7 +7,6 @@ namespace DotBelt.CMS.Shared.ManualMigrations;
 public class ManualMigrator
 {
     private readonly ApplicationDbContext _dbContext;
-    private readonly HttpClient _httpClient;
     private readonly ILogger<ManualMigrator> _logger;
 
     private readonly List<ManualMigrationItem> _migrationConfs = new();
@@ -38,15 +37,11 @@ public class ManualMigrator
     public void Dispose()
     {
         _dbContext.Dispose();
-        _httpClient.Dispose();
     }
 
     public async ValueTask DisposeAsync()
     {
         await _dbContext.DisposeAsync();
-        if (_httpClient is IAsyncDisposable httpClientAsyncDisposable)
-            await httpClientAsyncDisposable.DisposeAsync();
-        else
-            _httpClient.Dispose();
+
     }
 }

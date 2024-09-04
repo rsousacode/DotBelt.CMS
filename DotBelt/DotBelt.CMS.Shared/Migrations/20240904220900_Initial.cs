@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotBelt.CMS.Shared.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -180,15 +180,15 @@ namespace DotBelt.CMS.Shared.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: false),
-                    UrlName = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    UrlName = table.Column<string>(type: "text", nullable: false),
                     FullUrl = table.Column<string>(type: "text", nullable: true),
-                    Content = table.Column<string>(type: "text", nullable: true),
+                    Content = table.Column<string>(type: "jsonb", nullable: true),
                     ContentHtml = table.Column<string>(type: "text", nullable: true),
                     PublishDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     AuthorId = table.Column<string>(type: "text", nullable: true),
-                    PostType = table.Column<int>(type: "integer", nullable: false),
+                    PostType = table.Column<string>(type: "text", nullable: false),
                     ParentPostId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -212,11 +212,11 @@ namespace DotBelt.CMS.Shared.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: true),
                     UrlName = table.Column<string>(type: "text", nullable: false),
                     PublishDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
                     AuthorId = table.Column<string>(type: "text", nullable: true),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     ParentTaxonomyId = table.Column<int>(type: "integer", nullable: true)
@@ -301,6 +301,12 @@ namespace DotBelt.CMS.Shared.Migrations
                 name: "IX_Posts_AuthorId",
                 table: "Posts",
                 column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_FullUrl",
+                table: "Posts",
+                column: "FullUrl",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_ParentPostId",
