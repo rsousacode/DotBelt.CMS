@@ -15,41 +15,90 @@
 #   
 ##############################################################
 
-# Bring up Docker containers with build
+
+#########################################
+# Bring up Docker containers
+#########################################
+
 docker-up:
     docker compose up --build
+    
+#########################################
+# Bring up Docker containers (Dettached)
+#########################################    
 
-# Bring up Docker containers with build
 docker-up-detached:
     docker compose up --build -d
 
+
+#########################################
 # Bring down Docker containers
+#########################################    
+
 docker-down:
     docker compose down
 
-# Change directory to Frontend and run npm dev
+
+#########################################
+# Run frontend development
+#########################################    
+
 frontend:
     cd DotBelt.Frontend && npm run dev
+    
+
+#########################################
+# Run dotnet API 
+#########################################    
 
 dotnet: 
     cd DotBelt/DotBelt.CMS.API && dotnet run
 
-# Preview Docker containers with specific compose file, build, and remove orphans
+#########################################
+# Update database
+#########################################    
+
+database-update: 
+    cd DotBelt/DotBelt.CMS.Shared && dotnet ef database update
+
+
+#########################################
+# Preview all containers
+#########################################    
+
 docker-preview:
     docker compose -f docker-compose.all.yml up --build --remove-orphans
     
-# Generate GraphQL schema
+
+#########################################
+# Generate schema.graphql and copy to
+# frontend directory
+#########################################    
+
 generate-schema:
     dotnet run --project DotBelt/DotBelt.CMS.API -- schema export --output ../../DotBelt.Frontend/schema.graphql
 
-# Codegen Typescript types (GraphQL)
+
+#########################################
+# Generate TS types based on the GraphQL
+# schema
+#########################################    
+
 frontend-codegen:
     cd DotBelt.Frontend && npm run codegen
 
-# Update GraphQL schema and generate typescript types
+#########################################
+# Updates GraphQL schema and TS types
+#########################################    
+
 graphql-update:
     just generate-schema
     just frontend-codegen
+
+#########################################
+# Runs everything necessary for frontend
+# development
+#########################################    
 
 frontend-dev:
     just docker-up-detached

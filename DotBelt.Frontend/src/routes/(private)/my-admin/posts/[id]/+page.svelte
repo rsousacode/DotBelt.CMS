@@ -1,7 +1,7 @@
 <script lang="ts">
   import {onMount} from "svelte";
   import {page} from "$app/stores";
-  import PostEditor from "$lib/CMS/PostEditor.svelte";
+  import PostEditor from "$lib/CMS/Content/PostEditor.svelte";
   import {SITE_NAME} from "$lib/constants";
   import DashboardContainer from "$lib/CMS/Dashboard/DashboardContainer.svelte";
   import {updateDashboardData} from "$lib/CMS/Dashboard/DashboardStore.svelte";

@@ -42,6 +42,11 @@ html, body, main {
     padding-left: 20px;
 }
 
+.dashboard-item-container .name {
+    margin-left: 10px;
+    font-size: 18px;
+}
+
 .dashboard-item-container {
     padding-top: 10px;
     padding-bottom: 10px;

@@ -5,7 +5,7 @@
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary-header border-bottom box-shadow mb-3">
         <div class="container-fluid nav-container">
-            <a class="navbar-brand brand-color"  href="/static">.Belt CMS</a>
+            <a class="navbar-brand brand-color"  href="/static">dotBelt CMS</a>
             <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -32,7 +32,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container-fluid">
-        &copy; 2024 - .Belt CMS - <a href="/privacy">Privacy</a>
+        &copy; 2024 - dotBelt CMS - <a href="/privacy">Privacy</a>
     </div>
 </footer>
 

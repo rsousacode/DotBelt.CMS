@@ -1,5 +1,5 @@
 <script>
-    import PostEditor from "$lib/CMS/PostEditor.svelte";
+    import PostEditor from "$lib/CMS/Content/PostEditor.svelte";
     import {SITE_NAME} from "$lib/constants";
     import DashboardContainer from "$lib/CMS/Dashboard/DashboardContainer.svelte";
     import {onMount} from "svelte";

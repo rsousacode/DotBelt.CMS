@@ -1,1 +1,1 @@
-export const SITE_NAME = ".Belt CMS";
+export const SITE_NAME = "dotBelt CMS";

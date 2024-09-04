@@ -20,6 +20,7 @@
     onMount(() => {
         setDashboardData({title: "Posts", subtitle: ""})
     })
+
     async function fetchPosts(postType: string, variables: PaginationQuery) {
         const apolloClient = apolloClientProvider.GetApolloSvelteClient();
         if (!apolloClient) {
@@ -86,20 +87,31 @@
           </tr>
           </thead>
           <tbody>
-          {#each postsResult.nodes as post}
+
+          {#if postsResult.nodes.length > 0}
+            {#each postsResult.nodes as post}
+              <tr>
+                <td>{post.title}</td>
+                <td>{post.publishDate}</td>
+                <td class="table-actions">
+                  <a href={`/my-admin/posts/${post.id}`} target="_blank" class="cms-action-icon">
+                    <EditIcon/>
+                  </a>
+                  <a class="cms-action-icon" target="_blank" href={`/${post.urlName}`}>
+                    <ViewPublishedIcon/>
+                  </a>
+                </td>
+              </tr>
+            {/each}
+          {:else}
             <tr>
-              <td>{post.title}</td>
-              <td>{post.publishDate}</td>
-              <td class="table-actions">
-                <a href={`/my-admin/posts/${post.id}`} target="_blank" class="cms-action-icon">
-                  <EditIcon/>
-                </a>
-                <a class="cms-action-icon" target="_blank" href={`/${post.urlName}`}>
-                  <ViewPublishedIcon/>
-                </a>
+              <td colspan="6" style="height: 250px;">
+                No data found
               </td>
             </tr>
-          {/each}
+
+          {/if}
+
           </tbody>
         </table>
       </div>

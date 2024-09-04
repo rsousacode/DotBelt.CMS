@@ -42,7 +42,6 @@
 
     .panel-heading {
         background-color: #45279f;
-        min-height: 52px;
         width: 100%;
         padding-left: 20px;
         padding-top: 10px;

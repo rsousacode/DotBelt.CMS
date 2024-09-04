@@ -3,11 +3,11 @@
     import {goto, invalidateAll} from "$app/navigation";
     import type {ActionResult} from "@sveltejs/kit";
     import type {Post} from "$lib/GraphQL/generated";
-    import EditorJS from "$lib/CMS/EditorJS.svelte";
+    import EditorJS from "$lib/CMS/Content/EditorJS.svelte";
     import ApolloClientProvider from "$lib/GraphQL/ApolloClientProvider.svelte";
-    import AceEditor from "$lib/CMS/AceEditor/AceEditor.svelte";
+    import AceEditor from "$lib/CMS/Content/AceEditor/AceEditor.svelte";
     import {createRawSnippet, onMount} from "svelte";
-    import {updateDashboardFragment} from "$lib/CMS/Dashboard/DashboardStore.svelte";
+    import {updateDashboardFragment} from "$lib/CMS/Dashboard/DashboardStore.svelte.js";
     import SaveIcon from "$lib/CMS/Icons/SaveIcon.svelte";
     import TransitionalIcon from "$lib/CMS/Icons/TransitionalIcon.svelte";
     import SuccessIcon from "$lib/CMS/Icons/SuccessIcon.svelte";
