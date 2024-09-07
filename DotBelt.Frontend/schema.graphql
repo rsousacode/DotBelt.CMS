@@ -61,8 +61,8 @@ type PageInfo {
 type Post {
   id: Int!
   title: String
-  description: String!
-  urlName: String
+  description: String
+  urlName: String!
   fullUrl: String
   content: String
   contentHtml: String
@@ -116,11 +116,11 @@ type TaxonomiesEdge {
 
 type Taxonomy {
   id: Int!
-  title: String!
+  title: String
   urlName: String!
   publishDate: DateTime!
   modifiedDate: DateTime
-  description: String!
+  description: String
   author: ApplicationUser
   authorId: String
   type: TaxonomyTypeEnum!
@@ -174,7 +174,14 @@ input BooleanOperationFilterInput {
 
 input CreatePostInput {
   type: PostTypeEnum!
-  payload: EditablePostInput!
+  payload: Create_PostRequestInput!
+}
+
+input Create_PostRequestInput {
+  title: String
+  description: String
+  urlName: String
+  content: String!
 }
 
 input DateTimeOperationFilterInput {
@@ -194,14 +201,14 @@ input DateTimeOperationFilterInput {
 
 input EditPostInput {
   postId: Int!
-  payload: EditablePostInput!
+  payload: Edit_PostRequestInput!
 }
 
-input EditablePostInput {
+input Edit_PostRequestInput {
   title: String
-  description: String!
+  description: String
   urlName: String
-  content: String
+  content: String!
 }
 
 input IntOperationFilterInput {

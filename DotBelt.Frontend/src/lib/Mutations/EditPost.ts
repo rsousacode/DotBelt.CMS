@@ -1,12 +1,12 @@
-import type {EditablePostInput, GraphQlMutation} from '$lib/GraphQL/generated'
+import type {Edit_PostRequestInput, GraphQlMutation} from '$lib/GraphQL/generated'
 import type {ApolloClient, NormalizedCacheObject} from "@apollo/client/core/index.js";
 import {gql} from "@apollo/client/core/index.js";
 
-export async function editPost(client : ApolloClient<NormalizedCacheObject>, id: number, input: EditablePostInput) {
+export async function editPost(client : ApolloClient<NormalizedCacheObject>, id: number, input: Edit_PostRequestInput) {
 
     try {
         const mutation = gql`
-            mutation editPost($input: EditablePostInput!, $postId: Int!) {
+            mutation editPost($input: Edit_PostRequestInput!, $postId: Int!) {
                 editPost(input: {payload: $input, postId: $postId}) {
                     editPostResult {
                         success

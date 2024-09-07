@@ -79,13 +79,20 @@ export type BooleanOperationFilterInput = {
 };
 
 export type CreatePostInput = {
-  payload: EditablePostInput;
+  payload: Create_PostRequestInput;
   type: PostTypeEnum;
 };
 
 export type CreatePostPayload = {
   __typename?: 'CreatePostPayload';
   post?: Maybe<Post>;
+};
+
+export type Create_PostRequestInput = {
+  content: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  urlName?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DateTimeOperationFilterInput = {
@@ -104,7 +111,7 @@ export type DateTimeOperationFilterInput = {
 };
 
 export type EditPostInput = {
-  payload: EditablePostInput;
+  payload: Edit_PostRequestInput;
   postId: Scalars['Int']['input'];
 };
 
@@ -118,9 +125,9 @@ export type EditPostResult = {
   success: Scalars['Boolean']['output'];
 };
 
-export type EditablePostInput = {
-  content?: InputMaybe<Scalars['String']['input']>;
-  description: Scalars['String']['input'];
+export type Edit_PostRequestInput = {
+  content: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   urlName?: InputMaybe<Scalars['String']['input']>;
 };
@@ -234,7 +241,7 @@ export type Post = {
   childrenPosts: Array<Post>;
   content?: Maybe<Scalars['String']['output']>;
   contentHtml?: Maybe<Scalars['String']['output']>;
-  description: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   fullUrl?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
@@ -243,7 +250,7 @@ export type Post = {
   publishDate: Scalars['DateTime']['output'];
   taxonomies: Array<Taxonomy>;
   title?: Maybe<Scalars['String']['output']>;
-  urlName?: Maybe<Scalars['String']['output']>;
+  urlName: Scalars['String']['output'];
 };
 
 export type PostFilterInput = {
@@ -363,13 +370,13 @@ export type Taxonomy = {
   author?: Maybe<ApplicationUser>;
   authorId?: Maybe<Scalars['String']['output']>;
   childrenTaxonomies: Array<Taxonomy>;
-  description: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   parentTaxonomy?: Maybe<Taxonomy>;
   posts: Array<Post>;
   publishDate: Scalars['DateTime']['output'];
-  title: Scalars['String']['output'];
+  title?: Maybe<Scalars['String']['output']>;
   type: TaxonomyTypeEnum;
   urlName: Scalars['String']['output'];
 };

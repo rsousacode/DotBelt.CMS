@@ -1,11 +1,11 @@
-import {type EditablePostInput, type GraphQlMutation, PostTypeEnum} from '$lib/GraphQL/generated'
+import {type Edit_PostRequestInput, type GraphQlMutation, PostTypeEnum} from '$lib/GraphQL/generated'
 import type {ApolloClient, NormalizedCacheObject} from "@apollo/client/core/index.js";
 import {gql} from "@apollo/client/core/index.js";
 
-export async function createPost(client : ApolloClient<NormalizedCacheObject>, input: EditablePostInput, type: PostTypeEnum) {
+export async function createPost(client : ApolloClient<NormalizedCacheObject>, input: Edit_PostRequestInput, type: PostTypeEnum) {
 
     const mutation = gql`
-        mutation createPost($input: EditablePostInput!, $type: PostTypeEnum!) {
+        mutation createPost($input: Create_PostRequestInput!, $type: PostTypeEnum!) {
             createPost(input: {payload: $input, type: $type}) {
                 post {
                     id
