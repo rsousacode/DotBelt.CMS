@@ -8,23 +8,5 @@
         <RootNamespace>DotBelt.CMS.Shared</RootNamespace>
 
     </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="AutoRegisterInject" Version="1.3.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.6" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-
-        <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="8.0.6" />
-        <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.6" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
-        <PackageReference Include="Riok.Mapperly" Version="3.5.0" />
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Migrations\" />
-    </ItemGroup>
 
 </Project>

@@ -103,7 +103,32 @@ graphql-update:
 frontend-dev:
     just docker-up-detached
     just dotnet
-    
+
+#########################################
+# Gets swagger.json
+#########################################        
+
+gen-swagger-json: 
+    cd DotBelt/DotBelt.CMS.API && dotnet run swagger --output ../../DotBelt.Frontend/swagger.json
+
+
+
+#########################################
+# Gen TS types based on swagger.json
+#########################################        
+
+gen-swagger-ts:
+    cd DotBelt/DotBelt.Frontend && swagger-typescript-api -p ./swagger.json -o ./src/lib/Swagger/generated --module-name-first-tag  --route-types --modular --unwrap-response-data --single-http-client
+
+
+#########################################
+# Gets swagger.json & Gen TS types based 
+# on swagger.json
+#########################################        
+
+swagger:
+   just gen-swagger-json
+   just gen-swagger-ts
 
 
 #        _    ___ 
