@@ -1,8 +1,10 @@
 using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.CMS;
-using BoilerPlateSSR.QueriesMutations;
+using DotBelt.QueriesMutations;
+using HotChocolate.Data;
+using HotChocolate.Types;
 
-namespace BoilerPlateSSR.Queries;
+namespace DotBelt.Queries;
 
 [ExtendObjectType<GraphQLQuery>]
 

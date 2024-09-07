@@ -1,11 +1,13 @@
+using DotBelt.Queries;
 using DotBelt.CMS.Shared;
-using DotBelt.CMS.Shared.CMS;
-using BoilerPlateSSR.QueriesMutations;
+using DotBelt.QueriesMutations;
+using DotBelt.QueriesMutations.Posts;
 using DotBelt.CMS.Shared.CMS.Blocks.Parser;
+using HotChocolate.Types;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace BoilerPlateSSR.Queries;
+namespace DotBelt.Mutations.Posts;
 
 public class EditPostResult 
 {
@@ -13,12 +15,11 @@ public class EditPostResult
 }
 
 [ExtendObjectType(typeof(GraphQLMutation))]
-
-public class EditPostMutation
+public class Edit
 {
     public async Task<EditPostResult> EditPostAsync( ApplicationDbContext dbContext,
         [FromServices] BlockParser blockParser,
-        int postId, EditablePost payload )
+        int postId, Edit_PostRequest payload )
     {
         var post = await dbContext
             .Posts

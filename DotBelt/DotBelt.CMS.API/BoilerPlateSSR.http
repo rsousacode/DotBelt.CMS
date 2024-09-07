@@ -1,11 +1,11 @@
-@BoilerPlateSSR_HostAddress = http://localhost:5044
+@DotBelt_HostAddress = http://localhost:5044
 
-GET {{BoilerPlateSSR_HostAddress}}/todos/
+GET {{DotBelt_HostAddress}}/todos/
 Accept: application/json
 
 ###
 
-GET {{BoilerPlateSSR_HostAddress}}/todos/1
+GET {{DotBelt_HostAddress}}/todos/1
 Accept: application/json
 
 ###

@@ -1,17 +1,20 @@
+using DotBelt.Queries;
 using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.CMS;
-using BoilerPlateSSR.QueriesMutations;
+using DotBelt.QueriesMutations;
 using DotBelt.CMS.Shared.CMS.Blocks.Parser;
+using HotChocolate;
+using HotChocolate.Types;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BoilerPlateSSR.Queries;
+namespace DotBelt.Mutations.Posts.Create;
 
 [ExtendObjectType(typeof(GraphQLMutation))]
-public class CreatePostMutation
+public class Create
 {
     public async Task<Post> CreatePostAsync( ApplicationDbContext dbContext, 
         [Service] BlockParser blockParser,
-        PostTypeEnum type, EditablePost payload )
+        PostTypeEnum type, Create_PostRequest payload )
     {
         var urlName = PostHelpers.SanitizePermalink(payload.UrlName);
         

@@ -2,15 +2,15 @@ using System.Text.Json.Serialization;
 using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.ManualMigrations;
 using DotBelt.CMS.Shared.Users;
-using BoilerPlateSSR.Endpoints;
-using BoilerPlateSSR.Queries;
-using BoilerPlateSSR.QueriesMutations;
 using BoilerPlateSSR.Swagger;
+using DotBelt.QueriesMutations;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Npgsql;
 using Serilog;
+using Swashbuckle.AspNetCore.Swagger;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -18,13 +18,14 @@ Log.Logger = new LoggerConfiguration()
 
 try
 {
-    Log.Information("Starting web application");
-
     var builder = WebApplication.CreateBuilder(args);
-
+    
+    builder.WebHost.UseUrls("http://0.0.0.0:5044");
+    
     var configuration = builder.Configuration;
 
     var services = builder.Services;
+    
 
     services.AddAuthentication();
     services.AddAuthorization();
@@ -42,8 +43,6 @@ try
         {
             options.UseNpgsql(dataSource,
                 npgsqlOptions => { npgsqlOptions.MigrationsAssembly("DotBelt.CMS.Shared"); });
-
-            //options.UseModel(MyCompiledModels.ApplicationDbContextModel.Instance);
         });
 
     services.AddScoped<ApplicationDbContext>(serviceProvider =>
@@ -52,35 +51,17 @@ try
         return dbContextFactory.CreateDbContext();
     });
 
-    services
-        .AddGraphQLServer()
-        .AddDiagnosticEventListener<ErrorLoggingDiagnosticsEventListener>()
-        .AddProjections()
-        .AddFiltering()
-        .AddSorting()
-        .AddMutationConventions()
-        .AddQueryType<GraphQLQuery>()
-        .AddTypeExtension<PostsQueries>()
-        .AddTypeExtension<TaxonomiesQueries>()
-        .AddMutationType<GraphQLMutation>()
-        .AddTypeExtension<CreatePostMutation>()
-        .AddTypeExtension<EditPostMutation>()
-        .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled);
+    services.ConfigureGraphQL();
 
     services
         .AddIdentityApiEndpoints<ApplicationUser>(options => { options.SignIn.RequireConfirmedAccount = true; })
         .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-    builder.Services.ConfigureHttpJsonOptions(options =>
-    {
-        options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
-    });
     services.AddEndpointsApiExplorer();
-
-#if DEBUG
+    
     services.AddSwaggerGen();
-#endif
+
     var app = builder.Build();
 
     if (app.Environment.IsDevelopment())
@@ -113,18 +94,17 @@ try
     app.MapGroup("/api/auth")
         .MapIdentityApi<ApplicationUser>();
 
-    app.RegisterRootEndpointHandler();
 
     await using (var scope = app.Services.CreateAsyncScope())
     {
         var migrator = scope.ServiceProvider.GetService<ManualMigrator>();
         await migrator!.DoInitialMigration();
     }
-
-
-    await app.RunWithCommandExecuter(args);
     
-    await app.RunWithGraphQLCommandsAsync(args);
+    app.MapGet("/", () => "Hello World!");
+    
+    await app.RunWithCommandExecuter(args);
+
 }
 catch (Exception ex)
 {
@@ -133,13 +113,4 @@ catch (Exception ex)
 finally
 {
     Log.CloseAndFlush();
-}
-
-
-//app.Run();
-
-
-[JsonSerializable(typeof(UserResponse[]))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext
-{
 }
