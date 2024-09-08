@@ -1,22 +1,26 @@
 <script lang="ts">
-  let {action, validationSchema, onValidSubmit} = $props();
+  import {onMount} from "svelte";
+
+  let {schema, onValidSubmit} = $props();
 
   let form = $state();
 
   let errors = $state();
 
   function extractFormData() {
+      console.log('form', form);
       const formData = new FormData(form);
 
-      let formData = {}
+      let result = {}
+
       getFieldNames().forEach((fieldName) => {
-          formData[fieldName] = form.get(fieldName);
+          result[fieldName] = formData.get(fieldName);
       })
-      return formData;
+      return result;
   }
 
   function getFieldNames() {
-      return Object.keys(validationSchema.fields);
+      return Object.keys(schema.fields);
   }
 
   async function onSubmit(e) {
@@ -28,15 +32,25 @@
       }
   }
 
+  function resetErrors() {
+      getFieldNames().forEach((fieldName) => {
+          const errorForNameElement = document.querySelector(`[data-error-for="${fieldName}"]`);
+          if(errorForNameElement) {
+              errorForNameElement.textContent = "";
+          }
+      })
+  }
+
   async function validateForm(): Promise<boolean> {
+      resetErrors();
       const formData = extractFormData();
       try {
-          await validationSchema.validate(formData, { abortEarly: false });
+          await schema.validate(formData, { abortEarly: false });
           errors = {  };
           return true;
       } catch (err: any) {
           err.inner.forEach((error: any) => {
-              const errorForNameElement = document.querySelector(`[error-for="${error.path}"]`);
+              const errorForNameElement = document.querySelector(`[data-error-for="${error.path}"]`);
               if(errorForNameElement) {
                   errorForNameElement.textContent = error.message;
               }
@@ -48,21 +62,33 @@
   }
 
   async function validateField(path: string, value: FormDataEntryValue) {
-      const errorForNameElement = document.querySelector(`[error-for="${path}"]`);
+      const errorForNameElement = document.querySelector(`[data-error-for="${path}"]`);
 
       try {
-          await validationSchema.validateAt(path, { [path]: value });
-          errors[path] = "";
+          await schema.validateAt(path, { [path]: value });
           if(errorForNameElement) {
               errorForNameElement.textContent = "";
           }
       } catch (err: any) {
-          errors[path] = err.message;
           if(errorForNameElement) {
               errorForNameElement.textContent = err.message;
           }
       }
   }
+
+  onMount(async () => {
+      const elementsWithNameAttribute = document.querySelectorAll('[name]');
+
+      elementsWithNameAttribute.forEach(el => {
+          el.addEventListener('blur', async (ev) => {
+              console.log('ev target', ev)
+              const val = ev.target.value
+              const name = ev.target.name
+              await validateField(name, val);
+              console.log('blur', ev)
+          });
+      })
+  })
 
 </script>
 
