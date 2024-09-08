@@ -118,7 +118,7 @@ gen-swagger-json:
 #########################################        
 
 gen-swagger-ts:
-    cd DotBelt/DotBelt.Frontend && swagger-typescript-api -p ./swagger.json -o ./src/lib/Swagger/generated --module-name-first-tag  --route-types --modular --unwrap-response-data --single-http-client
+    cd DotBelt.Frontend && rm -rf ./src/lib/Swagger/generated && swagger-typescript-api -p ./swagger.json -o ./src/lib/Swagger/generated   --route-types  --unwrap-response-data 
 
 
 #########################################

@@ -5,10 +5,7 @@
 
   let form = $state();
 
-  let errors = $state();
-
   function extractFormData() {
-      console.log('form', form);
       const formData = new FormData(form);
 
       let result = {}
@@ -28,17 +25,12 @@
       const isValidForm = await validateForm();
 
       if(isValidForm) {
-          onValidSubmit(extractFormData());
+          onValidSubmit(form, extractFormData());
       }
   }
 
   function resetErrors() {
-      getFieldNames().forEach((fieldName) => {
-          const errorForNameElement = document.querySelector(`[data-error-for="${fieldName}"]`);
-          if(errorForNameElement) {
-              errorForNameElement.textContent = "";
-          }
-      })
+      getFieldNames().forEach(clearErrorForField);
   }
 
   async function validateForm(): Promise<boolean> {
@@ -46,7 +38,6 @@
       const formData = extractFormData();
       try {
           await schema.validate(formData, { abortEarly: false });
-          errors = {  };
           return true;
       } catch (err: any) {
           err.inner.forEach((error: any) => {
@@ -54,21 +45,25 @@
               if(errorForNameElement) {
                   errorForNameElement.textContent = error.message;
               }
-              //errors[error.path] = error.message;
           });
-          console.log("Validation errors:", errors);
           return false;
       }
   }
+
+  function clearErrorForField(fieldName: string) {
+      const errorElement = document.querySelector(`[data-error-for="${fieldName}"]`) as HTMLElement | null;
+      if (errorElement) {
+          errorElement.textContent = '';
+      }
+  }
+
 
   async function validateField(path: string, value: FormDataEntryValue) {
       const errorForNameElement = document.querySelector(`[data-error-for="${path}"]`);
 
       try {
           await schema.validateAt(path, { [path]: value });
-          if(errorForNameElement) {
-              errorForNameElement.textContent = "";
-          }
+          clearErrorForField(path);
       } catch (err: any) {
           if(errorForNameElement) {
               errorForNameElement.textContent = err.message;
@@ -81,11 +76,9 @@
 
       elementsWithNameAttribute.forEach(el => {
           el.addEventListener('blur', async (ev) => {
-              console.log('ev target', ev)
               const val = ev.target.value
               const name = ev.target.name
               await validateField(name, val);
-              console.log('blur', ev)
           });
       })
   })

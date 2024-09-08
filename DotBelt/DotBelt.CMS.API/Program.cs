@@ -1,16 +1,20 @@
-using System.Text.Json.Serialization;
+using System;
 using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.ManualMigrations;
 using DotBelt.CMS.Shared.Users;
 using BoilerPlateSSR.Swagger;
+using DotBelt.Identity;
 using DotBelt.QueriesMutations;
 using HotChocolate.AspNetCore;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Npgsql;
 using Serilog;
-using Swashbuckle.AspNetCore.Swagger;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -56,12 +60,11 @@ try
     services
         .AddIdentityApiEndpoints<ApplicationUser>(options => { options.SignIn.RequireConfirmedAccount = true; })
         .AddEntityFrameworkStores<ApplicationDbContext>();
-
-
+  
     services.AddEndpointsApiExplorer();
     
     services.AddSwaggerGen();
-
+    
     var app = builder.Build();
 
     if (app.Environment.IsDevelopment())
@@ -93,6 +96,7 @@ try
 
     app.MapGroup("/api/auth")
         .MapIdentityApi<ApplicationUser>();
+        
 
 
     await using (var scope = app.Services.CreateAsyncScope())
@@ -100,9 +104,7 @@ try
         var migrator = scope.ServiceProvider.GetService<ManualMigrator>();
         await migrator!.DoInitialMigration();
     }
-    
-    app.MapGet("/", () => "Hello World!");
-    
+        
     await app.RunWithCommandExecuter(args);
 
 }

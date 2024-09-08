@@ -4,6 +4,7 @@
     import * as yup from 'yup';
     import {onMount} from "svelte";
     import YupForm from "$lib/YupForm.svelte";
+    import {Api} from "$lib/Swagger/generated/Api";
 
     const schema = yup.object().shape({
         email: yup.string().email('Invalid email address').required('Email is required'),
@@ -11,8 +12,21 @@
         confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match').required('Confirm password is required')
     });
 
-    async function handleSubmit(formData) {
-        console.log(formData)
+    async function handleSubmit(form, data) {
+        const beltCms = new Api();
+
+        beltCms.api.authRegisterCreate({
+            email: data.email,
+            password: data.password,
+        }).then(async successData => {
+            console.log('successData', successData)
+
+        }).catch(async err => {
+            const error = await err.json();
+            console.log('error', error)
+        })
+
+
     }
 
     onMount(() => {
@@ -39,13 +53,13 @@
         <span data-error-for="email" class="text-danger"></span>
       </div>
       <div class="form-floating mb-3">
-        <input name="password" class="form-control" autocomplete="new-password" aria-required="true"
+        <input type="password" name="password" class="form-control" autocomplete="new-password" aria-required="true"
                placeholder="password"/>
         <label for="password">Password</label>
         <span data-error-for="password" class="text-danger"></span>
       </div>
       <div class="form-floating mb-3">
-        <input name="confirmPassword" class="form-control" autocomplete="new-password" aria-required="true"
+        <input type="password" name="confirmPassword" class="form-control" autocomplete="new-password" aria-required="true"
                placeholder="password"/>
         <label for="confirmPassword">Confirm Password</label>
         <span data-error-for="confirmPassword" class="text-danger"></span>

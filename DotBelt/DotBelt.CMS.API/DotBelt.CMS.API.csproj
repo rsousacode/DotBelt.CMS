@@ -9,6 +9,7 @@
         <!--<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>        -->
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <RootNamespace>DotBelt</RootNamespace>
+        <ImplicitUsings>disable</ImplicitUsings>
 
     </PropertyGroup>
     <PropertyGroup>
