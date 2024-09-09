@@ -5,12 +5,20 @@
     import {onMount} from "svelte";
     import YupForm from "$lib/YupForm.svelte";
     import {Api} from "$lib/Swagger/generated/Api";
+    import {ref} from "yup";
 
-    const schema = yup.object().shape({
+    let yupForm : YupForm;
+
+    const schema = yup.object({
         email: yup.string().email('Invalid email address').required('Email is required'),
         password: yup.string().required('Password is required'),
-        confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match').required('Confirm password is required')
+        confirmPassword: yup
+            .string()
+            .oneOf([ref("password")], 'Passwords must match')
+            .required(" "),
     });
+
+
 
     async function handleSubmit(form, data) {
         const beltCms = new Api();
@@ -22,8 +30,8 @@
             console.log('successData', successData)
 
         }).catch(async err => {
-            const error = await err.json();
-            console.log('error', error)
+            const errors = await err.json();
+            yupForm.onAspNetErrors(errors);
         })
 
 
@@ -42,27 +50,30 @@
 
 <div class="row">
   <div class="col-md-4">
-    <YupForm schema={schema} onValidSubmit={handleSubmit}>
+    <YupForm bind:this={yupForm} schema={schema} onValidSubmit={handleSubmit}>
       <h2>Create a new account.</h2>
       <hr/>
-      <div class="text-danger" role="alert"></div>
+      <div data-server-errors class="text-danger" role="alert"></div>
       <div class="form-floating mb-3">
         <input name="email" class="form-control" autocomplete="username" aria-required="true"
                placeholder="name@example.com"/>
         <label for="email">Email</label>
-        <span data-error-for="email" class="text-danger"></span>
+        <div data-error-for="email" class="text-danger"></div>
+        <div data-server-error-for="email" class="text-danger"></div>
       </div>
       <div class="form-floating mb-3">
         <input type="password" name="password" class="form-control" autocomplete="new-password" aria-required="true"
                placeholder="password"/>
         <label for="password">Password</label>
-        <span data-error-for="password" class="text-danger"></span>
+        <div data-error-for="password" class="text-danger"></div>
+        <div data-server-error-for="password" class="text-danger"></div>
       </div>
       <div class="form-floating mb-3">
         <input type="password" name="confirmPassword" class="form-control" autocomplete="new-password" aria-required="true"
                placeholder="password"/>
         <label for="confirmPassword">Confirm Password</label>
-        <span data-error-for="confirmPassword" class="text-danger"></span>
+        <div data-error-for="confirmPassword" class="text-danger"></div>
+        <div data-server-error-for="confirmPassword" class="text-danger"></div>
       </div>
       <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
 
