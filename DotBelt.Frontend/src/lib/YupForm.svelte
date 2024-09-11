@@ -128,6 +128,8 @@
 
   async function validateField(path: string, value: FormDataEntryValue) {
 
+      if(value === "") return;
+
       if(await validateForm()) {
           resetErrors();
           return;
