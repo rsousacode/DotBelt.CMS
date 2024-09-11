@@ -1,22 +1,23 @@
 <script lang="ts">
 import {SITE_NAME} from "$lib/constants";
 import * as yup from "yup";
+import {ref} from "yup";
 
 let model = $state({});
 
 const schema = yup.object({
     email: yup.string()
-        .email(m.InvalidEmailMessage())
+        .email("the email address must be valid")
         .required(" "),
     name: yup.string()
         .required("O nome é um campo obrigatório"),
     password: yup
         .string()
-        .min(8, m.PasswordMinCharacters())
+        .min(8, "the password has to be minimum 8 characters")
         .required(" "),
     passwordConfirmation: yup
         .string()
-        .min(8, m.PasswordMinCharacters())
+        .min(8, "the password has to be minimum 8 characters")
         .oneOf([ref("password")], 'Passwords must match')
         .required(" "),
     acceptTermsAndConditions: yup
