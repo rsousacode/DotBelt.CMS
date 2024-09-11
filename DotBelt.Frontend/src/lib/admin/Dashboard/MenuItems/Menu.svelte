@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import type {MenuItem} from "$lib/CMS/Dashboard/MenuItems/MenuItem";
+  import type {MenuItem} from "$lib/admin/Dashboard/MenuItems/MenuItem";
   import {quadInOut} from "svelte/easing";
   import {slide} from "svelte/transition";
 

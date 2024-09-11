@@ -1,6 +1,6 @@
 <script>
-    import PostsIcon from "$lib/CMS/Icons/PostsIcon.svelte";
-    import {dashboardData} from "$lib/CMS/Dashboard/DashboardStore.svelte";
+    import PostsIcon from "$lib/admin/Icons/PostsIcon.svelte";
+    import {dashboardData} from "$lib/admin/Dashboard/DashboardStore.svelte";
 
     let renderFragment;
 

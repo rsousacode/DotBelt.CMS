@@ -1,10 +1,10 @@
 <script lang="ts">
   import {onMount} from "svelte";
   import {page} from "$app/stores";
-  import PostEditor from "$lib/CMS/Content/PostEditor.svelte";
+  import PostEditor from "$lib/admin/Content/PostEditor.svelte";
   import {SITE_NAME} from "$lib/constants";
-  import DashboardContainer from "$lib/CMS/Dashboard/DashboardContainer.svelte";
-  import {updateDashboardData} from "$lib/CMS/Dashboard/DashboardStore.svelte";
+  import DashboardContainer from "$lib/admin/Dashboard/DashboardContainer.svelte";
+  import {updateDashboardData} from "$lib/admin/Dashboard/DashboardStore.svelte";
 
   let { data: { post } } = $page;
 

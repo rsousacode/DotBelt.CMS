@@ -1,11 +1,11 @@
 <script>
-    import PostsIcon from "$lib/CMS/Icons/PostsIcon.svelte";
-    import PanelHeading from "$lib/CMS/Dashboard/PanelHeading.svelte";
-    import Menu from "$lib/CMS/Dashboard/MenuItems/Menu.svelte";
-    import PageIcon from "$lib/CMS/Icons/PageIcon.svelte";
-    import SettingsIcon from "$lib/CMS/Icons/SettingsIcon.svelte";
-    import MediaIcon from "$lib/CMS/Icons/MediaIcon.svelte";
-    import DebugIcon from "$lib/CMS/Icons/DebugIcon.svelte";
+    import PostsIcon from "$lib/admin/Icons/PostsIcon.svelte";
+    import PanelHeading from "$lib/admin/Dashboard/PanelHeading.svelte";
+    import Menu from "$lib/admin/Dashboard/MenuItems/Menu.svelte";
+    import PageIcon from "$lib/admin/Icons/PageIcon.svelte";
+    import SettingsIcon from "$lib/admin/Icons/SettingsIcon.svelte";
+    import MediaIcon from "$lib/admin/Icons/MediaIcon.svelte";
+    import DebugIcon from "$lib/admin/Icons/DebugIcon.svelte";
 </script>
 
 <div class="dashboard-container">

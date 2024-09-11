@@ -1,21 +1,9 @@
 <script lang="ts">
-    import {gql} from "@apollo/client/core";
-    import {type GraphQlQuery, type Maybe, type PostsConnection, PostTypeEnum} from "$lib/GraphQL/generated";
-    import {onMount} from "svelte";
+  import type {Maybe, Post} from "$lib/GraphQL/generated";
 
-    let { hasImage = false, postCount = 10, posts } = $props();
+  let { hasImage = false, postCount = 10, posts } : Props = $props();
 
-    let postsResult : Maybe<PostsConnection> | undefined = $state({});
-
-    let nodes = $derived(postsResult?.nodes);
-
-    onMount(async () => {
-        console.log('im mounted')
-        console.log(posts)
-
-    })
-
-
+  type Props = {hasImage: boolean, postCount: number, posts: Maybe<Post[]>};
 
 </script>
 
