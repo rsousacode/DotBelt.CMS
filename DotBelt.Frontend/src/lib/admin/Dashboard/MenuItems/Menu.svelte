@@ -3,41 +3,37 @@
   import type {MenuItem} from "$lib/admin/Dashboard/MenuItems/MenuItem";
   import {quadInOut} from "svelte/easing";
   import {slide} from "svelte/transition";
+  import {menuState} from "$lib/admin/Dashboard/MenuItems/MenuState.svelte";
 
   let { menu } : { menu: MenuItem} = $props();
 
-  let hovering: boolean = $state(false);
+  let nameElement : Element;
 
-  let timeout : NodeJS.Timeout;
-  function onHoveringLeave() {
-      timeout = setTimeout(() => {
-          hovering = false;
-      }, 500)
+
+  function onMenuClicked(e) {
+    if(e.target === nameElement) {
+      return;
+    }
+    $menuState[menu.name] = !$menuState[menu.name];
   }
 
-  function onHovering() {
-      if (timeout) {
-          clearTimeout(timeout);
-      }
-      hovering = true;
-  }
 </script>
 
-<li class="panel-list-item parent" onmouseover={onHovering} onmouseleave={onHoveringLeave}>
-  <a href={menu.href}>
+<li class="panel-list-item parent" >
+  <div class="menu-item" onclick={onMenuClicked}>
     <div class="dashboard-item-container">
       {#if menu.icon }
         <span class="icon">
           <svelte:component this={menu.icon}/>
         </span>
       {/if}
-      <span class="name">
+      <a bind:this={nameElement} href={menu.href} class="name" >
           {menu.name}
-        </span>
+        </a>
     </div>
-  </a>
+  </div>
   {#if menu.items && menu.items.length && menu.items.length > 0}
-    {#if hovering}
+    {#if $menuState[menu.name] }
       <ul class="panel-list dropdown" transition:slide="{{ duration: 300, easing: quadInOut }}">
         {#each menu.items as item}
           <svelte:self menu={item}/>

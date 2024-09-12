@@ -174,8 +174,10 @@
         width: 100%;
     }
 
-    .panel-list-item > a {
+    .menu-item a,
+    .panel-list-item > .menu-item {
         text-decoration: none;
+        cursor: pointer;
         color: white;
     }
 

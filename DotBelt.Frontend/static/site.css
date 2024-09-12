@@ -51,8 +51,9 @@ html, body, main {
     padding-top: 10px;
     padding-bottom: 10px;
 }
-
-.panel-list-item > a {
+.menu-item a,
+.panel-list-item > .menu-item {
+    cursor: pointer;
     text-decoration: none;
     color: white;
 }

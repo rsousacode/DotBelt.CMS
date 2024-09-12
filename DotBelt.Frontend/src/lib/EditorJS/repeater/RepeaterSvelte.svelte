@@ -1,9 +1,9 @@
 <script lang="ts">
   import type {Maybe, Post} from "$lib/GraphQL/generated";
 
-  let { hasImage = false, postCount = 10, posts } : Props = $props();
+  let {hasImage = false, postCount = 10, posts}: Props = $props();
 
-  type Props = {hasImage: boolean, postCount: number, posts: Maybe<Post[]>};
+  type Props = { hasImage: boolean, postCount: number, posts: Maybe<Post[]> };
 
 </script>
 
@@ -14,7 +14,7 @@
       <div class="post-item">
         {#if hasImage}
           <div class="post-image">
-            <img alt="place-holder image" src="/images/placeholder-image.png" />
+            <img alt="place-holder image" src="/images/placeholder-image.png"/>
           </div>
         {/if}
 
@@ -35,23 +35,25 @@
 {/if}
 
 <style>
-  .posts-container {
-      display: flex;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-  }
-  .post-item {
-      display: flex;
-      flex-direction: column;
-      max-width: 320px;
-      padding: 15px;
-  }
+    .posts-container {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 
-  .post-image {
-      margin-bottom: 20px;
-  }
-  .post-image > img {
-      max-width: 100%;
-  }
+    .post-item {
+        display: flex;
+        flex-direction: column;
+        max-width: 320px;
+        padding: 15px;
+    }
+
+    .post-image {
+        margin-bottom: 20px;
+    }
+
+    .post-image > img {
+        max-width: 100%;
+    }
 </style>
