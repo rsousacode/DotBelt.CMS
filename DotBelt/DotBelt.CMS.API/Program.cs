@@ -3,12 +3,14 @@ using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.ManualMigrations;
 using DotBelt.CMS.Shared.Users;
 using BoilerPlateSSR.Swagger;
+using DotBelt.CMS.Shared.Internal;
 using DotBelt.Identity;
 using DotBelt.QueriesMutations;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -64,6 +66,9 @@ try
     services.AddEndpointsApiExplorer();
     
     services.AddSwaggerGen();
+    
+    services.AddTransient<IEmailSender, EmailSender>();
+    services.Configure<EmailOptions>(builder.Configuration.GetSection("EmailOptions"));
     
     var app = builder.Build();
 
