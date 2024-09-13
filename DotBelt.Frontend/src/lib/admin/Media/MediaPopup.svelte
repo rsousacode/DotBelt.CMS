@@ -145,6 +145,7 @@
         padding-right: -30px;
         border-top-right-radius: 10px;
         border-top-left-radius: 10px;
+        z-index: 1;
     }
 
     .modal-content {

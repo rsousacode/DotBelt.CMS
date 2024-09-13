@@ -1,4 +1,9 @@
 ﻿services:
+  email_dev:
+    image: "rnwood/smtp4dev"
+    ports:
+      - 5925:80
+      - 2525:25
   postgres_dev:
     build:
       context: ./Docker/Postgres
