@@ -4,6 +4,8 @@
 
 <svelte:head>
     <link rel="stylesheet" href="/site.css" />
+    <script src="/color-switcher.js"></script>
+
 </svelte:head>
 <header >
     <nav class="navbar navbar-expand-lg bg-body-secondary mb-3">

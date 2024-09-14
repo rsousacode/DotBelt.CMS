@@ -2,7 +2,10 @@
     import SignUpIcon from "$lib/admin/Icons/SignUpIcon.svelte";
     import LoginIcon from "$lib/admin/Icons/LoginIcon.svelte";
     import DashboardIcon from "$lib/admin/Icons/DashboardIcon.svelte";
+    import MoonStars from "$lib/admin/Icons/MoonStars.svelte";
+    import ColorSwitcher from "$lib/ColorSwitcher.svelte";
 </script>
+
 
 <ul class="navbar-nav">
     <li class="nav-item">
@@ -15,4 +18,5 @@
         <a class="nav-link header-icon" href="/my-admin"><DashboardIcon/></a>
     </li>
 
+    <ColorSwitcher/>
 </ul>

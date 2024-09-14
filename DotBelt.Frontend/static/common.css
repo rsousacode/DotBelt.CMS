@@ -1,3 +1,10 @@
 .header-icon {
     font-size: 24px;
 }
+
+.bi {
+    width: 1em;
+    height: 1em;
+    vertical-align: -.125em;
+    fill: currentcolor;
+}

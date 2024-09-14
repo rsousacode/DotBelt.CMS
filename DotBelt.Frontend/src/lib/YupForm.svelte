@@ -102,7 +102,6 @@
         const newNode = parentElement.appendChild(clonedElement);
 
         // TODO: Use the code instead and get the proper i18n message?
-        console.log(errors[i])
         newNode.textContent = errors[i];
       }
     }
@@ -129,7 +128,6 @@
   }
 
   function clearErrorForField(fieldName: string) {
-    console.log('clearing error for field', fieldName);
     setFieldError(fieldName, "");
   }
 
@@ -143,8 +141,6 @@
   async function validateField(path: string, value: FormDataEntryValue) {
 
     if (value === "") return;
-
-    console.log('validating field', path);
 
     if (await validateForm(false)) {
       resetErrors();
