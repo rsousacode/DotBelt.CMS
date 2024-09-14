@@ -1,24 +1,28 @@
+<script lang="ts" context="module">
+  import * as yup from 'yup';
+  import {ref} from "yup";
+
+  const registerSchema = yup.object({
+    email: yup.string().email('Invalid email address').required('Email is required'),
+    password: yup.string().required('Password is required'),
+    confirmPassword: yup
+      .string()
+      .oneOf([ref("password")], 'Passwords must match')
+      .required(" "),
+  });
+
+  export interface RegisterSchema extends yup.InferType<typeof registerSchema> {}
+
+</script>
 <script lang="ts">
     import {SITE_NAME} from "$lib/constants";
 
-    import * as yup from 'yup';
     import {onMount} from "svelte";
     import YupForm from "$lib/YupForm.svelte";
     import {Api} from "$lib/Swagger/generated/Api";
-    import {ref} from "yup";
     import {goto} from "$app/navigation";
 
     let yupForm : YupForm;
-
-    const schema = yup.object({
-        email: yup.string().email('Invalid email address').required('Email is required'),
-        password: yup.string().required('Password is required'),
-        confirmPassword: yup
-            .string()
-            .oneOf([ref("password")], 'Passwords must match')
-            .required(" "),
-    });
-
 
 
     async function handleSubmit(form, data) {
@@ -40,7 +44,7 @@
     }
 
     onMount(() => {
-        console.log(schema);
+        console.log(registerSchema);
     })
 </script>
 
@@ -52,7 +56,7 @@
 
 <div class="row">
   <div class="col-md-4">
-    <YupForm bind:this={yupForm} schema={schema} onValidSubmit={handleSubmit}>
+    <YupForm bind:this={yupForm} schema={registerSchema} onValidSubmit={handleSubmit}>
       <h2>Create a new account.</h2>
       <hr/>
       <div data-server-errors class="text-danger" role="alert"></div>

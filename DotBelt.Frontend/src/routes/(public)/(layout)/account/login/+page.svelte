@@ -1,19 +1,8 @@
-<script lang="ts">
-  import {SITE_NAME} from "$lib/constants";
+<script lang="ts" context="module">
   import * as yup from "yup";
   import {ref} from "yup";
-  import {onMount} from "svelte";
-  import {page} from "$app/stores";
 
-  let model = $state({});
-
-  let fromRegisteringSuccessfully: boolean = $state(false);
-
-  onMount(() => {
-    fromRegisteringSuccessfully = $page.url.searchParams.get('success') === "1";
-  })
-
-  const schema = yup.object({
+  const loginSchema = yup.object({
     email: yup.string()
       .email("the email address must be valid")
       .required(" "),
@@ -33,6 +22,27 @@
       .required(" ")
 
   });
+
+
+  export interface LoginSchema extends yup.InferType<typeof loginSchema> {}
+
+</script>
+
+<script lang="ts">
+  import {SITE_NAME} from "$lib/constants";
+
+  import {onMount} from "svelte";
+  import {page} from "$app/stores";
+
+  let model = $state({});
+
+  let fromRegisteringSuccessfully: boolean = $state(false);
+
+  onMount(() => {
+    fromRegisteringSuccessfully = $page.url.searchParams.get('success') === "1";
+  })
+
+
 
 </script>
 
