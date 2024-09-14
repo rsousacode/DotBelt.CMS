@@ -27,7 +27,7 @@ html, body, main {
 .panel-list-item > .menu-item {
     cursor: pointer;
     text-decoration: none;
-    color: white;
+    color: var(--bs-body-color);
 }
 
 .panel-list {
