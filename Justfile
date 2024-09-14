@@ -60,6 +60,13 @@ dotnet:
 
 database-update: 
     cd DotBelt/DotBelt.CMS.Shared && dotnet ef database update
+    
+#########################################
+# Reset Migrations
+#########################################    
+
+reset-migrations:
+    cd DotBelt/DotBelt.CMS.Shared && rm -rf Migrations && dotnet ef migrations add Initial
 
 
 #########################################

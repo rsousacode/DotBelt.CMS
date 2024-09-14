@@ -57,7 +57,7 @@ try
         return dbContextFactory.CreateDbContext();
     });
 
-    services.ConfigureGraphQL();
+    services.ConfigureGraphQl();
 
     services
         .AddIdentityApiEndpoints<ApplicationUser>(options => { options.SignIn.RequireConfirmedAccount = true; })

@@ -12,7 +12,7 @@ public class Taxonomy : IContent
 
     public required string? Description { get; set; }
     public ApplicationUser? Author { get; set; }
-    public string? AuthorId { get; set; }
+    public int? AuthorId { get; set; }
 
     public TaxonomyTypeEnum Type { get; set; }
     

@@ -22,7 +22,7 @@ export type ApplicationUser = {
   concurrencyStamp?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   emailConfirmed: Scalars['Boolean']['output'];
-  id: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
   lockoutEnabled: Scalars['Boolean']['output'];
   lockoutEnd?: Maybe<Scalars['DateTime']['output']>;
   normalizedEmail?: Maybe<Scalars['String']['output']>;
@@ -41,7 +41,7 @@ export type ApplicationUserFilterInput = {
   concurrencyStamp?: InputMaybe<StringOperationFilterInput>;
   email?: InputMaybe<StringOperationFilterInput>;
   emailConfirmed?: InputMaybe<BooleanOperationFilterInput>;
-  id?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<IntOperationFilterInput>;
   lockoutEnabled?: InputMaybe<BooleanOperationFilterInput>;
   lockoutEnd?: InputMaybe<DateTimeOperationFilterInput>;
   normalizedEmail?: InputMaybe<StringOperationFilterInput>;
@@ -155,6 +155,7 @@ export type GraphQlQuery = {
   posts?: Maybe<PostsConnection>;
   taxonomies?: Maybe<TaxonomiesConnection>;
   taxonomyById: Array<Taxonomy>;
+  users?: Maybe<UsersConnection>;
 };
 
 
@@ -190,6 +191,16 @@ export type GraphQlQueryTaxonomiesArgs = {
 
 export type GraphQlQueryTaxonomyByIdArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type GraphQlQueryUsersArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Array<UserResponseSortInput>>;
+  where?: InputMaybe<UserResponseFilterInput>;
 };
 
 export type IntOperationFilterInput = {
@@ -237,7 +248,7 @@ export type PageInfo = {
 export type Post = {
   __typename?: 'Post';
   author?: Maybe<ApplicationUser>;
-  authorId?: Maybe<Scalars['String']['output']>;
+  authorId?: Maybe<Scalars['Int']['output']>;
   childrenPosts: Array<Post>;
   content?: Maybe<Scalars['String']['output']>;
   contentHtml?: Maybe<Scalars['String']['output']>;
@@ -256,7 +267,7 @@ export type Post = {
 export type PostFilterInput = {
   and?: InputMaybe<Array<PostFilterInput>>;
   author?: InputMaybe<ApplicationUserFilterInput>;
-  authorId?: InputMaybe<StringOperationFilterInput>;
+  authorId?: InputMaybe<IntOperationFilterInput>;
   childrenPosts?: InputMaybe<ListFilterInputTypeOfPostFilterInput>;
   content?: InputMaybe<StringOperationFilterInput>;
   contentHtml?: InputMaybe<StringOperationFilterInput>;
@@ -368,7 +379,7 @@ export type TaxonomiesEdge = {
 export type Taxonomy = {
   __typename?: 'Taxonomy';
   author?: Maybe<ApplicationUser>;
-  authorId?: Maybe<Scalars['String']['output']>;
+  authorId?: Maybe<Scalars['Int']['output']>;
   childrenTaxonomies: Array<Taxonomy>;
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
@@ -384,7 +395,7 @@ export type Taxonomy = {
 export type TaxonomyFilterInput = {
   and?: InputMaybe<Array<TaxonomyFilterInput>>;
   author?: InputMaybe<ApplicationUserFilterInput>;
-  authorId?: InputMaybe<StringOperationFilterInput>;
+  authorId?: InputMaybe<IntOperationFilterInput>;
   childrenTaxonomies?: InputMaybe<ListFilterInputTypeOfTaxonomyFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<IntOperationFilterInput>;
@@ -422,4 +433,62 @@ export type TaxonomyTypeEnumOperationFilterInput = {
   in?: InputMaybe<Array<TaxonomyTypeEnum>>;
   neq?: InputMaybe<TaxonomyTypeEnum>;
   nin?: InputMaybe<Array<TaxonomyTypeEnum>>;
+};
+
+export type UserResponse = {
+  __typename?: 'UserResponse';
+  accessFailedCount: Scalars['Int']['output'];
+  email?: Maybe<Scalars['String']['output']>;
+  emailConfirmed: Scalars['Boolean']['output'];
+  id: Scalars['Int']['output'];
+  lockoutEnabled: Scalars['Boolean']['output'];
+  phoneNumber?: Maybe<Scalars['String']['output']>;
+  twoFactorEnabled: Scalars['Boolean']['output'];
+  userName?: Maybe<Scalars['String']['output']>;
+};
+
+export type UserResponseFilterInput = {
+  accessFailedCount?: InputMaybe<IntOperationFilterInput>;
+  and?: InputMaybe<Array<UserResponseFilterInput>>;
+  email?: InputMaybe<StringOperationFilterInput>;
+  emailConfirmed?: InputMaybe<BooleanOperationFilterInput>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  lockoutEnabled?: InputMaybe<BooleanOperationFilterInput>;
+  or?: InputMaybe<Array<UserResponseFilterInput>>;
+  phoneNumber?: InputMaybe<StringOperationFilterInput>;
+  twoFactorEnabled?: InputMaybe<BooleanOperationFilterInput>;
+  userName?: InputMaybe<StringOperationFilterInput>;
+};
+
+export type UserResponseSortInput = {
+  accessFailedCount?: InputMaybe<SortEnumType>;
+  email?: InputMaybe<SortEnumType>;
+  emailConfirmed?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  lockoutEnabled?: InputMaybe<SortEnumType>;
+  phoneNumber?: InputMaybe<SortEnumType>;
+  twoFactorEnabled?: InputMaybe<SortEnumType>;
+  userName?: InputMaybe<SortEnumType>;
+};
+
+/** A connection to a list of items. */
+export type UsersConnection = {
+  __typename?: 'UsersConnection';
+  /** A list of edges. */
+  edges?: Maybe<Array<UsersEdge>>;
+  /** A flattened list of the nodes. */
+  nodes?: Maybe<Array<UserResponse>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** Identifies the total count of items in the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** An edge in a connection. */
+export type UsersEdge = {
+  __typename?: 'UsersEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: UserResponse;
 };

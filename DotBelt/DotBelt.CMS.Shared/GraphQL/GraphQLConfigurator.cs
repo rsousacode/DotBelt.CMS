@@ -1,32 +1,66 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Reflection;
 using BoilerPlateSSR.QueriesMutations;
-using DotBelt.Mutations.Posts;
-using DotBelt.Mutations.Posts.Create;
-using DotBelt.Queries;
 using DotBelt.CMS.Shared;
-using HotChocolate.Data;
+using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DotBelt.QueriesMutations;
-
-public static class GraphQLConfigurator
+namespace DotBelt.QueriesMutations
 {
-    public static IServiceCollection ConfigureGraphQL(this IServiceCollection services)
+    public static class GraphQLConfigurator
     {
-        services
-            .AddGraphQLServer()
-            .AddDiagnosticEventListener<ErrorLoggingDiagnosticsEventListener>()
-            .AddProjections()
-            .AddFiltering()
-            .AddSorting()
-            .AddMutationConventions()
-            .AddQueryType<GraphQLQuery>()
-            .AddTypeExtension<PostsQueries>()
-            .AddTypeExtension<TaxonomiesQueries>()
-            .AddMutationType<GraphQLMutation>()
-            .AddTypeExtension<Create>()
-            .AddTypeExtension<Edit>()
-            .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled);
+        private static IRequestExecutorBuilder AddGraphQlTypeExtensions(this IRequestExecutorBuilder builder)
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-        return services;
+            var typesWithAttribute = assemblies
+                .SelectMany(assembly => assembly.GetTypes())
+                .Where(type => type.GetCustomAttributes(true)
+                        .Any(IsExtendObjectTypeAttribute))
+                .ToList();
+
+            foreach (var type in typesWithAttribute)
+            {
+                builder.AddTypeExtension(type);
+            }
+
+            return builder;
+        }
+
+        private static bool IsExtendObjectTypeAttribute(object attribute)
+        {
+            var attributeType = attribute.GetType();
+            if (attributeType.IsGenericType && attributeType.GetGenericTypeDefinition() == typeof(ExtendObjectTypeAttribute<>))
+            {
+                return true;
+            }
+
+            if (attributeType == typeof(ExtendObjectTypeAttribute))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static IServiceCollection ConfigureGraphQl(this IServiceCollection services)
+        {        
+            services
+                .AddGraphQLServer()
+                .AddDiagnosticEventListener<ErrorLoggingDiagnosticsEventListener>()
+                .AddProjections()
+                .AddFiltering()
+                .AddSorting()
+                .AddMutationConventions()
+                .AddQueryType<GraphQLQuery>()
+                .AddMutationType<GraphQLMutation>()
+                .AddGraphQlTypeExtensions()
+                .AddApolloTracing()
+                .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled);
+
+            return services;
+        }
     }
 }

@@ -1,6 +1,7 @@
 using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.CMS;
 using DotBelt.QueriesMutations;
+using HotChocolate;
 using HotChocolate.Data;
 using HotChocolate.Types;
 

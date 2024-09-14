@@ -8,7 +8,7 @@ public interface IContent
     public string? Title { get; set; }
     public string? Description { get; set; }
     public ApplicationUser? Author { get; set; }
-    public string? AuthorId { get; set; }
+    public int? AuthorId { get; set; }
     
     public string UrlName { get; set; }
 

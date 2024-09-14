@@ -39,7 +39,7 @@ public class Post : IContent
     public DateTimeOffset? ModifiedDate { get; set; }
     
     public ApplicationUser? Author { get; set; }
-    public string? AuthorId { get; set; }
+    public int? AuthorId { get; set; }
     public PostTypeEnum PostType { get; set; }
     
     public Post? ParentPost { get; set; }

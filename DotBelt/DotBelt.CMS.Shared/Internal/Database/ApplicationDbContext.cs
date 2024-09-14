@@ -2,12 +2,14 @@ using System.Reflection;
 using DotBelt.CMS.Shared.CMS;
 using DotBelt.CMS.Shared.ManualMigrations;
 using DotBelt.CMS.Shared.Users;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotBelt.CMS.Shared;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
+    : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>(options)
 {
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
