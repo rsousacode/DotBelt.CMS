@@ -14,7 +14,7 @@
   function extractFormData(): Record<string, any> {
     const formData = new FormData(form);
 
-    const result: Record<string, any> = [];
+    const result: Record<string, any> = {};
 
     getFieldNames().forEach((fieldName : string, index) => {
       result[fieldName] = formData.get(fieldName);
@@ -36,6 +36,7 @@
     getFieldNames().forEach((fieldName) => {
       cleanServerErrorElements(fieldName);
     })
+
     const isValidForm = await validateForm();
 
     if (isValidForm) {
@@ -109,7 +110,10 @@
 
 
   async function validateForm(showErrors = true): Promise<boolean> {
-    resetErrors();
+    if(showErrors) {
+      resetErrors();
+    }
+
     const formData = extractFormData();
     try {
       await schema.validate(formData, {abortEarly: false});
@@ -125,6 +129,7 @@
   }
 
   function clearErrorForField(fieldName: string) {
+    console.log('clearing error for field', fieldName);
     setFieldError(fieldName, "");
   }
 
@@ -138,6 +143,8 @@
   async function validateField(path: string, value: FormDataEntryValue) {
 
     if (value === "") return;
+
+    console.log('validating field', path);
 
     if (await validateForm(false)) {
       resetErrors();
