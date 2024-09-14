@@ -1,4 +1,4 @@
-import type {Maybe} from "$lib/GraphQL/generated";
+import type {Maybe} from "$lib/API/GraphQL/generated";
 
 export type PaginationQuery = {
     first: number| undefined,

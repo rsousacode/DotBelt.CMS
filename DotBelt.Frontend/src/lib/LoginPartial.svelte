@@ -1,9 +1,8 @@
 <script>
-    import SignUpIcon from "$lib/admin/Icons/SignUpIcon.svelte";
-    import LoginIcon from "$lib/admin/Icons/LoginIcon.svelte";
-    import DashboardIcon from "$lib/admin/Icons/DashboardIcon.svelte";
-    import MoonStars from "$lib/admin/Icons/MoonStars.svelte";
-    import ColorSwitcher from "$lib/ColorSwitcher.svelte";
+    import SignUpIcon from "$lib/Utilities/Icons/SignUpIcon.svelte";
+    import LoginIcon from "$lib/Utilities/Icons/LoginIcon.svelte";
+    import DashboardIcon from "$lib/Utilities/Icons/DashboardIcon.svelte";
+    import ColorSwitcher from "$lib/Utilities/ColorSwitcher.svelte";
 </script>
 
 

@@ -1,9 +1,9 @@
 <script>
-    import PostEditor from "$lib/admin/Content/PostEditor.svelte";
     import {SITE_NAME} from "$lib/constants";
-    import DashboardContainer from "$lib/admin/Dashboard/DashboardContainer.svelte";
+    import DashboardContainer from "$lib/Dashboard/DashboardContainer.svelte";
     import {onMount} from "svelte";
-    import { updateDashboardData } from "$lib/admin/Dashboard/DashboardStore.svelte";
+    import { updateDashboardData } from "$lib/Dashboard/DashboardStore.svelte";
+    import PostEditor from "$lib/Content/Components/PostEditor.svelte";
 
 
     onMount(() => {

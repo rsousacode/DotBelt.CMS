@@ -1,4 +1,4 @@
-import type {Edit_PostRequestInput, GraphQlMutation} from '$lib/GraphQL/generated'
+import type {Edit_PostRequestInput, GraphQlMutation} from '$lib/API/GraphQL/generated'
 import type {ApolloClient, NormalizedCacheObject} from "@apollo/client/core/index.js";
 import {gql} from "@apollo/client/core/index.js";
 

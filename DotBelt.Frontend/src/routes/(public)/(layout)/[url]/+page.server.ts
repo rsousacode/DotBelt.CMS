@@ -1,8 +1,8 @@
-import {getApolloClient} from "$lib/GraphQL/apolloClient";
+import {getApolloClient} from "$lib/API/GraphQL/apolloClient";
 import type { PageServerLoad } from '../../../../.svelte-kit/types/src/routes'
-import type { Post } from "$lib/GraphQL/generated";
+import type { Post } from "$lib/API/GraphQL/generated";
 
-import {getPostByUrl} from "$lib/Queries/GetPostByUrl";
+import {getPostByUrl} from "$lib/Content/Posts/GetPostByUrl";
 import {error} from "@sveltejs/kit";
 
 export const load: PageServerLoad<Promise<{post: Post}>> = async ({ params }) => {

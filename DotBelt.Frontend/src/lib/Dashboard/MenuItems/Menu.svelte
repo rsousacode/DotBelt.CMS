@@ -1,9 +1,9 @@
 <script lang="ts">
 
-  import type {MenuItem} from "$lib/admin/Dashboard/MenuItems/MenuItem";
+  import type {MenuItem} from "$lib/Dashboard/MenuItems/MenuItem";
   import {quadInOut} from "svelte/easing";
   import {slide} from "svelte/transition";
-  import {menuState} from "$lib/admin/Dashboard/MenuItems/MenuState.svelte";
+  import {menuState} from "$lib/Dashboard/MenuItems/MenuState.svelte";
 
   let { menu } : { menu: MenuItem} = $props();
 

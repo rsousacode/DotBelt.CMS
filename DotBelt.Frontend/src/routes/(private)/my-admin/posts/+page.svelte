@@ -1,17 +1,17 @@
 <script lang="ts">
-    import DashboardContainer from "$lib/admin/Dashboard/DashboardContainer.svelte";
+    import DashboardContainer from "$lib/Dashboard/DashboardContainer.svelte";
     import {SITE_NAME} from "$lib/constants";
-    import ApolloClientProvider from "$lib/GraphQL/ApolloClientProvider.svelte";
-    import {getPosts} from "$lib/Queries/GetPosts";
-    import {type PostsConnection, PostTypeEnum} from "$lib/GraphQL/generated";
+    import ApolloClientProvider from "$lib/API/GraphQL/ApolloClientProvider.svelte";
+    import {getPosts} from "$lib/Content/Posts/GetPosts";
+    import {type PostsConnection, PostTypeEnum} from "$lib/API/GraphQL/generated";
     import type {Maybe} from "yup";
-    import EditIcon from "$lib/admin/Icons/EditIcon.svelte";
-    import ViewPublishedIcon from "$lib/admin/Icons/ViewPublishedIcon.svelte";
+    import EditIcon from "$lib/Utilities/Icons/EditIcon.svelte";
+    import ViewPublishedIcon from "$lib/Utilities/Icons/ViewPublishedIcon.svelte";
     import {page} from "$app/stores";
     import {afterNavigate} from "$app/navigation";
-    import type {PaginationQuery} from "$lib/GraphQL/PaginationQuery";
+    import type {PaginationQuery} from "$lib/API/GraphQL/PaginationQuery";
     import {onMount} from "svelte";
-    import {setDashboardData, updateDashboardData} from "$lib/admin/Dashboard/DashboardStore.svelte";
+    import {setDashboardData, updateDashboardData} from "$lib/Dashboard/DashboardStore.svelte";
 
     let apolloClientProvider: ApolloClientProvider;
     let postsResult: Maybe<PostsConnection> | undefined = $state(undefined);

@@ -1,7 +1,7 @@
 <script>
-    import DashboardContainer from "$lib/admin/Dashboard/DashboardContainer.svelte";
+    import DashboardContainer from "$lib/Dashboard/DashboardContainer.svelte";
     import {onMount} from "svelte";
-    import {setDashboardData} from "$lib/admin/Dashboard/DashboardStore.svelte";
+    import {setDashboardData} from "$lib/Dashboard/DashboardStore.svelte";
 
     onMount(() => {
         setDashboardData({title: "Dashboard", subtitle: ""})

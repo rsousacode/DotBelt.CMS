@@ -1,6 +1,6 @@
 <script lang="ts">
   import {onMount} from "svelte";
-  import {getApolloClient} from "$lib/GraphQL/apolloClient";
+  import {getApolloClient} from "$lib/API/GraphQL/apolloClient";
   import type {ApolloClient, NormalizedCacheObject} from "@apollo/client/core/index.js";
 
   let client: ApolloClient<NormalizedCacheObject> | null = null;

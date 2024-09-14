@@ -1,18 +1,18 @@
 <script lang="ts">
-    import {applyAction, deserialize, enhance} from '$app/forms';
+    import {applyAction, deserialize} from '$app/forms';
     import {goto, invalidateAll} from "$app/navigation";
     import type {ActionResult} from "@sveltejs/kit";
-    import type {Post} from "$lib/GraphQL/generated";
-    import EditorJS from "$lib/admin/Content/EditorJS.svelte";
-    import ApolloClientProvider from "$lib/GraphQL/ApolloClientProvider.svelte";
-    import AceEditor from "$lib/admin/Content/AceEditor.svelte";
-    import {createRawSnippet, onMount} from "svelte";
-    import {updateDashboardFragment} from "$lib/admin/Dashboard/DashboardStore.svelte.js";
-    import SaveIcon from "$lib/admin/Icons/SaveIcon.svelte";
-    import TransitionalIcon from "$lib/admin/Icons/TransitionalIcon.svelte";
-    import SuccessIcon from "$lib/admin/Icons/SuccessIcon.svelte";
-    import JsonIcon from "$lib/admin/Icons/JsonIcon.svelte";
-    import BlocksIcon from "$lib/admin/Icons/BlocksIcon.svelte";
+    import type {Post} from "$lib/API/GraphQL/generated";
+    import ApolloClientProvider from "$lib/API/GraphQL/ApolloClientProvider.svelte";
+    import {onMount} from "svelte";
+    import {updateDashboardFragment} from "$lib/Dashboard/DashboardStore.svelte.js";
+    import SaveIcon from "$lib/Utilities/Icons/SaveIcon.svelte";
+    import TransitionalIcon from "$lib/Utilities/Icons/TransitionalIcon.svelte";
+    import SuccessIcon from "$lib/Utilities/Icons/SuccessIcon.svelte";
+    import JsonIcon from "$lib/Utilities/Icons/JsonIcon.svelte";
+    import BlocksIcon from "$lib/Utilities/Icons/BlocksIcon.svelte";
+    import EditorJS from "$lib/Content/EditorJS/EditorJS.svelte";
+    import AceEditor from "$lib/Content/Components/AceEditor.svelte";
 
 
     let {post = $bindable({content: "{}", urlName: ""})}: { post: Post } = $props();

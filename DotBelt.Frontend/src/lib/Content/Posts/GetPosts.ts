@@ -1,8 +1,8 @@
 
-import {type GraphQlQuery, type Maybe, type PostsConnection, PostTypeEnum} from '$lib/GraphQL/generated'
+import {type GraphQlQuery, type Maybe, type PostsConnection, PostTypeEnum} from '$lib/API/GraphQL/generated'
 import type {ApolloClient, NormalizedCacheObject} from "@apollo/client/core/index.js";
 import {gql} from "@apollo/client/core/index.js";
-import type {PaginationQuery} from "$lib/GraphQL/PaginationQuery";
+import type {PaginationQuery} from "$lib/API/GraphQL/PaginationQuery";
 
 
 

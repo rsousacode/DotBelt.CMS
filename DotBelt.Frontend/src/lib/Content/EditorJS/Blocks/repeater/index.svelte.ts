@@ -1,7 +1,7 @@
-import RepeaterSvelte from "$lib/EditorJS/repeater/RepeaterSvelte.svelte";
+import RepeaterSvelte from "./RepeaterSvelte.svelte";
 import {mount} from "svelte";
 import type {API, BlockTune} from "@editorjs/editorjs";
-import {type GraphQlQuery, type Maybe, type Post, type PostsConnection, PostTypeEnum} from "$lib/GraphQL/generated";
+import {type GraphQlQuery, type Maybe, type Post, type PostsConnection, PostTypeEnum} from "$lib/API/GraphQL/generated";
 import {gql} from "@apollo/client/core";
 
 type RepeaterData = { hasImage: boolean, posts: Maybe<Post[]> | undefined }

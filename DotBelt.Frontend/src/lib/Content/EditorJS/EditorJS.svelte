@@ -1,7 +1,7 @@
 <script lang="ts">
 
 import {onDestroy, onMount, setContext} from "svelte";
-import Repeater from "$lib/EditorJS/repeater/index.svelte.js";
+import Repeater from "$lib/Content/EditorJS/Blocks/repeater/index.svelte.js";
 
 let { content = $bindable() } = $props();
 

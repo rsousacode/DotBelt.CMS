@@ -1,9 +1,9 @@
 <script lang="ts">
     import {onMount} from "svelte";
     import {beforeNavigate} from "$app/navigation";
-    import CloseIcon from "$lib/admin/Icons/CloseIcon.svelte";
-    import ChevronLeft from "$lib/admin/Icons/ChevronLeft.svelte";
-    import ChevronRight from "$lib/admin/Icons/ChevronRight.svelte";
+    import CloseIcon from "$lib/Utilities/Icons/CloseIcon.svelte";
+    import ChevronLeft from "$lib/Utilities/Icons/ChevronLeft.svelte";
+    import ChevronRight from "$lib/Utilities/Icons/ChevronRight.svelte";
 
     let body: Element;
 

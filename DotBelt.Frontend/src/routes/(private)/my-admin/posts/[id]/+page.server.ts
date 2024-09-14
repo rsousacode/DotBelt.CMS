@@ -1,10 +1,9 @@
-import {getApolloClient} from "$lib/GraphQL/apolloClient";
-import type { PageServerLoad } from '../../../../../../.svelte-kit/types/src/routes'
-import {getPostById} from "$lib/Queries/GetPostById";
-import type {CreatePostInput, EditablePostInput, EditPostInput, Post} from "$lib/GraphQL/generated";
-import {createPost} from "$lib/Mutations/CreatePost";
-import type {Actions} from "../../../../../../.svelte-kit/types/src/routes/my-admin/posts/new/$types";
-import {editPost} from "$lib/Mutations/EditPost";
+import {getApolloClient} from "$lib/API/GraphQL/apolloClient";
+import type { PageServerLoad } from './$types'
+import {getPostById} from "$lib/Content/Posts/GetPostById";
+import type {  Edit_PostRequestInput, Post} from "$lib/API/GraphQL/generated";
+import type {Actions} from "./$types";
+import {editPost} from "$lib/Content/Posts/EditPost";
 
 export const load: PageServerLoad<Promise<{post: Post}>> = async ({ params }) => {
 
@@ -24,7 +23,7 @@ export const actions = {
         const apollo = getApolloClient();
 
         const formData = await event.request.formData();
-        const input: EditablePostInput = Object.fromEntries(formData.entries());
+        const input: Edit_PostRequestInput = Object.fromEntries(formData.entries()) as Edit_PostRequestInput;
 
         const id = event.params.id;
 

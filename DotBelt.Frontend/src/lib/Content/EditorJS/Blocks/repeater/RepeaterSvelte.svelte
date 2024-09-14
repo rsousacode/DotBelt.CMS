@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type {Maybe, Post} from "$lib/GraphQL/generated";
+  import type {Maybe, Post} from "$lib/API/GraphQL/generated";
 
   let {hasImage = false, postCount = 10, posts}: Props = $props();
 
