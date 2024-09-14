@@ -121,7 +121,7 @@
               <input class="classy-input permalink-input" onchange={handlePermalinkChanged} type="text" placeholder="write-your-url" bind:value={post.urlName}>
             </div>
             <div>
-              <input class="classy-input" type="text" style="color: #494949" placeholder="Write your title here"
+              <input class="classy-input" type="text"placeholder="Write your title here"
                      bind:value={post.title}>
 
             </div>
@@ -139,37 +139,3 @@
   </form>
 </ApolloClientProvider>
 
-
-<style>
-    .classy-input {
-        font-size: 24px;
-        border: none;
-        outline: none;
-    }
-
-    .permalink-input::placeholder {
-        color: #b8b8b8
-
-    }
-    .permalink-input {
-        font-size: 16px;
-        margin-left: -5px;
-        color: #8f8f8f
-    }
-
-    .permalink-editor-container {
-        margin-bottom: 20px;
-    }
-
-    .editor-container-header {
-        margin-bottom: 16px;
-    }
-
-    .editor-container {
-        margin-left: 30px;
-    }
-
-
-    .editor-js {
-    }
-</style>

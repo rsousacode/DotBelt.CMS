@@ -6,13 +6,13 @@
 
 <ul class="navbar-nav">
     <li class="nav-item">
-        <a class="nav-link text-white header-icon" href="/account/register"><SignUpIcon/></a>
+        <a class="nav-link header-icon" href="/account/register"><SignUpIcon/></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-white header-icon" href="/account/login"><LoginIcon/></a>
+        <a class="nav-link header-icon" href="/account/login"><LoginIcon/></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-white header-icon" href="/my-admin"><DashboardIcon/></a>
+        <a class="nav-link header-icon" href="/my-admin"><DashboardIcon/></a>
     </li>
 
 </ul>

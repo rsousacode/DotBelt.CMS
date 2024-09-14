@@ -6,6 +6,7 @@
     import YupForm from "$lib/YupForm.svelte";
     import {Api} from "$lib/Swagger/generated/Api";
     import {ref} from "yup";
+    import {goto} from "$app/navigation";
 
     let yupForm : YupForm;
 
@@ -28,6 +29,7 @@
             password: data.password,
         }).then(async successData => {
             console.log('successData', successData)
+            goto("/account/login?success=1")
 
         }).catch(async err => {
             const errors = await err.json();

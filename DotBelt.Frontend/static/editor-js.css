@@ -1,0 +1,22 @@
+
+.ce-block__content,
+.ce-toolbar__content {
+    max-width: unset;
+}
+
+.ce-popover__container {
+    background: var(--bs-body-bg);
+}
+
+.ce-popover-item {
+    color: var(--bs-body-color);
+}
+
+.ce-toolbar__plus {
+    color: var(--bs-body-color);
+
+}
+
+.ce-popover-item:hover:not(.ce-popover-item--no-hover) {
+    background-color: var(--bs-btn-hover-color);
+}

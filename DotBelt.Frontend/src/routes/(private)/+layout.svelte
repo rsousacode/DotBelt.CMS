@@ -2,10 +2,13 @@
     import LoginPartial from "$lib/LoginPartial.svelte";
 </script>
 
+<svelte:head>
+    <link rel="stylesheet" href="/admin.css" />
+</svelte:head>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary-header box-shadow">
+    <nav class="navbar navbar-expand-lg bg-body-secondary">
         <div class="container-fluid nav-container">
-            <a class="navbar-brand brand-color"  href="/">dotBelt CMS</a>
+            <a class="navbar-brand"  href="/">dotBelt CMS</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -25,10 +28,6 @@
 
 
 <style>
-    .brand-color {
-        background: #542fa9;
-        color: white;
-    }
 
     .navbar,
     .nav-container {

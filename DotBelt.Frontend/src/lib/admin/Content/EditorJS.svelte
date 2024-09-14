@@ -71,4 +71,8 @@ onDestroy(() => {
 
 </script>
 
+<svelte:head>
+  <link rel="stylesheet" href="/editor-js.css" />
+</svelte:head>
+
 <div class="editor-js" id="editor-js"></div>

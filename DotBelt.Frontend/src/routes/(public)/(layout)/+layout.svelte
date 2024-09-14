@@ -2,10 +2,13 @@
     import LoginPartial from "$lib/LoginPartial.svelte";
 </script>
 
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-primary-header border-bottom box-shadow mb-3">
-        <div class="container-fluid nav-container">
-            <a class="navbar-brand brand-color"  href="/static">dotBelt CMS</a>
+<svelte:head>
+    <link rel="stylesheet" href="/site.css" />
+</svelte:head>
+<header >
+    <nav class="navbar navbar-expand-lg bg-body-secondary mb-3">
+        <div class="container">
+            <a class="navbar-brand"  href="/">dotBelt CMS</a>
             <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -13,10 +16,10 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-white"  href="/static">Home</a>
+                        <a class="nav-link"  href="/static">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="/privacy">Privacy</a>
+                        <a class="nav-link" href="/privacy">Privacy</a>
                     </li>
                 </ul>
                 <LoginPartial/>
@@ -24,23 +27,19 @@
         </div>
     </nav>
 </header>
-<div class="container-fluid">
+<div class="container">
     <main class="pb-3">
         <slot />
     </main>
 </div>
 
 <footer class="border-top footer text-muted">
-    <div class="container-fluid">
+    <div class="container">
         &copy; 2024 - dotBelt CMS - <a href="/privacy">Privacy</a>
     </div>
 </footer>
 
 <style>
-    .brand-color {
-        background: #542fa9;
-        color: white;
-    }
 
     .navbar,
     .nav-container {

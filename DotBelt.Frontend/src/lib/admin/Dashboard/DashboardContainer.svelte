@@ -10,7 +10,7 @@
 
 <div class="dashboard-container">
   <div class="small-column">
-    <div class="dashboard-panel">
+    <div class="dashboard-panel bg-body-tertiary ">
       <div class="panel-category">
         <ul class="panel-list">
           <Menu menu={{
@@ -76,11 +76,17 @@
                 },
               ]
           }}/>
-           <Menu menu={{
+          <Menu menu={{
               name: "Settings",
               href: "",
               icon: SettingsIcon,
               items: [
+                 {
+                  name: "Users",
+                  href: "/my-admin/settings/users",
+                  icon: undefined,
+                  items: []
+                },
                 {
                   name: "Reading",
                   href: "/my-admin/settings/reading",
@@ -95,7 +101,7 @@
                 },
               ]
           }}/>
-           <Menu menu={{
+          <Menu menu={{
               name: "Developer",
               href: "",
               icon: DebugIcon,
@@ -129,63 +135,3 @@
   </div>
 </div>
 
-<style>
-
-    .dashboard-container {
-        display: flex;
-        height: 100%;
-    }
-
-    .small-column {
-        min-width: 224px;
-        height: 100%;
-    }
-
-    .large-column {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .panel-content-container {
-        margin-left: 20px;
-        margin-right: 20px;
-        /* margin-bottom: 20px; */
-        margin-top: 20px;
-        background: white;
-        padding: 13px;
-        flex-direction: column;
-        box-shadow: 0px 1px 10px 1px rgba(110, 106, 200, 0.08);
-        max-height: 100% !important;
-        overflow-y: scroll;
-    }
-
-    .panel-category {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .dashboard-panel {
-        display: flex;
-        background-color: #291569;
-        height: 100%;
-        padding-top: 24px;
-        width: 100%;
-    }
-
-    .menu-item a,
-    .panel-list-item > .menu-item {
-        text-decoration: none;
-        cursor: pointer;
-        color: white;
-    }
-
-    .panel-list {
-        list-style-type: none;
-        padding: 0;
-
-    }
-
-
-</style>
