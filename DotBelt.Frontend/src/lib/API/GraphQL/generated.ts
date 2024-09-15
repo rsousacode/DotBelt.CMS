@@ -156,8 +156,8 @@ export type GraphQlMutationEditPostArgs = {
 
 export type GraphQlQuery = {
   __typename?: 'GraphQLQuery';
-  postById: Array<Post>;
-  postByUrl: Array<Post>;
+  postById: Array<PostResponse>;
+  postByUrl: Array<PostResponse>;
   posts?: Maybe<PostsConnection>;
   session: SessionData;
   taxonomies?: Maybe<TaxonomiesConnection>;
@@ -181,8 +181,8 @@ export type GraphQlQueryPostsArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
-  order?: InputMaybe<Array<PostSortInput>>;
-  where?: InputMaybe<PostFilterInput>;
+  order?: InputMaybe<Array<PostResponseSortInput>>;
+  where?: InputMaybe<PostResponseFilterInput>;
 };
 
 
@@ -239,6 +239,13 @@ export type ListFilterInputTypeOfTaxonomyFilterInput = {
   some?: InputMaybe<TaxonomyFilterInput>;
 };
 
+export type ListFilterInputTypeOfTaxonomyResponseFilterInput = {
+  all?: InputMaybe<TaxonomyResponseFilterInput>;
+  any?: InputMaybe<Scalars['Boolean']['input']>;
+  none?: InputMaybe<TaxonomyResponseFilterInput>;
+  some?: InputMaybe<TaxonomyResponseFilterInput>;
+};
+
 /** Information about pagination in a connection. */
 export type PageInfo = {
   __typename?: 'PageInfo';
@@ -264,6 +271,7 @@ export type Post = {
   id: Scalars['Int']['output'];
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   parentPost?: Maybe<Post>;
+  parentPostId?: Maybe<Scalars['Int']['output']>;
   postType: PostTypeEnum;
   publishDate: Scalars['DateTime']['output'];
   taxonomies: Array<Taxonomy>;
@@ -284,6 +292,7 @@ export type PostFilterInput = {
   modifiedDate?: InputMaybe<DateTimeOperationFilterInput>;
   or?: InputMaybe<Array<PostFilterInput>>;
   parentPost?: InputMaybe<PostFilterInput>;
+  parentPostId?: InputMaybe<IntOperationFilterInput>;
   postType?: InputMaybe<PostTypeEnumOperationFilterInput>;
   publishDate?: InputMaybe<DateTimeOperationFilterInput>;
   taxonomies?: InputMaybe<ListFilterInputTypeOfTaxonomyFilterInput>;
@@ -291,8 +300,45 @@ export type PostFilterInput = {
   urlName?: InputMaybe<StringOperationFilterInput>;
 };
 
-export type PostSortInput = {
-  author?: InputMaybe<ApplicationUserSortInput>;
+export type PostResponse = {
+  __typename?: 'PostResponse';
+  author?: Maybe<UserResponse>;
+  authorId?: Maybe<Scalars['Int']['output']>;
+  content?: Maybe<Scalars['String']['output']>;
+  contentHtml?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  fullUrl?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  parentPostId?: Maybe<Scalars['Int']['output']>;
+  postType: PostTypeEnum;
+  publishDate: Scalars['DateTime']['output'];
+  taxonomies: Array<TaxonomyResponse>;
+  title?: Maybe<Scalars['String']['output']>;
+  urlName: Scalars['String']['output'];
+};
+
+export type PostResponseFilterInput = {
+  and?: InputMaybe<Array<PostResponseFilterInput>>;
+  author?: InputMaybe<UserResponseFilterInput>;
+  authorId?: InputMaybe<IntOperationFilterInput>;
+  content?: InputMaybe<StringOperationFilterInput>;
+  contentHtml?: InputMaybe<StringOperationFilterInput>;
+  description?: InputMaybe<StringOperationFilterInput>;
+  fullUrl?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  modifiedDate?: InputMaybe<DateTimeOperationFilterInput>;
+  or?: InputMaybe<Array<PostResponseFilterInput>>;
+  parentPostId?: InputMaybe<IntOperationFilterInput>;
+  postType?: InputMaybe<PostTypeEnumOperationFilterInput>;
+  publishDate?: InputMaybe<DateTimeOperationFilterInput>;
+  taxonomies?: InputMaybe<ListFilterInputTypeOfTaxonomyResponseFilterInput>;
+  title?: InputMaybe<StringOperationFilterInput>;
+  urlName?: InputMaybe<StringOperationFilterInput>;
+};
+
+export type PostResponseSortInput = {
+  author?: InputMaybe<UserResponseSortInput>;
   authorId?: InputMaybe<SortEnumType>;
   content?: InputMaybe<SortEnumType>;
   contentHtml?: InputMaybe<SortEnumType>;
@@ -300,7 +346,7 @@ export type PostSortInput = {
   fullUrl?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   modifiedDate?: InputMaybe<SortEnumType>;
-  parentPost?: InputMaybe<PostSortInput>;
+  parentPostId?: InputMaybe<SortEnumType>;
   postType?: InputMaybe<SortEnumType>;
   publishDate?: InputMaybe<SortEnumType>;
   title?: InputMaybe<SortEnumType>;
@@ -327,7 +373,7 @@ export type PostsConnection = {
   /** A list of edges. */
   edges?: Maybe<Array<PostsEdge>>;
   /** A flattened list of the nodes. */
-  nodes?: Maybe<Array<Post>>;
+  nodes?: Maybe<Array<PostResponse>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
   /** Identifies the total count of items in the connection. */
@@ -340,7 +386,7 @@ export type PostsEdge = {
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
-  node: Post;
+  node: PostResponse;
 };
 
 export type SessionData = {
@@ -394,11 +440,10 @@ export type Taxonomy = {
   __typename?: 'Taxonomy';
   author?: Maybe<ApplicationUser>;
   authorId?: Maybe<Scalars['Int']['output']>;
-  childrenTaxonomies: Array<Taxonomy>;
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
-  parentTaxonomy?: Maybe<Taxonomy>;
+  parentTaxonomyId?: Maybe<Scalars['Int']['output']>;
   posts: Array<Post>;
   publishDate: Scalars['DateTime']['output'];
   title?: Maybe<Scalars['String']['output']>;
@@ -410,13 +455,41 @@ export type TaxonomyFilterInput = {
   and?: InputMaybe<Array<TaxonomyFilterInput>>;
   author?: InputMaybe<ApplicationUserFilterInput>;
   authorId?: InputMaybe<IntOperationFilterInput>;
-  childrenTaxonomies?: InputMaybe<ListFilterInputTypeOfTaxonomyFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<IntOperationFilterInput>;
   modifiedDate?: InputMaybe<DateTimeOperationFilterInput>;
   or?: InputMaybe<Array<TaxonomyFilterInput>>;
-  parentTaxonomy?: InputMaybe<TaxonomyFilterInput>;
+  parentTaxonomyId?: InputMaybe<IntOperationFilterInput>;
   posts?: InputMaybe<ListFilterInputTypeOfPostFilterInput>;
+  publishDate?: InputMaybe<DateTimeOperationFilterInput>;
+  title?: InputMaybe<StringOperationFilterInput>;
+  type?: InputMaybe<TaxonomyTypeEnumOperationFilterInput>;
+  urlName?: InputMaybe<StringOperationFilterInput>;
+};
+
+export type TaxonomyResponse = {
+  __typename?: 'TaxonomyResponse';
+  author?: Maybe<UserResponse>;
+  authorId?: Maybe<Scalars['Int']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  parentTaxonomyId?: Maybe<Scalars['Int']['output']>;
+  publishDate: Scalars['DateTime']['output'];
+  title?: Maybe<Scalars['String']['output']>;
+  type: TaxonomyTypeEnum;
+  urlName: Scalars['String']['output'];
+};
+
+export type TaxonomyResponseFilterInput = {
+  and?: InputMaybe<Array<TaxonomyResponseFilterInput>>;
+  author?: InputMaybe<UserResponseFilterInput>;
+  authorId?: InputMaybe<IntOperationFilterInput>;
+  description?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  modifiedDate?: InputMaybe<DateTimeOperationFilterInput>;
+  or?: InputMaybe<Array<TaxonomyResponseFilterInput>>;
+  parentTaxonomyId?: InputMaybe<IntOperationFilterInput>;
   publishDate?: InputMaybe<DateTimeOperationFilterInput>;
   title?: InputMaybe<StringOperationFilterInput>;
   type?: InputMaybe<TaxonomyTypeEnumOperationFilterInput>;
@@ -429,7 +502,7 @@ export type TaxonomySortInput = {
   description?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   modifiedDate?: InputMaybe<SortEnumType>;
-  parentTaxonomy?: InputMaybe<TaxonomySortInput>;
+  parentTaxonomyId?: InputMaybe<SortEnumType>;
   publishDate?: InputMaybe<SortEnumType>;
   title?: InputMaybe<SortEnumType>;
   type?: InputMaybe<SortEnumType>;

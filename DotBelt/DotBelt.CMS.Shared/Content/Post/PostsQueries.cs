@@ -1,5 +1,6 @@
 using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.CMS;
+using DotBelt.CMS.Shared.Content.Post;
 using DotBelt.QueriesMutations;
 using HotChocolate;
 using HotChocolate.Authorization;
@@ -12,44 +13,37 @@ namespace DotBelt.Queries;
 
 public class PostsQueries
 {
-    // TODO: Use DTOs
     [Authorize]
-
     [UsePaging(IncludeTotalCount = true)]
     [UseProjection]
     [UseFiltering]
     [UseSorting]
 
-    public IQueryable<Post> GetPosts(ApplicationDbContext context)
-    {
-        return context
-            .Posts;
-    }
-    
-    // TODO: Use DTOs
-    
-    [UseProjection]
-
-    public IQueryable<Post> GetPostById(int id, ApplicationDbContext context)
+    public IQueryable<PostResponse> GetPosts(ApplicationDbContext context)
     {
         return context
             .Posts
-            .Where(x => x.Id == id);
+            .ProjectToPostResponse();
+    }
+    
+    
+    [UseProjection]
+    [Authorize]
+    public IQueryable<PostResponse> GetPostById(int id, ApplicationDbContext context)
+    {
+        return context
+            .Posts
+            .Where(x => x.Id == id)
+            .ProjectToPostResponse();
     }
   
     [UseProjection]
-
-    public IQueryable<Post> GetPostByUrl(string url, ApplicationDbContext context)
+    public IQueryable<PostResponse> GetPostByUrl(string url, ApplicationDbContext context)
     {
-        var p = context
-            .Posts
-            .Where(x => x.UrlName == url)
-            .FirstOrDefault();
-       
-        
         return context
             .Posts
-            .Where(x => x.UrlName == url);
+            .Where(x => x.UrlName == url)
+            .ProjectToPostResponse();
     }
 
 

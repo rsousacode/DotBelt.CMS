@@ -1,8 +1,8 @@
-import type {GraphQlQuery, Post} from '$lib/API/GraphQL/generated'
+import type {GraphQlQuery, PostResponse} from '$lib/API/GraphQL/generated'
 import type {ApolloClient, NormalizedCacheObject} from "@apollo/client/core/index.js";
 import {gql} from "@apollo/client/core/index.js";
 
-export async function getPostById(client : ApolloClient<NormalizedCacheObject>, id: number) : Promise<Post> {
+export async function getPostById(client : ApolloClient<NormalizedCacheObject>, id: number) : Promise<PostResponse> {
 
     const query = gql`
         query postById($id: Int!) {

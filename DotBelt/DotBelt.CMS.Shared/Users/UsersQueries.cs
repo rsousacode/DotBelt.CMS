@@ -15,17 +15,7 @@ public class UsersQueries
     {
         return context
             .Users
-            .Select(x => new UserResponse()
-            {
-                Id = x.Id,
-                AccessFailedCount = x.AccessFailedCount,
-                Email = x.Email,
-                EmailConfirmed = x.EmailConfirmed,
-                LockoutEnabled = x.LockoutEnabled,
-                PhoneNumber = x.PhoneNumber,
-                TwoFactorEnabled = x.TwoFactorEnabled,
-                UserName = x.UserName
-            });
+            .ProjectToUserResponse();
     }
 
 }

@@ -39,9 +39,9 @@ type GraphQLMutation {
 }
 
 type GraphQLQuery {
-  posts("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: PostFilterInput order: [PostSortInput!]): PostsConnection @authorize
-  postById(id: Int!): [Post!]!
-  postByUrl(url: String!): [Post!]!
+  posts("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: PostResponseFilterInput order: [PostResponseSortInput!]): PostsConnection @authorize
+  postById(id: Int!): [PostResponse!]! @authorize
+  postByUrl(url: String!): [PostResponse!]!
   taxonomies("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: TaxonomyFilterInput order: [TaxonomySortInput!]): TaxonomiesConnection
   taxonomyById(id: Int!): [Taxonomy!]!
   users("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: UserResponseFilterInput order: [UserResponseSortInput!]): UsersConnection
@@ -74,8 +74,26 @@ type Post {
   authorId: Int
   postType: PostTypeEnum!
   parentPost: Post
+  parentPostId: Int
   childrenPosts: [Post!]!
   taxonomies: [Taxonomy!]!
+}
+
+type PostResponse {
+  id: Int!
+  title: String
+  description: String
+  urlName: String!
+  fullUrl: String
+  content: String
+  contentHtml: String
+  publishDate: DateTime!
+  modifiedDate: DateTime
+  author: UserResponse
+  authorId: Int
+  postType: PostTypeEnum!
+  parentPostId: Int
+  taxonomies: [TaxonomyResponse!]!
 }
 
 "A connection to a list of items."
@@ -85,7 +103,7 @@ type PostsConnection {
   "A list of edges."
   edges: [PostsEdge!]
   "A flattened list of the nodes."
-  nodes: [Post!]
+  nodes: [PostResponse!]
   "Identifies the total count of items in the connection."
   totalCount: Int!
 }
@@ -95,7 +113,7 @@ type PostsEdge {
   "A cursor for use in pagination."
   cursor: String!
   "The item at the end of the edge."
-  node: Post!
+  node: PostResponse!
 }
 
 type SessionData {
@@ -132,9 +150,21 @@ type Taxonomy {
   author: ApplicationUser
   authorId: Int
   type: TaxonomyTypeEnum!
-  parentTaxonomy: Taxonomy
-  childrenTaxonomies: [Taxonomy!]!
+  parentTaxonomyId: Int
   posts: [Post!]!
+}
+
+type TaxonomyResponse {
+  id: Int!
+  title: String
+  urlName: String!
+  publishDate: DateTime!
+  modifiedDate: DateTime
+  description: String
+  author: UserResponse
+  authorId: Int
+  type: TaxonomyTypeEnum!
+  parentTaxonomyId: Int
 }
 
 type UserResponse {
@@ -279,6 +309,13 @@ input ListFilterInputTypeOfTaxonomyFilterInput {
   any: Boolean
 }
 
+input ListFilterInputTypeOfTaxonomyResponseFilterInput {
+  all: TaxonomyResponseFilterInput
+  none: TaxonomyResponseFilterInput
+  some: TaxonomyResponseFilterInput
+  any: Boolean
+}
+
 input PostFilterInput {
   and: [PostFilterInput!]
   or: [PostFilterInput!]
@@ -295,11 +332,31 @@ input PostFilterInput {
   authorId: IntOperationFilterInput
   postType: PostTypeEnumOperationFilterInput
   parentPost: PostFilterInput
+  parentPostId: IntOperationFilterInput
   childrenPosts: ListFilterInputTypeOfPostFilterInput
   taxonomies: ListFilterInputTypeOfTaxonomyFilterInput
 }
 
-input PostSortInput {
+input PostResponseFilterInput {
+  and: [PostResponseFilterInput!]
+  or: [PostResponseFilterInput!]
+  id: IntOperationFilterInput
+  title: StringOperationFilterInput
+  description: StringOperationFilterInput
+  urlName: StringOperationFilterInput
+  fullUrl: StringOperationFilterInput
+  content: StringOperationFilterInput
+  contentHtml: StringOperationFilterInput
+  publishDate: DateTimeOperationFilterInput
+  modifiedDate: DateTimeOperationFilterInput
+  author: UserResponseFilterInput
+  authorId: IntOperationFilterInput
+  postType: PostTypeEnumOperationFilterInput
+  parentPostId: IntOperationFilterInput
+  taxonomies: ListFilterInputTypeOfTaxonomyResponseFilterInput
+}
+
+input PostResponseSortInput {
   id: SortEnumType
   title: SortEnumType
   description: SortEnumType
@@ -309,10 +366,10 @@ input PostSortInput {
   contentHtml: SortEnumType
   publishDate: SortEnumType
   modifiedDate: SortEnumType
-  author: ApplicationUserSortInput
+  author: UserResponseSortInput
   authorId: SortEnumType
   postType: SortEnumType
-  parentPost: PostSortInput
+  parentPostId: SortEnumType
 }
 
 input PostTypeEnumOperationFilterInput {
@@ -349,9 +406,23 @@ input TaxonomyFilterInput {
   author: ApplicationUserFilterInput
   authorId: IntOperationFilterInput
   type: TaxonomyTypeEnumOperationFilterInput
-  parentTaxonomy: TaxonomyFilterInput
-  childrenTaxonomies: ListFilterInputTypeOfTaxonomyFilterInput
+  parentTaxonomyId: IntOperationFilterInput
   posts: ListFilterInputTypeOfPostFilterInput
+}
+
+input TaxonomyResponseFilterInput {
+  and: [TaxonomyResponseFilterInput!]
+  or: [TaxonomyResponseFilterInput!]
+  id: IntOperationFilterInput
+  title: StringOperationFilterInput
+  urlName: StringOperationFilterInput
+  publishDate: DateTimeOperationFilterInput
+  modifiedDate: DateTimeOperationFilterInput
+  description: StringOperationFilterInput
+  author: UserResponseFilterInput
+  authorId: IntOperationFilterInput
+  type: TaxonomyTypeEnumOperationFilterInput
+  parentTaxonomyId: IntOperationFilterInput
 }
 
 input TaxonomySortInput {
@@ -364,7 +435,7 @@ input TaxonomySortInput {
   author: ApplicationUserSortInput
   authorId: SortEnumType
   type: SortEnumType
-  parentTaxonomy: TaxonomySortInput
+  parentTaxonomyId: SortEnumType
 }
 
 input TaxonomyTypeEnumOperationFilterInput {

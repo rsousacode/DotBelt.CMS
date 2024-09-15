@@ -43,6 +43,7 @@ public class Post : IContent
     public PostTypeEnum PostType { get; set; }
     
     public Post? ParentPost { get; set; }
+    public int? ParentPostId { get; set; }
     public Post[] ChildrenPosts { get; set; } = null!;
     
     

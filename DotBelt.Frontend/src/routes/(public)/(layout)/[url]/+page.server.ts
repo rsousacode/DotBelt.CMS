@@ -1,11 +1,11 @@
 import {getApolloClient} from "$lib/API/GraphQL/apolloClient";
 import type { PageServerLoad } from './$types'
-import type { Post } from "$lib/API/GraphQL/generated";
+import type { PostResponse } from "$lib/API/GraphQL/generated";
 
 import {getPostByUrl} from "$lib/Content/Posts/GetPostByUrl";
 import {error} from "@sveltejs/kit";
 
-export const load: PageServerLoad<Promise<{post: Post}>> = async ({ params }) => {
+export const load: PageServerLoad<Promise<{post: PostResponse}>> = async ({ params }) => {
 
     const url = params.url;
 
