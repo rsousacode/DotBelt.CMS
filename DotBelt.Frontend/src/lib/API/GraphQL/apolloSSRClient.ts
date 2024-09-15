@@ -4,7 +4,7 @@ import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core/index
 /**
  Returns a GraphQL Client that is ready to use.
  */
-export function getApolloSSRClient(fetch = undefined) {
+export function getApolloSSRClient(fetch : any = undefined) {
   const httpLink = new HttpLink({
     uri: PUBLIC_GRAPHQL_HTTP_API_URL,
     fetch: fetch

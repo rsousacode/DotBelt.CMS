@@ -9,7 +9,6 @@ using DotBelt.Identity;
 using DotBelt.QueriesMutations;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -73,7 +72,7 @@ try
     
     services.AddTransient<IEmailSender<ApplicationUser>, IdentityEmailSender>();
     
-    services.Configure<EmailOptions>(builder.Configuration.GetSection("EmailOptions"));
+    services.Configure<EmailOptions>(configuration.GetSection("EmailOptions"));
     
     var app = builder.Build();
 
