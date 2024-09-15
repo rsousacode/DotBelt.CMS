@@ -2,7 +2,7 @@
     import DashboardContainer from "$lib/Dashboard/DashboardContainer.svelte";
     import {onMount} from "svelte";
     import {setDashboardData} from "$lib/Dashboard/DashboardStore.svelte";
-    import MediaPopup from "$lib/admin/Media/MediaPopup.svelte";
+    import MediaPopup from "$lib/Content/Media/MediaPopup.svelte";
 
     type imageMedia = {url: string};
 

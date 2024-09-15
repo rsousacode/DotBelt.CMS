@@ -116,8 +116,14 @@ frontend-dev:
 #########################################        
 
 gen-swagger-json: 
-    cd DotBelt/DotBelt.CMS.API && dotnet run swagger --output ../../DotBelt.Frontend/swagger.json
+    cd DotBelt/DotBelt.CMS.API && dotnet run dotbelt swagger --output ../../DotBelt.Frontend/swagger.json
 
+#########################################
+# Seed data
+#########################################        
+
+seed: 
+    cd DotBelt/DotBelt.CMS.API && dotnet run dotbelt seed
 
 
 #########################################

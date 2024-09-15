@@ -11,7 +11,9 @@
     import {afterNavigate} from "$app/navigation";
     import type {PaginationQuery} from "$lib/API/GraphQL/PaginationQuery";
     import {onMount} from "svelte";
-    import {setDashboardData, updateDashboardData} from "$lib/Dashboard/DashboardStore.svelte";
+    import {setDashboardData, updateDashboardFragment} from "$lib/Dashboard/DashboardStore.svelte";
+    import SaveIcon from "$lib/Utilities/Icons/SaveIcon.svelte";
+    import SuccessIcon from "$lib/Utilities/Icons/SuccessIcon.svelte";
 
     let apolloClientProvider: ApolloClientProvider;
     let postsResult: Maybe<PostsConnection> | undefined = $state(undefined);
@@ -19,6 +21,7 @@
 
     onMount(() => {
         setDashboardData({title: "Posts", subtitle: ""})
+        updateDashboardFragment(newPostButton);
     })
 
     async function fetchPosts(postType: string, variables: PaginationQuery) {
@@ -28,7 +31,6 @@
             return;
         }
         postsResult = await getPosts(apolloClient, postType.toUpperCase() as PostTypeEnum, variables);
-        console.log(postsResult);
     }
 
     afterNavigate(async () => {
@@ -73,6 +75,13 @@
 <svelte:head>
   <title>Posts - {SITE_NAME} </title>
 </svelte:head>
+
+{#snippet newPostButton()}
+  <a href={`/my-admin/posts/new?type=${$page.url.searchParams.get("type")}`} class="btn btn-primary" type="button" >
+    Add new
+  </a>
+
+{/snippet}
 
 <ApolloClientProvider bind:this={apolloClientProvider}>
   <DashboardContainer>

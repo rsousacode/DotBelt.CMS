@@ -2,6 +2,11 @@ html, body, main {
     height: 100%;
 }
 
+body {
+    position: fixed;
+    width: 100%;
+}
+
 
 .nm {
     margin: 0 !important;
@@ -101,7 +106,8 @@ html, body, main {
     margin-left: 20px;
     margin-right: 20px;
     margin-top: 20px;
-    padding: 13px;
+    padding-left: 20px;
+    padding-right: 13px;
     flex-direction: column;
     max-height: 100% !important;
     overflow-y: scroll;

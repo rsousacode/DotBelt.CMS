@@ -9,7 +9,7 @@ namespace BoilerPlateSSR.Swagger;
 public class CommandExecuter : CommandLineBuilder
 {
     public CommandExecuter(IHost host)
-        : base(new CommandSwagger())
+        : base(new RootCommand())
     {
         this.AddMiddleware((Action<InvocationContext>) (x => x.BindingContext.AddService<IHost>((Func<IServiceProvider, IHost>) (_ => host)))).UseDefaults();
     }
@@ -20,7 +20,8 @@ public static class CommandExecuterExtensions
 {
     private static bool IsValidCommand(this string[] args)
     {
-        return args != null && args.Length >= 1 && args[0] == "swagger";
+        
+        return args != null && args.Length >= 1 && args[0] == "dotbelt";
     }
     public static async Task<int> RunWithCommandExecuter(
         this IHost host,

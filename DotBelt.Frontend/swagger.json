@@ -5,25 +5,6 @@
     "version": "1.0"
   },
   "paths": {
-    "/": {
-      "get": {
-        "tags": [
-          "DotBelt.CMS.API"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/auth/register": {
       "post": {
         "tags": [
@@ -36,7 +17,8 @@
                 "$ref": "#/components/schemas/RegisterRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -83,7 +65,8 @@
                 "$ref": "#/components/schemas/LoginRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -111,7 +94,8 @@
                 "$ref": "#/components/schemas/RefreshRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -137,6 +121,7 @@
           {
             "name": "userId",
             "in": "query",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -144,6 +129,7 @@
           {
             "name": "code",
             "in": "query",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -175,7 +161,8 @@
                 "$ref": "#/components/schemas/ResendConfirmationEmailRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -196,7 +183,8 @@
                 "$ref": "#/components/schemas/ForgotPasswordRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -227,7 +215,8 @@
                 "$ref": "#/components/schemas/ResetPasswordRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -258,7 +247,8 @@
                 "$ref": "#/components/schemas/TwoFactorRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -329,7 +319,8 @@
                 "$ref": "#/components/schemas/InfoRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {

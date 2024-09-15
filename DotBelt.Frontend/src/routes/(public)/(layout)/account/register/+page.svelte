@@ -18,8 +18,8 @@
     import {SITE_NAME} from "$lib/constants";
 
     import {onMount} from "svelte";
-    import YupForm from "$lib/YupForm.svelte";
-    import {Api} from "$lib/Swagger/generated/Api";
+    import YupForm from "$lib/Utilities/YupForm.svelte";
+    import {Api} from "$lib/API/Swagger/generated/Api";
     import {goto} from "$app/navigation";
 
     let yupForm : YupForm;
@@ -32,9 +32,7 @@
             email: data.email,
             password: data.password,
         }).then(async successData => {
-            console.log('successData', successData)
-            goto("/account/login?success=1")
-
+            await goto("/account/register/success")
         }).catch(async err => {
             const errors = await err.json();
             yupForm.onAspNetErrors(errors);
@@ -43,13 +41,10 @@
 
     }
 
-    onMount(() => {
-        console.log(registerSchema);
-    })
 </script>
 
 <svelte:head>
-  <title>Register - {SITE_NAME} </title>
+  <title>Thank you for registering - {SITE_NAME} </title>
 </svelte:head>
 
 <h1>Register</h1>

@@ -4,5 +4,6 @@ export type MenuItem = {
     icon: Component | undefined,
     name: string,
     href: string,
+    openNewTab: boolean | undefined,
     items: MenuItem[],
 }

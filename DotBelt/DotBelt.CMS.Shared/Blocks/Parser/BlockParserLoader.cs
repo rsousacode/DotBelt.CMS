@@ -8,7 +8,7 @@ public static class BlockParserLoader
     {
         var result = new Dictionary<string, StaticHtmlBlockParser>();
         
-        var blockParserTypes = Reflection.GetTypesUsingAttribute<BlockParserAttribute>();
+        var blockParserTypes = Reflection.GetTypesInheritingFrom<StaticHtmlBlockParser>();
             
         foreach (var type in blockParserTypes)
         {

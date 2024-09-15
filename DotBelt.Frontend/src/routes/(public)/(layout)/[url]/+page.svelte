@@ -5,9 +5,6 @@
 
   let { data: { post } } = $page;
 
-  onMount(() => {
-      console.log(post)
-  })
 
 </script>
 

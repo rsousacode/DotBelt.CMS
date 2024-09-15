@@ -3,7 +3,8 @@ using DotBelt.CMS.Shared.CMS.Blocks.Parser;
 
 namespace DotBelt.CMS.Shared.CMS.Blocks.Header;
 
-public class HeaderParser : StaticHtmlBlockParser
+
+public class HeaderParser() : StaticHtmlBlockParser("header")
 {
     public override string GetHtmlFromJson(JsonElement node)
     {

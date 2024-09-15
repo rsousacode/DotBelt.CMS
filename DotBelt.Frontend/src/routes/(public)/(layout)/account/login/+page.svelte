@@ -57,11 +57,7 @@
     <section>
       <form id="account" method="post">
         <h2>Use a local account to log in.</h2>
-
         <hr/>
-        <div class="message-container" role="alert">
-          Verify your email address
-        </div>
         <div class="form-floating mb-3">
           <input name="email" class="form-control" autocomplete="username" aria-required="true"
                  placeholder="name@example.com"/>

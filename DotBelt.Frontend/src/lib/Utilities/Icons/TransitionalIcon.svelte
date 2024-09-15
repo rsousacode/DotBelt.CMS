@@ -1,11 +1,11 @@
 <script lang="ts">
   import type {Component} from "svelte";
   import {fade, scale} from 'svelte/transition'
-  import statefulSwap from "$lib/Utilities/Icons/statefulSwap";
+  import statefulSwapSvelte from "$lib/Utilities/Icons/statefulSwap.svelte";
 
   let {component1, component2}: { component1: Component, component2: Component } = $props();
 
-  const {onOutro, transitionTo, state} = statefulSwap("first")
+  const {onOutro, transitionTo, state} = statefulSwapSvelte("first")
 
   export function triggerComponent2(time = 1000) {
     transitionTo("second")

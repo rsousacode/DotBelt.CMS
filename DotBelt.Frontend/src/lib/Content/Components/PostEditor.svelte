@@ -1,104 +1,101 @@
 <script lang="ts">
-    import {applyAction, deserialize} from '$app/forms';
-    import {goto, invalidateAll} from "$app/navigation";
-    import type {ActionResult} from "@sveltejs/kit";
-    import type {Post} from "$lib/API/GraphQL/generated";
-    import ApolloClientProvider from "$lib/API/GraphQL/ApolloClientProvider.svelte";
-    import {onMount} from "svelte";
-    import {updateDashboardFragment} from "$lib/Dashboard/DashboardStore.svelte.js";
-    import SaveIcon from "$lib/Utilities/Icons/SaveIcon.svelte";
-    import TransitionalIcon from "$lib/Utilities/Icons/TransitionalIcon.svelte";
-    import SuccessIcon from "$lib/Utilities/Icons/SuccessIcon.svelte";
-    import JsonIcon from "$lib/Utilities/Icons/JsonIcon.svelte";
-    import BlocksIcon from "$lib/Utilities/Icons/BlocksIcon.svelte";
-    import EditorJS from "$lib/Content/EditorJS/EditorJS.svelte";
-    import AceEditor from "$lib/Content/Components/AceEditor.svelte";
+  import {applyAction, deserialize} from '$app/forms';
+  import {goto, invalidateAll} from "$app/navigation";
+  import type {ActionResult} from "@sveltejs/kit";
+  import type {Post} from "$lib/API/GraphQL/generated";
+  import ApolloClientProvider from "$lib/API/GraphQL/ApolloClientProvider.svelte";
+  import {onMount} from "svelte";
+  import {updateDashboardFragment} from "$lib/Dashboard/DashboardStore.svelte.js";
+  import SaveIcon from "$lib/Utilities/Icons/SaveIcon.svelte";
+  import TransitionalIcon from "$lib/Utilities/Icons/TransitionalIcon.svelte";
+  import SuccessIcon from "$lib/Utilities/Icons/SuccessIcon.svelte";
+  import JsonIcon from "$lib/Utilities/Icons/JsonIcon.svelte";
+  import BlocksIcon from "$lib/Utilities/Icons/BlocksIcon.svelte";
+  import EditorJS from "$lib/Content/EditorJS/EditorJS.svelte";
+  import AceEditor from "$lib/Content/Components/AceEditor.svelte";
 
 
-    let {post = $bindable({content: "{}", urlName: ""})}: { post: Post } = $props();
+  let {post = $bindable({content: "{}", urlName: ""})}: { post: Post } = $props();
 
-    type EditorMode = 'editor' | 'code';
+  type EditorMode = 'editor' | 'code';
 
-    let currentMode: EditorMode = $state('editor');
+  let currentMode: EditorMode = $state('editor');
 
-    let successFeedbackIcon : TransitionalIcon;
-    onMount(() => {
-        updateDashboardFragment(saveButton);
-    })
+  let successFeedbackIcon: TransitionalIcon;
+  onMount(() => {
+    updateDashboardFragment(saveButton);
+  })
 
 
-    function sanitizePermalink(permalink: string) {
-        // Replace spaces with hyphens
-        permalink = permalink.replace(/\s+/g, "-");
+  function sanitizePermalink(permalink: string) {
+    // Replace spaces with hyphens
+    permalink = permalink.replace(/\s+/g, "-");
 
-        // Remove any characters that are not letters, numbers, or hyphens
-        permalink = permalink.replace(/[^a-zA-Z0-9-/]/g, "");
+    // Remove any characters that are not letters, numbers, or hyphens
+    permalink = permalink.replace(/[^a-zA-Z0-9-/]/g, "");
 
-        permalink = permalink.replace(/^-+|-+$/g, "");
-        // Convert the permalink to lowercase
-        permalink = permalink.toLowerCase();
+    permalink = permalink.replace(/^-+|-+$/g, "");
+    // Convert the permalink to lowercase
+    permalink = permalink.toLowerCase();
 
-        return permalink;
+    return permalink;
+  }
+
+  function handlePermalinkChanged(e) {
+    post.urlName = sanitizePermalink(post.urlName);
+  }
+
+  async function createPost() {
+
+    post.title = post.title ?? "";
+    post.description = post.description ?? "";
+    post.urlName = post.urlName ?? "";
+
+    const formData = new FormData();
+
+    Object.entries(post).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    const response = await fetch("", {
+      method: 'POST',
+      body: formData,
+    });
+
+    const result: ActionResult = deserialize(await response.text());
+
+    if (result.type === 'success') {
+
+      successFeedbackIcon.triggerComponent2();
+
+      if (result.data) {
+        await invalidateAll();
+        await goto("/my-admin/posts/" + result.data.id);
+      }
     }
 
-    function handlePermalinkChanged(e) {
-        post.urlName = sanitizePermalink(post.urlName);
-        console.log(post.urlName)
+    await applyAction(result);
+  }
+
+  function onSwitchMode() {
+    if (currentMode === 'code') {
+      currentMode = 'editor';
+    } else {
+      currentMode = 'code';
     }
+  }
 
-    async function createPost() {
-
-        post.title = post.title ?? "";
-        post.description = post.description ?? "";
-        post.urlName = post.urlName ?? "";
-
-        const formData = new FormData();
-
-        Object.entries(post).forEach(([key, value]) => {
-            formData.append(key, value);
-        });
-
-        const response = await fetch("", {
-            method: 'POST',
-            body: formData,
-        });
-
-        const result: ActionResult = deserialize(await response.text());
-        console.log(result);
-
-
-        if (result.type === 'success') {
-
-            successFeedbackIcon.triggerComponent2();
-
-            if(result.data) {
-                await invalidateAll();
-                await goto("/my-admin/posts/" + result.data.id);
-            }
-        }
-
-        await applyAction(result);
+  async function handleSubmit() {
+    if (!post.id) {
+      await createPost();
     }
-
-    function onSwitchMode() {
-        if (currentMode === 'code') {
-            currentMode = 'editor';
-        } else {
-            currentMode = 'code';
-        }
-    }
-
-    async function handleSubmit() {
-        if (!post.id) {
-            await createPost();
-        }
-    }
+  }
 </script>
 
 {#snippet saveButton()}
   <button class="dashboard-icon" type="button" onclick={handleSubmit}>
     <TransitionalIcon
-        bind:this={successFeedbackIcon}
+      bind:this={successFeedbackIcon}
       component1={SaveIcon}
       component2={SuccessIcon}/>
   </button>
@@ -111,26 +108,28 @@
   </button>
 {/snippet}
 <ApolloClientProvider>
-  <form method="POST" action=""  onsubmit={handleSubmit}>
+  <form method="POST" action="" onsubmit={handleSubmit}>
     <div class="row">
       <div class="col">
         <div class="editor-container">
           <div class="editor-container-header">
             <div class="permalink-editor-container">
               <span style="color: #919191;">https://my-website.com/</span>
-              <input class="classy-input permalink-input" onchange={handlePermalinkChanged} type="text" placeholder="write-your-url" bind:value={post.urlName}>
+              <input class="classy-input permalink-input" onchange={handlePermalinkChanged} type="text"
+                     placeholder="write-your-url" bind:value={post.urlName}>
             </div>
             <div>
-              <input class="classy-input" type="text"placeholder="Write your title here"
+              <input class="classy-input" type="text" placeholder="Write your title here"
                      bind:value={post.title}>
 
             </div>
           </div>
+          <hr>
 
           {#if currentMode === 'editor'}
-            <EditorJS  bind:content={post.content}/>
+            <EditorJS bind:content={post.content}/>
           {:else}
-            <AceEditor bind:code={post.content} />
+            <AceEditor bind:code={post.content}/>
           {/if}
 
         </div>

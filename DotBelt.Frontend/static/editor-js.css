@@ -20,3 +20,19 @@
 .ce-popover-item:hover:not(.ce-popover-item--no-hover) {
     background-color: var(--bs-btn-hover-color);
 }
+
+.cdx-search-field {
+    background: var(--bs-body-bg);
+}
+.ce-toolbar__settings-btn {
+    color: var(--bs-body-color);
+}
+
+.ce-toolbar__plus:hover,
+.ce-toolbar__settings-btn:hover {
+    background-color: unset;
+}
+
+.ce-block--selected .ce-block__content {
+    background: var(--bs-tertiary-bg);
+}

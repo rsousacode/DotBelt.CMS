@@ -27,7 +27,7 @@
           <svelte:component this={menu.icon}/>
         </span>
       {/if}
-      <a bind:this={nameElement} href={menu.href} class="name" >
+      <a bind:this={nameElement} target={menu.openNewTab ? '_blank' : ''} href={menu.href} class="name" >
           {menu.name}
         </a>
     </div>

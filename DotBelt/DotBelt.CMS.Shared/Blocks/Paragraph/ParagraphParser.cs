@@ -4,8 +4,7 @@ using DotBelt.CMS.Shared.CMS.Blocks.Parser;
 
 namespace DotBelt.CMS.Shared.CMS.Blocks;
 
-[BlockParser("paragraph")]
-public class ParagraphParser : StaticHtmlBlockParser
+public class ParagraphParser() : StaticHtmlBlockParser("paragraph")
 {
     public override string GetHtmlFromJson(JsonElement node)
     {

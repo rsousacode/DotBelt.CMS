@@ -22,18 +22,21 @@
                   name: "New Post",
                   href: "/my-admin/posts/new?type=Post",
                   icon: undefined,
+                  openNewTab: false,
                   items: []
                 },
                 {
                   name: "Categories",
                   href: "/my-admin/taxonomies?type=Post&name=categories",
                   icon: undefined,
+                  openNewTab: false,
                   items: []
                 },
                 {
                   name: "Tags",
                   href: "/my-admin/taxonomies?type=Post&name=tags",
                   icon: undefined,
+                  openNewTab: false,
                   items: []
                 },
               ]
@@ -47,12 +50,14 @@
                   name: "New Post",
                   href: "/my-admin/posts/new?type=page",
                   icon: undefined,
+                  openNewTab: false,
                   items: []
                 },
                 {
                   name: "Tags",
                   href: "/my-admin/taxonomies?type=page&name=tags",
                   icon: undefined,
+                  openNewTab: false,
                   items: []
                 },
               ]
@@ -66,12 +71,14 @@
                   name: "Upload Media",
                   href: "/my-admin/posts/new?type=page",
                   icon: undefined,
+                  openNewTab: false,
                   items: []
                 },
                 {
                   name: "Categories",
                   href: "/my-admin/taxonomies?type=media&name=categories",
                   icon: undefined,
+                  openNewTab: false,
                   items: []
                 },
               ]
@@ -85,18 +92,21 @@
                   name: "Users",
                   href: "/my-admin/settings/users",
                   icon: undefined,
+                  openNewTab: false,
                   items: []
                 },
                 {
                   name: "Reading",
                   href: "/my-admin/settings/reading",
                   icon: undefined,
+                  openNewTab: false,
                   items: []
                 },
                 {
                   name: "Roles",
                   href: "/my-admin/settings/roles",
                   icon: undefined,
+                  openNewTab: false,
                   items: []
                 },
               ]
@@ -105,19 +115,30 @@
               name: "Developer",
               href: "",
               icon: DebugIcon,
+              openNewTab: false,
               items: [
                 {
                   name: "GraphQL",
                   href: "/api/banana",
                   icon: undefined,
+                  openNewTab: false,
                   items: []
                 },
                 {
                   name: "Swagger",
                   href: "/swagger/index.html",
                   icon: undefined,
+                  openNewTab: false,
                   items: []
                 },
+                {
+                  name: "Email Dev",
+                  href: "http://localhost:5925",
+                  icon: undefined,
+                  openNewTab: true,
+                  items: []
+                },
+
               ]
           }}/>
 
