@@ -1,24 +1,32 @@
 using DotBelt.CMS.Shared.Users;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DotBelt.CMS.Shared.Commands.Seeding;
 
 public static class SeedAdmin
 {
-    public static ApplicationUser GetAdminUser()
+    public static async Task<ApplicationUser> GetCreatedAdminUser(IServiceProvider sp)
     {
-        var user = new ApplicationUser()
+        var userManager = sp.GetRequiredService<UserManager<ApplicationUser>>();
+
+        if (!userManager.SupportsUserEmail)
         {
-            UserName = "admin@localhost",
-            NormalizedUserName = "ADMIN@LOCALHOST",
-            Email = "admin@localhost",
-            NormalizedEmail = "ADMIN@LOCALHOST",
-            EmailConfirmed = true,
-            PasswordHash = "AQAAAAIAAYagAAAAEOw2yqwAsSSKkNBFv7Vjt3ITxStYjh1TE//vCvc4bF91xCJ8lh0IAirb2kYOxFIGgA==",
-            PhoneNumberConfirmed = false,
-            TwoFactorEnabled = false,
-            LockoutEnabled = true,
-        };
+            throw new NotSupportedException($"SeedAdmin requires a user store with email support.");
+        }
+
+        var userStore = sp.GetRequiredService<IUserStore<ApplicationUser>>();
+        var emailStore = (IUserEmailStore<ApplicationUser>)userStore;
+        var email = "admin@localhost";
+
+        var user = new ApplicationUser();
+        user.EmailConfirmed = true;
+        await userStore.SetUserNameAsync(user, email, CancellationToken.None);
+        await emailStore.SetEmailAsync(user, email, CancellationToken.None);
+        await userManager.CreateAsync(user, "Admin123$");
 
         return user;
+
     }
 }

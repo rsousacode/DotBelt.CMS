@@ -2,11 +2,9 @@
   import AccountIcon from "$lib/Utilities/Icons/AccountIcon.svelte";
   import {Api} from "$lib/API/Swagger/generated/Api";
   import {goto, invalidateAll} from "$app/navigation";
-  import type {SessionData} from "$lib/API/GraphQL/generated.js";
-  import {page} from "$app/stores";
+  import Authorize from "$lib/Users/Authorize.svelte";
+  import {AuthorizationState} from "$lib/Users/AuthorizationState";
 
-
-  let session = $derived<SessionData>($page.data.session);
 
   async function onLogoutClicked() {
     const beltCms = new Api();
@@ -39,7 +37,7 @@
     <span class="d-lg-none ms-2" id="bd-theme-text">Account</span>
   </button>
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
-    {#if session.isAuthenticated}
+    <Authorize state={AuthorizationState.LoggedIn}>
       <li>
         <button onclick={onLogoutClicked} type="button" class="dropdown-item d-flex align-items-center"
                 aria-pressed="false">
@@ -48,11 +46,11 @@
 
         </button>
       </li>
-    {:else}
+    </Authorize>
+    <Authorize state={AuthorizationState.LoggedOut}>
       <li>
         <a href="/account/login" type="button" class="btn dropdown-item d-flex align-items-center">
           Login
-
         </a>
       </li>
       <li>
@@ -60,6 +58,8 @@
           Register
         </a>
       </li>
-    {/if}
+    </Authorize>
+
+
   </ul>
 </li>

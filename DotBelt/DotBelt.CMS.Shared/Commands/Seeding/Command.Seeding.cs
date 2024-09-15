@@ -30,11 +30,11 @@ public class Command_Seeding : Command
             throw new InvalidOperationException("Could not find ApplicationDbContext");
         }
 
-        var user = SeedAdmin.GetAdminUser();
+        var user = await SeedAdmin.GetCreatedAdminUser(scope.ServiceProvider);
         
-        dbContext.Users.Add(user);
-       
-        var post = SeedPages.GetHelloWorld();       
+        var post = SeedPages.GetHelloWorld();     
+        
+        post.Author = user;
 
         dbContext.Add(post);
         

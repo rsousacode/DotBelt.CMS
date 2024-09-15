@@ -28,7 +28,7 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
     
-    builder.WebHost.UseUrls("http://0.0.0.0:5044");
+    builder.WebHost.UseUrls("http://0.0.0.0:5994");
     
     var configuration = builder.Configuration;
 
