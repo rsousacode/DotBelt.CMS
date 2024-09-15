@@ -11,8 +11,6 @@
       .required(" "),
   });
 
-  export interface RegisterSchema extends yup.InferType<typeof registerSchema> {}
-
 </script>
 <script lang="ts">
     import {SITE_NAME} from "$lib/constants";

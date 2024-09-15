@@ -49,6 +49,7 @@ namespace DotBelt.QueriesMutations
         {        
             services
                 .AddGraphQLServer()
+                .AddAuthorization()
                 .AddDiagnosticEventListener<ErrorLoggingDiagnosticsEventListener>()
                 .AddProjections()
                 .AddFiltering()

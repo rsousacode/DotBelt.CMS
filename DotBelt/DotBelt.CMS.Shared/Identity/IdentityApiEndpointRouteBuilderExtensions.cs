@@ -137,6 +137,19 @@ public static class IdentityApiEndpointRouteBuilderExtensions
             // The signInManager already produced the needed response in the form of a cookie or bearer token.
             return TypedResults.Empty;
         });
+        
+        
+        routeGroup.MapPost("/logout", async Task<Results<EmptyHttpResult, ProblemHttpResult>>
+        ( [FromServices] IServiceProvider sp) =>
+        {
+            var signInManager = sp.GetRequiredService<SignInManager<TUser>>();
+
+            await signInManager.SignOutAsync();
+
+            return TypedResults.Empty;
+        });
+        
+        
 
         routeGroup.MapPost("/refresh",
             async Task<Results<Ok<AccessTokenResponse>, UnauthorizedHttpResult, SignInHttpResult, ChallengeHttpResult>>

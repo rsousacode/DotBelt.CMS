@@ -1,30 +1,20 @@
 <script lang="ts" context="module">
   import * as yup from "yup";
-  import {ref} from "yup";
 
   const loginSchema = yup.object({
     email: yup.string()
       .email("the email address must be valid")
       .required(" "),
-    name: yup.string()
-      .required("O nome é um campo obrigatório"),
     password: yup
       .string()
       .min(8, "the password has to be minimum 8 characters")
       .required(" "),
-    passwordConfirmation: yup
+    rememberMe: yup
       .string()
-      .min(8, "the password has to be minimum 8 characters")
-      .oneOf([ref("password")], 'Passwords must match')
-      .required(" "),
-    acceptTermsAndConditions: yup
-      .bool()
-      .required(" ")
+      .nullable()
 
   });
 
-
-  export interface LoginSchema extends yup.InferType<typeof loginSchema> {}
 
 </script>
 
@@ -33,16 +23,30 @@
 
   import {onMount} from "svelte";
   import {page} from "$app/stores";
+  import {Api} from "$lib/API/Swagger/generated/Api";
+  import {goto, invalidateAll} from "$app/navigation";
+  import YupForm from "$lib/Utilities/YupForm.svelte";
 
   let model = $state({});
+  let yupForm: YupForm;
 
-  let fromRegisteringSuccessfully: boolean = $state(false);
+  async function handleSubmit(form, data: { email: string, password: string, rememberMe: null | string }) {
+    const beltCms = new Api();
 
-  onMount(() => {
-    fromRegisteringSuccessfully = $page.url.searchParams.get('success') === "1";
-  })
+    beltCms.api.authLoginCreate({
+      password: data.password,
+      email: data.email
+    }, {useCookies: true})
+      .then(async () => {
+        await goto("/")
+        await invalidateAll();
+      }).catch(async err => {
+      const errors = await err.json();
+      yupForm.onAspNetErrors(errors);
+    })
 
 
+  }
 
 </script>
 
@@ -55,24 +59,31 @@
 <div class="row">
   <div class="col-md-4">
     <section>
-      <form id="account" method="post">
+      <YupForm bind:this={yupForm} schema={loginSchema} onValidSubmit={handleSubmit}>
         <h2>Use a local account to log in.</h2>
         <hr/>
         <div class="form-floating mb-3">
           <input name="email" class="form-control" autocomplete="username" aria-required="true"
                  placeholder="name@example.com"/>
           <label for="email" class="form-label">Email</label>
+          <div data-error-for="email" class="text-danger"></div>
+          <div data-server-error-for="email" class="text-danger"></div>
         </div>
         <div class="form-floating mb-3">
-          <input id="password" name="password" class="form-control" autocomplete="current-password" aria-required="true"
+          <input type="password" id="password" name="password" class="form-control" autocomplete="current-password"
+                 aria-required="true"
                  placeholder="password"/>
           <label for="password" class="form-label">Password</label>
+          <div data-error-for="password" class="text-danger"></div>
+          <div data-server-error-for="password" class="text-danger"></div>
         </div>
         <div class="checkbox mb-3">
           <label class="form-label">
-            <input class="form-check-input"/>
+            <input name="rememberMe" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
             Remember Me
           </label>
+          <div data-error-for="rememberMe" class="text-danger"></div>
+          <div data-server-error-for="rememberMe" class="text-danger"></div>
         </div>
         <div>
           <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
@@ -82,7 +93,7 @@
           <p><a href="./register">Register as a new user</a></p>
           <p><a id="resend-confirmation" href="./ResendEmailConfirmation">Resend email confirmation</a></p>
         </div>
-      </form>
+      </YupForm>
     </section>
   </div>
   <div class="col-md-6 col-md-offset-2">

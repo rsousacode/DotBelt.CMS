@@ -2,6 +2,7 @@ using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.CMS;
 using DotBelt.QueriesMutations;
 using HotChocolate;
+using HotChocolate.Authorization;
 using HotChocolate.Data;
 using HotChocolate.Types;
 
@@ -12,7 +13,8 @@ namespace DotBelt.Queries;
 public class PostsQueries
 {
     // TODO: Use DTOs
-    
+    [Authorize]
+
     [UsePaging(IncludeTotalCount = true)]
     [UseProjection]
     [UseFiltering]

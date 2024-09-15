@@ -28,6 +28,7 @@
 
   async function onSubmit(e: SubmitEvent) {
     e.preventDefault();
+    console.log('submit')
 
     if(!form) {
       return;

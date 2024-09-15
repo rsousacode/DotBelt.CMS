@@ -73,6 +73,12 @@ export type ApplicationUserSortInput = {
   userName?: InputMaybe<SortEnumType>;
 };
 
+export enum ApplyPolicy {
+  AfterResolver = 'AFTER_RESOLVER',
+  BeforeResolver = 'BEFORE_RESOLVER',
+  Validation = 'VALIDATION'
+}
+
 export type BooleanOperationFilterInput = {
   eq?: InputMaybe<Scalars['Boolean']['input']>;
   neq?: InputMaybe<Scalars['Boolean']['input']>;
@@ -153,6 +159,7 @@ export type GraphQlQuery = {
   postById: Array<Post>;
   postByUrl: Array<Post>;
   posts?: Maybe<PostsConnection>;
+  session: SessionData;
   taxonomies?: Maybe<TaxonomiesConnection>;
   taxonomyById: Array<Taxonomy>;
   users?: Maybe<UsersConnection>;
@@ -334,6 +341,13 @@ export type PostsEdge = {
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
   node: Post;
+};
+
+export type SessionData = {
+  __typename?: 'SessionData';
+  email?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  isAuthenticated: Scalars['Boolean']['output'];
 };
 
 export enum SortEnumType {

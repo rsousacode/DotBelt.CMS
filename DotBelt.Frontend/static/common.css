@@ -15,3 +15,7 @@
     margin: auto;
     text-align: center;
 }
+
+.account-icon > svg {
+    font-size: 24px;
+}

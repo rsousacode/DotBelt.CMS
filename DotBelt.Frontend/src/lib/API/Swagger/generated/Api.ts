@@ -121,6 +121,20 @@ export namespace Api {
   /**
    * No description
    * @tags DotBelt.CMS.API
+   * @name AuthLogoutCreate
+   * @request POST:/api/auth/logout
+   */
+  export namespace AuthLogoutCreate {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+
+  /**
+   * No description
+   * @tags DotBelt.CMS.API
    * @name AuthRefreshCreate
    * @request POST:/api/auth/refresh
    */
@@ -141,8 +155,8 @@ export namespace Api {
   export namespace MapIdentityApiApiAuthConfirmEmail {
     export type RequestParams = {};
     export type RequestQuery = {
-      userId?: string;
-      code?: string;
+      userId: string;
+      code: string;
       changedEmail?: string;
     };
     export type RequestBody = never;
@@ -450,20 +464,6 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version 1.0
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
-  /**
-   * No description
-   *
-   * @tags DotBelt.CMS.API
-   * @name GetRoot
-   * @request GET:/
-   */
-  getRoot = (params: RequestParams = {}) =>
-    this.request<string, any>({
-      path: `/`,
-      method: "GET",
-      ...params,
-    });
-
   api = {
     /**
      * No description
@@ -510,6 +510,20 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags DotBelt.CMS.API
+     * @name AuthLogoutCreate
+     * @request POST:/api/auth/logout
+     */
+    authLogoutCreate: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/auth/logout`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags DotBelt.CMS.API
      * @name AuthRefreshCreate
      * @request POST:/api/auth/refresh
      */
@@ -531,9 +545,9 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/auth/confirmEmail
      */
     mapIdentityApiApiAuthConfirmEmail: (
-      query?: {
-        userId?: string;
-        code?: string;
+      query: {
+        userId: string;
+        code: string;
         changedEmail?: string;
       },
       params: RequestParams = {},

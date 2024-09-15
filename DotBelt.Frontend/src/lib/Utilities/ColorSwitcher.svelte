@@ -4,7 +4,6 @@
     onMount(() => {
 
 
-
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
             const storedTheme = window.getStoredTheme()
             if (storedTheme !== 'light' && storedTheme !== 'dark') {
