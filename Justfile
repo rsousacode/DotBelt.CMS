@@ -131,7 +131,7 @@ seed:
 #########################################        
 
 gen-swagger-ts:
-    cd DotBelt.Frontend && rm -rf ./src/lib/API/Swagger/generated && swagger-typescript-api -p ./swagger.json -o ./src/lib/API/Swagger/generated   --route-types  --unwrap-response-data 
+    cd DotBelt.Frontend && rm -rf ./src/lib/API/Swagger/generated && swagger-typescript-api -p ./swagger.json -o ./src/lib/API/Swagger/generated --axios   --route-types  --unwrap-response-data 
 
 
 #########################################
