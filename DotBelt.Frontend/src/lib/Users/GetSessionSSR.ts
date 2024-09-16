@@ -11,6 +11,8 @@ export async function getSessionSSR(fetch: any) : Promise<Maybe<SessionData | un
         query GetSession {
             session {
                 id,
+                email,
+                userName,
                 isAuthenticated
             }
         }

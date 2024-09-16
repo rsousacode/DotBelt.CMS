@@ -39,6 +39,11 @@
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
     <Authorize state={AuthorizationState.LoggedIn}>
       <li>
+        <a href="/account/manage" type="button" class="btn dropdown-item d-flex align-items-center">
+          Account
+        </a>
+      </li>
+      <li>
         <button onclick={onLogoutClicked} type="button" class="dropdown-item d-flex align-items-center"
                 aria-pressed="false">
 
@@ -46,6 +51,8 @@
 
         </button>
       </li>
+
+
     </Authorize>
     <Authorize state={AuthorizationState.LoggedOut}>
       <li>

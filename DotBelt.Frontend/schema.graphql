@@ -119,6 +119,7 @@ type PostsEdge {
 type SessionData {
   id: Int
   email: String
+  userName: String
   isAuthenticated: Boolean!
 }
 

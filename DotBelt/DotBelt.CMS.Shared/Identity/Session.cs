@@ -8,6 +8,9 @@ public class SessionData
 {
     public int? Id { get; set; }
     public string? Email { get; set; } = "";
+    
+    public string? UserName { get; set; } = "";
+    
     public bool IsAuthenticated { get; set; }
 
 }
@@ -43,6 +46,12 @@ public class Session
                 .Where(c => c.Type == ClaimTypes.Email)
                 .Select(x => x.Value)
                 .FirstOrDefault(),
+            UserName = user
+                .Claims
+                .Where(c => c.Type == ClaimTypes.Name)
+                .Select(x => x.Value)
+                .FirstOrDefault(),
+            
         };
 
     }

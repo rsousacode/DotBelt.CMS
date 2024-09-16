@@ -13,3 +13,15 @@ html {
     position: relative;
 }
 
+body, html {
+    height: 100%;
+}
+
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
+}

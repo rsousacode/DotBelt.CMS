@@ -394,6 +394,7 @@ export type SessionData = {
   email?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   isAuthenticated: Scalars['Boolean']['output'];
+  userName?: Maybe<Scalars['String']['output']>;
 };
 
 export enum SortEnumType {

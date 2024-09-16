@@ -105,8 +105,6 @@ try
 
     app.MapGroup("/api/auth")
         .MapIdentityApi<ApplicationUser>();
-        
-
 
     await using (var scope = app.Services.CreateAsyncScope())
     {
