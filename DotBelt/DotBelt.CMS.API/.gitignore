@@ -1,1 +1,7 @@
 logs/
+
+# Ignore all files in the upload folder
+wwwroot/uploads/*
+
+# Allow .gitkeep
+!wwwroot/uploads/.gitkeep

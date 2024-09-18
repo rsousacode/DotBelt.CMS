@@ -9,7 +9,7 @@ public class PostResponse
     public int Id { get; set; }
     public string? Title { get; set; }
     public required string? Description { get; set; }
-    public required string UrlName { get; set; }
+    public required string RelativeUrl { get; set; }
     
     public string? FullUrl { get; set; }
     
@@ -25,5 +25,5 @@ public class PostResponse
     
     public int? ParentPostId { get; set; }
     
-    public TaxonomyResponse[] Taxonomies { get; set; } = null!;
+    public IEnumerable<TaxonomyResponse> Taxonomies { get; set; } = null!;
 }

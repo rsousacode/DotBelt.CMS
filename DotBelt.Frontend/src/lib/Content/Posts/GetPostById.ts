@@ -10,7 +10,7 @@ export async function getPostById(client : ApolloClient<NormalizedCacheObject>, 
                 content,
                 title,
                 description,
-                urlName
+                relativeUrl
             }
         }
     `

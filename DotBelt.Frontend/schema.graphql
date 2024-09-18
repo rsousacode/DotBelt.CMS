@@ -64,26 +64,31 @@ type Post {
   id: Int!
   title: String
   description: String
-  urlName: String!
+  relativeUrl: String!
+  inTrash: Boolean
   fullUrl: String
   content: String
   contentHtml: String
   publishDate: DateTime!
   modifiedDate: DateTime
-  author: ApplicationUser
-  authorId: Int
+  author: ApplicationUser!
+  authorId: Int!
   postType: PostTypeEnum!
   parentPost: Post
   parentPostId: Int
   childrenPosts: [Post!]!
   taxonomies: [Taxonomy!]!
+  tenant: Tenant!
+  tenantId: Int!
+  featuredImage: Upload
+  featuredImageId: Int
 }
 
 type PostResponse {
   id: Int!
   title: String
   description: String
-  urlName: String!
+  relativeUrl: String!
   fullUrl: String
   content: String
   contentHtml: String
@@ -144,12 +149,16 @@ type TaxonomiesEdge {
 type Taxonomy {
   id: Int!
   title: String
-  urlName: String!
+  relativeUrl: String!
+  fullUrl: String
+  inTrash: Boolean
   publishDate: DateTime!
   modifiedDate: DateTime
+  tenant: Tenant!
+  tenantId: Int!
   description: String
-  author: ApplicationUser
-  authorId: Int
+  author: ApplicationUser!
+  authorId: Int!
   type: TaxonomyTypeEnum!
   parentTaxonomyId: Int
   posts: [Post!]!
@@ -158,7 +167,7 @@ type Taxonomy {
 type TaxonomyResponse {
   id: Int!
   title: String
-  urlName: String!
+  relativeUrl: String!
   publishDate: DateTime!
   modifiedDate: DateTime
   description: String
@@ -166,6 +175,34 @@ type TaxonomyResponse {
   authorId: Int
   type: TaxonomyTypeEnum!
   parentTaxonomyId: Int
+}
+
+type Tenant {
+  id: Int!
+  name: String!
+  allowedFileTypes: [String!]!
+  posts: [Post!]!
+  taxonomies: [Taxonomy!]!
+}
+
+type Upload {
+  id: Int!
+  title: String
+  description: String
+  fileName: String!
+  absolutePath: String
+  mimeType: String!
+  length: Int!
+  author: ApplicationUser!
+  authorId: Int!
+  relativeUrl: String!
+  fullUrl: String
+  inTrash: Boolean
+  publishDate: DateTime!
+  modifiedDate: DateTime
+  tenant: Tenant!
+  tenantId: Int!
+  metaData: String
 }
 
 type UserResponse {
@@ -250,7 +287,7 @@ input CreatePostInput {
 input Create_PostRequestInput {
   title: String
   description: String
-  urlName: String
+  relativeUrl: String
   content: String!
 }
 
@@ -277,7 +314,7 @@ input EditPostInput {
 input Edit_PostRequestInput {
   title: String
   description: String
-  urlName: String
+  relativeUrl: String
   content: String!
 }
 
@@ -317,13 +354,21 @@ input ListFilterInputTypeOfTaxonomyResponseFilterInput {
   any: Boolean
 }
 
+input ListStringOperationFilterInput {
+  all: StringOperationFilterInput
+  none: StringOperationFilterInput
+  some: StringOperationFilterInput
+  any: Boolean
+}
+
 input PostFilterInput {
   and: [PostFilterInput!]
   or: [PostFilterInput!]
   id: IntOperationFilterInput
   title: StringOperationFilterInput
   description: StringOperationFilterInput
-  urlName: StringOperationFilterInput
+  relativeUrl: StringOperationFilterInput
+  inTrash: BooleanOperationFilterInput
   fullUrl: StringOperationFilterInput
   content: StringOperationFilterInput
   contentHtml: StringOperationFilterInput
@@ -336,6 +381,10 @@ input PostFilterInput {
   parentPostId: IntOperationFilterInput
   childrenPosts: ListFilterInputTypeOfPostFilterInput
   taxonomies: ListFilterInputTypeOfTaxonomyFilterInput
+  tenant: TenantFilterInput
+  tenantId: IntOperationFilterInput
+  featuredImage: UploadFilterInput
+  featuredImageId: IntOperationFilterInput
 }
 
 input PostResponseFilterInput {
@@ -344,7 +393,7 @@ input PostResponseFilterInput {
   id: IntOperationFilterInput
   title: StringOperationFilterInput
   description: StringOperationFilterInput
-  urlName: StringOperationFilterInput
+  relativeUrl: StringOperationFilterInput
   fullUrl: StringOperationFilterInput
   content: StringOperationFilterInput
   contentHtml: StringOperationFilterInput
@@ -361,7 +410,7 @@ input PostResponseSortInput {
   id: SortEnumType
   title: SortEnumType
   description: SortEnumType
-  urlName: SortEnumType
+  relativeUrl: SortEnumType
   fullUrl: SortEnumType
   content: SortEnumType
   contentHtml: SortEnumType
@@ -400,9 +449,13 @@ input TaxonomyFilterInput {
   or: [TaxonomyFilterInput!]
   id: IntOperationFilterInput
   title: StringOperationFilterInput
-  urlName: StringOperationFilterInput
+  relativeUrl: StringOperationFilterInput
+  fullUrl: StringOperationFilterInput
+  inTrash: BooleanOperationFilterInput
   publishDate: DateTimeOperationFilterInput
   modifiedDate: DateTimeOperationFilterInput
+  tenant: TenantFilterInput
+  tenantId: IntOperationFilterInput
   description: StringOperationFilterInput
   author: ApplicationUserFilterInput
   authorId: IntOperationFilterInput
@@ -416,7 +469,7 @@ input TaxonomyResponseFilterInput {
   or: [TaxonomyResponseFilterInput!]
   id: IntOperationFilterInput
   title: StringOperationFilterInput
-  urlName: StringOperationFilterInput
+  relativeUrl: StringOperationFilterInput
   publishDate: DateTimeOperationFilterInput
   modifiedDate: DateTimeOperationFilterInput
   description: StringOperationFilterInput
@@ -429,9 +482,13 @@ input TaxonomyResponseFilterInput {
 input TaxonomySortInput {
   id: SortEnumType
   title: SortEnumType
-  urlName: SortEnumType
+  relativeUrl: SortEnumType
+  fullUrl: SortEnumType
+  inTrash: SortEnumType
   publishDate: SortEnumType
   modifiedDate: SortEnumType
+  tenant: TenantSortInput
+  tenantId: SortEnumType
   description: SortEnumType
   author: ApplicationUserSortInput
   authorId: SortEnumType
@@ -444,6 +501,43 @@ input TaxonomyTypeEnumOperationFilterInput {
   neq: TaxonomyTypeEnum
   in: [TaxonomyTypeEnum!]
   nin: [TaxonomyTypeEnum!]
+}
+
+input TenantFilterInput {
+  and: [TenantFilterInput!]
+  or: [TenantFilterInput!]
+  id: IntOperationFilterInput
+  name: StringOperationFilterInput
+  allowedFileTypes: ListStringOperationFilterInput
+  posts: ListFilterInputTypeOfPostFilterInput
+  taxonomies: ListFilterInputTypeOfTaxonomyFilterInput
+}
+
+input TenantSortInput {
+  id: SortEnumType
+  name: SortEnumType
+}
+
+input UploadFilterInput {
+  and: [UploadFilterInput!]
+  or: [UploadFilterInput!]
+  id: IntOperationFilterInput
+  title: StringOperationFilterInput
+  description: StringOperationFilterInput
+  fileName: StringOperationFilterInput
+  absolutePath: StringOperationFilterInput
+  mimeType: StringOperationFilterInput
+  length: IntOperationFilterInput
+  author: ApplicationUserFilterInput
+  authorId: IntOperationFilterInput
+  relativeUrl: StringOperationFilterInput
+  fullUrl: StringOperationFilterInput
+  inTrash: BooleanOperationFilterInput
+  publishDate: DateTimeOperationFilterInput
+  modifiedDate: DateTimeOperationFilterInput
+  tenant: TenantFilterInput
+  tenantId: IntOperationFilterInput
+  metaData: StringOperationFilterInput
 }
 
 input UserResponseFilterInput {

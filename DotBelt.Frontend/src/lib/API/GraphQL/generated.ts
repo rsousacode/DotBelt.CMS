@@ -97,8 +97,8 @@ export type CreatePostPayload = {
 export type Create_PostRequestInput = {
   content: Scalars['String']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
+  relativeUrl?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
-  urlName?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DateTimeOperationFilterInput = {
@@ -134,8 +134,8 @@ export type EditPostResult = {
 export type Edit_PostRequestInput = {
   content: Scalars['String']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
+  relativeUrl?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
-  urlName?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type GraphQlMutation = {
@@ -246,6 +246,13 @@ export type ListFilterInputTypeOfTaxonomyResponseFilterInput = {
   some?: InputMaybe<TaxonomyResponseFilterInput>;
 };
 
+export type ListStringOperationFilterInput = {
+  all?: InputMaybe<StringOperationFilterInput>;
+  any?: InputMaybe<Scalars['Boolean']['input']>;
+  none?: InputMaybe<StringOperationFilterInput>;
+  some?: InputMaybe<StringOperationFilterInput>;
+};
+
 /** Information about pagination in a connection. */
 export type PageInfo = {
   __typename?: 'PageInfo';
@@ -261,22 +268,27 @@ export type PageInfo = {
 
 export type Post = {
   __typename?: 'Post';
-  author?: Maybe<ApplicationUser>;
-  authorId?: Maybe<Scalars['Int']['output']>;
+  author: ApplicationUser;
+  authorId: Scalars['Int']['output'];
   childrenPosts: Array<Post>;
   content?: Maybe<Scalars['String']['output']>;
   contentHtml?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  featuredImage?: Maybe<Upload>;
+  featuredImageId?: Maybe<Scalars['Int']['output']>;
   fullUrl?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
+  inTrash?: Maybe<Scalars['Boolean']['output']>;
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   parentPost?: Maybe<Post>;
   parentPostId?: Maybe<Scalars['Int']['output']>;
   postType: PostTypeEnum;
   publishDate: Scalars['DateTime']['output'];
+  relativeUrl: Scalars['String']['output'];
   taxonomies: Array<Taxonomy>;
+  tenant: Tenant;
+  tenantId: Scalars['Int']['output'];
   title?: Maybe<Scalars['String']['output']>;
-  urlName: Scalars['String']['output'];
 };
 
 export type PostFilterInput = {
@@ -287,17 +299,22 @@ export type PostFilterInput = {
   content?: InputMaybe<StringOperationFilterInput>;
   contentHtml?: InputMaybe<StringOperationFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
+  featuredImage?: InputMaybe<UploadFilterInput>;
+  featuredImageId?: InputMaybe<IntOperationFilterInput>;
   fullUrl?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<IntOperationFilterInput>;
+  inTrash?: InputMaybe<BooleanOperationFilterInput>;
   modifiedDate?: InputMaybe<DateTimeOperationFilterInput>;
   or?: InputMaybe<Array<PostFilterInput>>;
   parentPost?: InputMaybe<PostFilterInput>;
   parentPostId?: InputMaybe<IntOperationFilterInput>;
   postType?: InputMaybe<PostTypeEnumOperationFilterInput>;
   publishDate?: InputMaybe<DateTimeOperationFilterInput>;
+  relativeUrl?: InputMaybe<StringOperationFilterInput>;
   taxonomies?: InputMaybe<ListFilterInputTypeOfTaxonomyFilterInput>;
+  tenant?: InputMaybe<TenantFilterInput>;
+  tenantId?: InputMaybe<IntOperationFilterInput>;
   title?: InputMaybe<StringOperationFilterInput>;
-  urlName?: InputMaybe<StringOperationFilterInput>;
 };
 
 export type PostResponse = {
@@ -313,9 +330,9 @@ export type PostResponse = {
   parentPostId?: Maybe<Scalars['Int']['output']>;
   postType: PostTypeEnum;
   publishDate: Scalars['DateTime']['output'];
+  relativeUrl: Scalars['String']['output'];
   taxonomies: Array<TaxonomyResponse>;
   title?: Maybe<Scalars['String']['output']>;
-  urlName: Scalars['String']['output'];
 };
 
 export type PostResponseFilterInput = {
@@ -332,9 +349,9 @@ export type PostResponseFilterInput = {
   parentPostId?: InputMaybe<IntOperationFilterInput>;
   postType?: InputMaybe<PostTypeEnumOperationFilterInput>;
   publishDate?: InputMaybe<DateTimeOperationFilterInput>;
+  relativeUrl?: InputMaybe<StringOperationFilterInput>;
   taxonomies?: InputMaybe<ListFilterInputTypeOfTaxonomyResponseFilterInput>;
   title?: InputMaybe<StringOperationFilterInput>;
-  urlName?: InputMaybe<StringOperationFilterInput>;
 };
 
 export type PostResponseSortInput = {
@@ -349,8 +366,8 @@ export type PostResponseSortInput = {
   parentPostId?: InputMaybe<SortEnumType>;
   postType?: InputMaybe<SortEnumType>;
   publishDate?: InputMaybe<SortEnumType>;
+  relativeUrl?: InputMaybe<SortEnumType>;
   title?: InputMaybe<SortEnumType>;
-  urlName?: InputMaybe<SortEnumType>;
 };
 
 export enum PostTypeEnum {
@@ -439,17 +456,21 @@ export type TaxonomiesEdge = {
 
 export type Taxonomy = {
   __typename?: 'Taxonomy';
-  author?: Maybe<ApplicationUser>;
-  authorId?: Maybe<Scalars['Int']['output']>;
+  author: ApplicationUser;
+  authorId: Scalars['Int']['output'];
   description?: Maybe<Scalars['String']['output']>;
+  fullUrl?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
+  inTrash?: Maybe<Scalars['Boolean']['output']>;
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   parentTaxonomyId?: Maybe<Scalars['Int']['output']>;
   posts: Array<Post>;
   publishDate: Scalars['DateTime']['output'];
+  relativeUrl: Scalars['String']['output'];
+  tenant: Tenant;
+  tenantId: Scalars['Int']['output'];
   title?: Maybe<Scalars['String']['output']>;
   type: TaxonomyTypeEnum;
-  urlName: Scalars['String']['output'];
 };
 
 export type TaxonomyFilterInput = {
@@ -457,15 +478,19 @@ export type TaxonomyFilterInput = {
   author?: InputMaybe<ApplicationUserFilterInput>;
   authorId?: InputMaybe<IntOperationFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
+  fullUrl?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<IntOperationFilterInput>;
+  inTrash?: InputMaybe<BooleanOperationFilterInput>;
   modifiedDate?: InputMaybe<DateTimeOperationFilterInput>;
   or?: InputMaybe<Array<TaxonomyFilterInput>>;
   parentTaxonomyId?: InputMaybe<IntOperationFilterInput>;
   posts?: InputMaybe<ListFilterInputTypeOfPostFilterInput>;
   publishDate?: InputMaybe<DateTimeOperationFilterInput>;
+  relativeUrl?: InputMaybe<StringOperationFilterInput>;
+  tenant?: InputMaybe<TenantFilterInput>;
+  tenantId?: InputMaybe<IntOperationFilterInput>;
   title?: InputMaybe<StringOperationFilterInput>;
   type?: InputMaybe<TaxonomyTypeEnumOperationFilterInput>;
-  urlName?: InputMaybe<StringOperationFilterInput>;
 };
 
 export type TaxonomyResponse = {
@@ -477,9 +502,9 @@ export type TaxonomyResponse = {
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   parentTaxonomyId?: Maybe<Scalars['Int']['output']>;
   publishDate: Scalars['DateTime']['output'];
+  relativeUrl: Scalars['String']['output'];
   title?: Maybe<Scalars['String']['output']>;
   type: TaxonomyTypeEnum;
-  urlName: Scalars['String']['output'];
 };
 
 export type TaxonomyResponseFilterInput = {
@@ -492,22 +517,26 @@ export type TaxonomyResponseFilterInput = {
   or?: InputMaybe<Array<TaxonomyResponseFilterInput>>;
   parentTaxonomyId?: InputMaybe<IntOperationFilterInput>;
   publishDate?: InputMaybe<DateTimeOperationFilterInput>;
+  relativeUrl?: InputMaybe<StringOperationFilterInput>;
   title?: InputMaybe<StringOperationFilterInput>;
   type?: InputMaybe<TaxonomyTypeEnumOperationFilterInput>;
-  urlName?: InputMaybe<StringOperationFilterInput>;
 };
 
 export type TaxonomySortInput = {
   author?: InputMaybe<ApplicationUserSortInput>;
   authorId?: InputMaybe<SortEnumType>;
   description?: InputMaybe<SortEnumType>;
+  fullUrl?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
+  inTrash?: InputMaybe<SortEnumType>;
   modifiedDate?: InputMaybe<SortEnumType>;
   parentTaxonomyId?: InputMaybe<SortEnumType>;
   publishDate?: InputMaybe<SortEnumType>;
+  relativeUrl?: InputMaybe<SortEnumType>;
+  tenant?: InputMaybe<TenantSortInput>;
+  tenantId?: InputMaybe<SortEnumType>;
   title?: InputMaybe<SortEnumType>;
   type?: InputMaybe<SortEnumType>;
-  urlName?: InputMaybe<SortEnumType>;
 };
 
 export enum TaxonomyTypeEnum {
@@ -521,6 +550,73 @@ export type TaxonomyTypeEnumOperationFilterInput = {
   in?: InputMaybe<Array<TaxonomyTypeEnum>>;
   neq?: InputMaybe<TaxonomyTypeEnum>;
   nin?: InputMaybe<Array<TaxonomyTypeEnum>>;
+};
+
+export type Tenant = {
+  __typename?: 'Tenant';
+  allowedFileTypes: Array<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  posts: Array<Post>;
+  taxonomies: Array<Taxonomy>;
+};
+
+export type TenantFilterInput = {
+  allowedFileTypes?: InputMaybe<ListStringOperationFilterInput>;
+  and?: InputMaybe<Array<TenantFilterInput>>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  name?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<TenantFilterInput>>;
+  posts?: InputMaybe<ListFilterInputTypeOfPostFilterInput>;
+  taxonomies?: InputMaybe<ListFilterInputTypeOfTaxonomyFilterInput>;
+};
+
+export type TenantSortInput = {
+  id?: InputMaybe<SortEnumType>;
+  name?: InputMaybe<SortEnumType>;
+};
+
+export type Upload = {
+  __typename?: 'Upload';
+  absolutePath?: Maybe<Scalars['String']['output']>;
+  author: ApplicationUser;
+  authorId: Scalars['Int']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  fileName: Scalars['String']['output'];
+  fullUrl?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  inTrash?: Maybe<Scalars['Boolean']['output']>;
+  length: Scalars['Int']['output'];
+  metaData?: Maybe<Scalars['String']['output']>;
+  mimeType: Scalars['String']['output'];
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  publishDate: Scalars['DateTime']['output'];
+  relativeUrl: Scalars['String']['output'];
+  tenant: Tenant;
+  tenantId: Scalars['Int']['output'];
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type UploadFilterInput = {
+  absolutePath?: InputMaybe<StringOperationFilterInput>;
+  and?: InputMaybe<Array<UploadFilterInput>>;
+  author?: InputMaybe<ApplicationUserFilterInput>;
+  authorId?: InputMaybe<IntOperationFilterInput>;
+  description?: InputMaybe<StringOperationFilterInput>;
+  fileName?: InputMaybe<StringOperationFilterInput>;
+  fullUrl?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  inTrash?: InputMaybe<BooleanOperationFilterInput>;
+  length?: InputMaybe<IntOperationFilterInput>;
+  metaData?: InputMaybe<StringOperationFilterInput>;
+  mimeType?: InputMaybe<StringOperationFilterInput>;
+  modifiedDate?: InputMaybe<DateTimeOperationFilterInput>;
+  or?: InputMaybe<Array<UploadFilterInput>>;
+  publishDate?: InputMaybe<DateTimeOperationFilterInput>;
+  relativeUrl?: InputMaybe<StringOperationFilterInput>;
+  tenant?: InputMaybe<TenantFilterInput>;
+  tenantId?: InputMaybe<IntOperationFilterInput>;
+  title?: InputMaybe<StringOperationFilterInput>;
 };
 
 export type UserResponse = {

@@ -29,13 +29,13 @@ public class Edit
 
         if (post == null) return new EditPostResult() { Success = false };;
         
-        var urlName = PostHelpers.SanitizePermalink(payload.UrlName);
+        var urlName = PostHelpers.SanitizePermalink(payload.RelativeUrl);
 
         post.ModifiedDate = DateTime.UtcNow;
         post.Title = payload.Title; 
         post.Content = payload.Content;
         post.Description = payload.Description;
-        post.UrlName = urlName;
+        post.RelativeUrl = urlName;
         
         post.FullUrl = urlName;
 

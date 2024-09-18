@@ -3,11 +3,11 @@ using DotBelt.CMS.Shared.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace DotBelt.CMS.Shared.CMS;
+namespace DotBelt.CMS.Shared.CMS.Media;
 
-public class TaxonomyConfiguration : IEntityTypeConfiguration<Taxonomy> 
+public class UploadConfiguration : IEntityTypeConfiguration<Upload> 
 {
-    public void Configure(EntityTypeBuilder<Taxonomy> builder)
+    public void Configure(EntityTypeBuilder<Upload> builder)
     {
         builder
             .Property(x => x.FullUrl)
@@ -17,32 +17,30 @@ public class TaxonomyConfiguration : IEntityTypeConfiguration<Taxonomy>
             .Property(x => x.RelativeUrl)
             .HasMaxLength(255);
 
+        builder
+            .Property(x => x.MetaData)
+            .HasColumnType("jsonb");
     }
 }
 
-public class Taxonomy : IContent
+public class Upload : IContent
 {
     public int Id { get; set; }
     public string? Title { get; set; }
+    public string? Description { get; set; }
+    public required string FileName { get; set; }
+    public required string MimeType { get; set; }
+    public int Length { get; set; }
+    public required ApplicationUser Author { get; set; }
+    public int AuthorId { get; set; }
     public required string RelativeUrl { get; set; }
-    
     public string? FullUrl { get; set; }
-    
     public bool? InTrash { get; set; }
     public DateTimeOffset PublishDate { get; set; }
     public DateTimeOffset? ModifiedDate { get; set; }
-    
     public required Tenant Tenant { get; set; }
     public int TenantId { get; set; }
 
-    public required string? Description { get; set; }
-    public required ApplicationUser Author { get; set; }
-    public required int AuthorId { get; set; }
-
-    public TaxonomyTypeEnum Type { get; set; }
-    
-    public int? ParentTaxonomyId { get; set; }
-
-
-    public ICollection<Post> Posts { get; set; } = null!;
+    public string? MetaData { get; set; }
+     
 }

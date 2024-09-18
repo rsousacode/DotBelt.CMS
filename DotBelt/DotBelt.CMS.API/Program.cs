@@ -3,6 +3,7 @@ using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.ManualMigrations;
 using DotBelt.CMS.Shared.Users;
 using BoilerPlateSSR.Swagger;
+using DotBelt.CMS.Shared.CMS.Media;
 using DotBelt.CMS.Shared.Identity;
 using DotBelt.CMS.Shared.Internal;
 using DotBelt.Identity;
@@ -35,7 +36,13 @@ try
     
 
     services.AddAuthentication();
+   
     services.AddAuthorization();
+    
+    services.AddAntiforgery(options =>
+    {
+        options.HeaderName = "X-XSRF-TOKEN"; 
+    });
 
     services.AutoRegisterFromDotBeltCMSShared();
 
@@ -90,6 +97,7 @@ try
     app.UseAuthentication();
 
     app.UseAuthorization();
+    app.UseAntiforgery();
 
     app.MapGraphQL("/api/graphql").WithOptions(new GraphQLServerOptions()
     {
@@ -105,6 +113,9 @@ try
 
     app.MapGroup("/api/auth")
         .MapIdentityApi<ApplicationUser>();
+
+    app.MapGroup("/api/uploads")
+        .MapUploadsApi();
 
     await using (var scope = app.Services.CreateAsyncScope())
     {

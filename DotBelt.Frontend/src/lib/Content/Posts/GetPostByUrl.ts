@@ -9,7 +9,7 @@ export async function getPostByUrl(client: ApolloClient<NormalizedCacheObject>, 
             postByUrl(url: $url) {
                 contentHtml,
                 title,
-                urlName
+                relativeUrl
             }
         }
     `

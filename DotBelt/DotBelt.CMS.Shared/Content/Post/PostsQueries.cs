@@ -42,7 +42,7 @@ public class PostsQueries
     {
         return context
             .Posts
-            .Where(x => x.UrlName == url)
+            .Where(x => x.RelativeUrl == url)
             .ProjectToPostResponse();
     }
 

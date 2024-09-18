@@ -1,5 +1,7 @@
 using System.CommandLine;
 using BoilerPlateSSR.Swagger;
+using DotBelt.CMS.Shared.CMS.Media;
+using DotBelt.CMS.Shared.Tenants;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -30,12 +32,21 @@ public class Command_Seeding : Command
             throw new InvalidOperationException("Could not find ApplicationDbContext");
         }
 
+        var tenant = new Tenant()
+        {
+            AllowedFileTypes = Mimes.Images,
+            Name = "boilerplate.com",
+
+        };
+
+        dbContext.Add(tenant);
+        
+        await dbContext.SaveChangesAsync();
+
         var user = await SeedAdmin.GetCreatedAdminUser(scope.ServiceProvider);
         
-        var post = SeedPages.GetHelloWorld();     
+        var post = SeedPages.GetHelloWorld(user.Id, tenant.Id);     
         
-        post.Author = user;
-
         dbContext.Add(post);
         
         await dbContext.SaveChangesAsync();

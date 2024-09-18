@@ -3,7 +3,10 @@ using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.CMS;
 using DotBelt.QueriesMutations;
 using DotBelt.CMS.Shared.CMS.Blocks.Parser;
+using DotBelt.CMS.Shared.Identity;
 using HotChocolate.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotBelt.Mutations.Posts.Create;
 
@@ -11,11 +14,26 @@ namespace DotBelt.Mutations.Posts.Create;
 public class Create
 {
     [Authorize]
-    public async Task<Post> CreatePostAsync( ApplicationDbContext dbContext, 
+    public async Task<Post?> CreatePostAsync( 
+        ApplicationDbContext dbContext, 
+        [Service] IHttpContextAccessor httpContextAccessor,
         [Service] BlockParser blockParser,
         PostTypeEnum type, Create_PostRequest payload )
     {
-        var urlName = PostHelpers.SanitizePermalink(payload.UrlName);
+        var urlName = PostHelpers.SanitizePermalink(payload.RelativeUrl);
+
+        var userId = httpContextAccessor.GetUserId();
+        
+        if(userId == null)
+        {
+            return null;
+        }
+        
+        var tenantId = dbContext
+            .Tenants
+            .AsNoTracking()
+            .Select(x => x.Id)
+            .FirstOrDefault();
         
         
         var post = new Post()
@@ -23,18 +41,18 @@ public class Create
             Title = payload.Title,
             Content = payload.Content,
             PostType = type,
-            UrlName = urlName,
+            RelativeUrl = urlName,
             FullUrl = urlName,
             Description = payload.Description,
+            Author = null!,
+            AuthorId = userId.Value,
+            TenantId = tenantId,
+            ContentHtml = blockParser.GetHtmlFromContent(payload.Content),
+            PublishDate = DateTime.UtcNow,
+            Tenant = null!
         };
 
-        post.PublishDate = DateTime.UtcNow;
 
-        if (payload.Content != null)
-        {
-            post.ContentHtml = blockParser.GetHtmlFromContent(payload.Content);
-        }
-        
         dbContext.Posts.Add( post );
         
         await dbContext.SaveChangesAsync();

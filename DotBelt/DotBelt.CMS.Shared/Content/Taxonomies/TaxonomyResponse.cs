@@ -8,7 +8,7 @@ public class TaxonomyResponse
 {
     public int Id { get; set; }
     public string? Title { get; set; }
-    public required string UrlName { get; set; }
+    public required string RelativeUrl { get; set; }
     public DateTimeOffset PublishDate { get; set; }
     public DateTimeOffset? ModifiedDate { get; set; }
 

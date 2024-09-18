@@ -1,6 +1,8 @@
 using System.Reflection;
 using DotBelt.CMS.Shared.CMS;
+using DotBelt.CMS.Shared.CMS.Media;
 using DotBelt.CMS.Shared.ManualMigrations;
+using DotBelt.CMS.Shared.Tenants;
 using DotBelt.CMS.Shared.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -17,6 +19,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         base.OnModelCreating(modelBuilder);
         //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         modelBuilder.ApplyConfiguration(new PostTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new TaxonomyConfiguration());
+        modelBuilder.ApplyConfiguration(new UploadConfiguration());
+        
         modelBuilder.HasPostgresExtension("uuid-ossp");        
         
     }
@@ -25,6 +30,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     
     public DbSet<Post> Posts { get; set; } 
     public DbSet<Taxonomy> Taxonomies { get; set; }
+    
+    public DbSet<Upload> Uploads { get; set; }
+    
+    public DbSet<Tenant> Tenants { get; set; }
     
 
     

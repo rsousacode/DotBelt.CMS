@@ -23,6 +23,70 @@ namespace DotBelt.CMS.Shared.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Media.Upload", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AbsolutePath")
+                        .HasColumnType("text");
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("FullUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<bool?>("InTrash")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Length")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("MetaData")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset?>("ModifiedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("PublishDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RelativeUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("Uploads");
+                });
+
             modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -31,7 +95,7 @@ namespace DotBelt.CMS.Shared.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AuthorId")
+                    b.Property<int>("AuthorId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Content")
@@ -43,8 +107,14 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<int?>("FeaturedImageId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("FullUrl")
                         .HasColumnType("text");
+
+                    b.Property<bool?>("InTrash")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");
@@ -59,21 +129,28 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.Property<DateTimeOffset>("PublishDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("RelativeUrl")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("UrlName")
-                        .IsRequired()
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
 
+                    b.HasIndex("FeaturedImageId");
+
                     b.HasIndex("FullUrl")
                         .IsUnique();
 
                     b.HasIndex("ParentPostId");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Posts");
                 });
@@ -86,11 +163,18 @@ namespace DotBelt.CMS.Shared.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AuthorId")
+                    b.Property<int>("AuthorId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<string>("FullUrl")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<bool?>("InTrash")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");
@@ -101,21 +185,25 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.Property<DateTimeOffset>("PublishDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("RelativeUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Title")
                         .HasColumnType("text");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
-                    b.Property<string>("UrlName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
 
-                    b.HasIndex("ParentTaxonomyId");
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Taxonomies");
                 });
@@ -135,6 +223,27 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ManualMigrations");
+                });
+
+            modelBuilder.Entity("DotBelt.CMS.Shared.Tenants.Tenant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string[]>("AllowedFileTypes")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tenants");
                 });
 
             modelBuilder.Entity("DotBelt.CMS.Shared.Users.ApplicationUser", b =>
@@ -351,34 +460,73 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.ToTable("PostTaxonomy");
                 });
 
+            modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Media.Upload", b =>
+                {
+                    b.HasOne("DotBelt.CMS.Shared.Users.ApplicationUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DotBelt.CMS.Shared.Tenants.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Tenant");
+                });
+
             modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Post", b =>
                 {
                     b.HasOne("DotBelt.CMS.Shared.Users.ApplicationUser", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DotBelt.CMS.Shared.CMS.Media.Upload", "FeaturedImage")
+                        .WithMany()
+                        .HasForeignKey("FeaturedImageId");
 
                     b.HasOne("DotBelt.CMS.Shared.CMS.Post", "ParentPost")
                         .WithMany("ChildrenPosts")
                         .HasForeignKey("ParentPostId");
 
+                    b.HasOne("DotBelt.CMS.Shared.Tenants.Tenant", "Tenant")
+                        .WithMany("Posts")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Author");
 
+                    b.Navigation("FeaturedImage");
+
                     b.Navigation("ParentPost");
+
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Taxonomy", b =>
                 {
                     b.HasOne("DotBelt.CMS.Shared.Users.ApplicationUser", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("DotBelt.CMS.Shared.CMS.Taxonomy", "ParentTaxonomy")
-                        .WithMany("ChildrenTaxonomies")
-                        .HasForeignKey("ParentTaxonomyId");
+                    b.HasOne("DotBelt.CMS.Shared.Tenants.Tenant", "Tenant")
+                        .WithMany("Taxonomies")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Author");
 
-                    b.Navigation("ParentTaxonomy");
+                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -452,9 +600,11 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.Navigation("ChildrenPosts");
                 });
 
-            modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Taxonomy", b =>
+            modelBuilder.Entity("DotBelt.CMS.Shared.Tenants.Tenant", b =>
                 {
-                    b.Navigation("ChildrenTaxonomies");
+                    b.Navigation("Posts");
+
+                    b.Navigation("Taxonomies");
                 });
 #pragma warning restore 612, 618
         }

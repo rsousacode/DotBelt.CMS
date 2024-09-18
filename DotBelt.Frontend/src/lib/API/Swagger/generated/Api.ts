@@ -17,6 +17,27 @@ export interface AccessTokenResponse {
   refreshToken: string | null;
 }
 
+export interface ApplicationUser {
+  /** @format int32 */
+  id?: number;
+  userName?: string | null;
+  normalizedUserName?: string | null;
+  email?: string | null;
+  normalizedEmail?: string | null;
+  emailConfirmed?: boolean;
+  passwordHash?: string | null;
+  securityStamp?: string | null;
+  concurrencyStamp?: string | null;
+  phoneNumber?: string | null;
+  phoneNumberConfirmed?: boolean;
+  twoFactorEnabled?: boolean;
+  /** @format date-time */
+  lockoutEnd?: string | null;
+  lockoutEnabled?: boolean;
+  /** @format int32 */
+  accessFailedCount?: number;
+}
+
 export interface ForgotPasswordRequest {
   email: string | null;
 }
@@ -30,6 +51,13 @@ export interface HttpValidationProblemDetails {
   instance?: string | null;
   errors?: Record<string, string[]>;
   [key: string]: any;
+}
+
+export interface IFile {
+  name?: string | null;
+  /** @format int64 */
+  length?: number | null;
+  contentType?: string | null;
 }
 
 export interface InfoRequest {
@@ -48,6 +76,45 @@ export interface LoginRequest {
   password: string | null;
   twoFactorCode?: string | null;
   twoFactorRecoveryCode?: string | null;
+}
+
+export interface Post {
+  /** @format int32 */
+  id?: number;
+  title?: string | null;
+  description: string | null;
+  relativeUrl: string | null;
+  inTrash?: boolean | null;
+  fullUrl?: string | null;
+  content?: string | null;
+  contentHtml?: string | null;
+  /** @format date-time */
+  publishDate?: string;
+  /** @format date-time */
+  modifiedDate?: string | null;
+  author: ApplicationUser;
+  /** @format int32 */
+  authorId: number;
+  postType?: PostTypeEnum;
+  parentPost?: Post;
+  /** @format int32 */
+  parentPostId?: number | null;
+  childrenPosts?: Post[] | null;
+  taxonomies?: Taxonomy[] | null;
+  tenant: Tenant;
+  /** @format int32 */
+  tenantId?: number;
+  featuredImage?: Upload;
+  /** @format int32 */
+  featuredImageId?: number | null;
+}
+
+/** @format int32 */
+export enum PostTypeEnum {
+  Value0 = 0,
+  Value1 = 1,
+  Value2 = 2,
+  Value3 = 3,
 }
 
 export interface RefreshRequest {
@@ -69,6 +136,46 @@ export interface ResetPasswordRequest {
   newPassword: string | null;
 }
 
+export interface Taxonomy {
+  /** @format int32 */
+  id?: number;
+  title?: string | null;
+  relativeUrl: string | null;
+  fullUrl?: string | null;
+  inTrash?: boolean | null;
+  /** @format date-time */
+  publishDate?: string;
+  /** @format date-time */
+  modifiedDate?: string | null;
+  tenant: Tenant;
+  /** @format int32 */
+  tenantId?: number;
+  description: string | null;
+  author: ApplicationUser;
+  /** @format int32 */
+  authorId: number;
+  type?: TaxonomyTypeEnum;
+  /** @format int32 */
+  parentTaxonomyId?: number | null;
+  posts?: Post[] | null;
+}
+
+/** @format int32 */
+export enum TaxonomyTypeEnum {
+  Value0 = 0,
+  Value1 = 1,
+  Value2 = 2,
+}
+
+export interface Tenant {
+  /** @format int32 */
+  id?: number;
+  name: string | null;
+  allowedFileTypes: string[] | null;
+  posts?: Post[] | null;
+  taxonomies?: Taxonomy[] | null;
+}
+
 export interface TwoFactorRequest {
   enable?: boolean | null;
   twoFactorCode?: string | null;
@@ -84,6 +191,32 @@ export interface TwoFactorResponse {
   recoveryCodes?: string[] | null;
   isTwoFactorEnabled: boolean;
   isMachineRemembered: boolean;
+}
+
+export interface Upload {
+  /** @format int32 */
+  id?: number;
+  title?: string | null;
+  description?: string | null;
+  fileName: string | null;
+  absolutePath?: string | null;
+  mimeType: string | null;
+  /** @format int32 */
+  length?: number;
+  author: ApplicationUser;
+  /** @format int32 */
+  authorId?: number;
+  relativeUrl: string | null;
+  fullUrl?: string | null;
+  inTrash?: boolean | null;
+  /** @format date-time */
+  publishDate?: string;
+  /** @format date-time */
+  modifiedDate?: string | null;
+  tenant: Tenant;
+  /** @format int32 */
+  tenantId?: number;
+  metaData?: string | null;
 }
 
 export namespace Api {
@@ -246,6 +379,20 @@ export namespace Api {
     export type RequestBody = InfoRequest;
     export type RequestHeaders = {};
     export type ResponseBody = InfoResponse;
+  }
+
+  /**
+   * No description
+   * @tags DotBelt.CMS.API
+   * @name UploadsCreate
+   * @request POST:/api/uploads
+   */
+  export namespace UploadsCreate {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = IFile[];
+    export type RequestHeaders = {};
+    export type ResponseBody = Upload[];
   }
 }
 
@@ -575,6 +722,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     authManageInfoCreate: (data: InfoRequest, params: RequestParams = {}) =>
       this.request<InfoResponse, HttpValidationProblemDetails | void>({
         path: `/api/auth/manage/info`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags DotBelt.CMS.API
+     * @name UploadsCreate
+     * @request POST:/api/uploads
+     */
+    uploadsCreate: (data: IFile[], params: RequestParams = {}) =>
+      this.request<Upload[], HttpValidationProblemDetails>({
+        path: `/api/uploads`,
         method: "POST",
         body: data,
         type: ContentType.Json,

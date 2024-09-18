@@ -27,7 +27,7 @@ export async function getPosts(client: ApolloClient<NormalizedCacheObject>,
                         id
                         title
                         publishDate
-                        urlName
+                        relativeUrl
                     }
             }
         }

@@ -13,9 +13,11 @@
   import BlocksIcon from "$lib/Utilities/Icons/BlocksIcon.svelte";
   import EditorJS from "$lib/Content/EditorJS/EditorJS.svelte";
   import AceEditor from "$lib/Content/Components/AceEditor.svelte";
+  import type {ChangeEventHandler} from "svelte/elements";
+  import DropfileZone from "$lib/Content/Media/DropfileZone.svelte";
 
 
-  let {post = $bindable({content: "{}", urlName: ""})}: { post: Post } = $props();
+  let {post = $bindable({content: "{}", relativeUrl: ""})}: { post: Post } = $props();
 
   type EditorMode = 'editor' | 'code';
 
@@ -41,15 +43,15 @@
     return permalink;
   }
 
-  function handlePermalinkChanged(e) {
-    post.urlName = sanitizePermalink(post.urlName);
+  function handlePermalinkChanged(e: ChangeEventHandler<HTMLInputElement>) {
+    post.relativeUrl = sanitizePermalink(post.relativeUrl);
   }
 
   async function createPost() {
 
     post.title = post.title ?? "";
     post.description = post.description ?? "";
-    post.urlName = post.urlName ?? "";
+    post.relativeUrl= post.relativeUrl?? "";
 
     const formData = new FormData();
 
@@ -60,6 +62,7 @@
     const response = await fetch("", {
       method: 'POST',
       body: formData,
+      credentials: 'include',
     });
 
     const result: ActionResult = deserialize(await response.text());
@@ -116,7 +119,7 @@
             <div class="permalink-editor-container">
               <span style="color: #919191;">https://my-website.com/</span>
               <input class="classy-input permalink-input" onchange={handlePermalinkChanged} type="text"
-                     placeholder="write-your-url" bind:value={post.urlName}>
+                     placeholder="write-your-url" bind:value={post.relativeUrl}>
             </div>
             <div>
               <input class="classy-input" type="text" placeholder="Write your title here"
@@ -138,3 +141,8 @@
   </form>
 </ApolloClientProvider>
 
+<form action="/api/uploads" method="post" enctype="multipart/form-data">
+  <input type="file" multiple name="files">
+  <input type="submit" value="Submit">
+</form>
+<DropfileZone/>
