@@ -162,6 +162,7 @@ export type GraphQlQuery = {
   session: SessionData;
   taxonomies?: Maybe<TaxonomiesConnection>;
   taxonomyById: Array<Taxonomy>;
+  uploads?: Maybe<UploadsConnection>;
   users?: Maybe<UsersConnection>;
 };
 
@@ -198,6 +199,16 @@ export type GraphQlQueryTaxonomiesArgs = {
 
 export type GraphQlQueryTaxonomyByIdArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type GraphQlQueryUploadsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Array<UploadResponseSortInput>>;
+  where?: InputMaybe<UploadResponseFilterInput>;
 };
 
 
@@ -578,7 +589,6 @@ export type TenantSortInput = {
 
 export type Upload = {
   __typename?: 'Upload';
-  absolutePath?: Maybe<Scalars['String']['output']>;
   author: ApplicationUser;
   authorId: Scalars['Int']['output'];
   description?: Maybe<Scalars['String']['output']>;
@@ -598,7 +608,6 @@ export type Upload = {
 };
 
 export type UploadFilterInput = {
-  absolutePath?: InputMaybe<StringOperationFilterInput>;
   and?: InputMaybe<Array<UploadFilterInput>>;
   author?: InputMaybe<ApplicationUserFilterInput>;
   authorId?: InputMaybe<IntOperationFilterInput>;
@@ -617,6 +626,76 @@ export type UploadFilterInput = {
   tenant?: InputMaybe<TenantFilterInput>;
   tenantId?: InputMaybe<IntOperationFilterInput>;
   title?: InputMaybe<StringOperationFilterInput>;
+};
+
+export type UploadResponse = {
+  __typename?: 'UploadResponse';
+  author: UserResponse;
+  description?: Maybe<Scalars['String']['output']>;
+  fileName: Scalars['String']['output'];
+  fullUrl?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  length: Scalars['Int']['output'];
+  metaData?: Maybe<Scalars['String']['output']>;
+  mimeType: Scalars['String']['output'];
+  modifiedDate?: Maybe<Scalars['DateTime']['output']>;
+  publishDate: Scalars['DateTime']['output'];
+  relativeUrl: Scalars['String']['output'];
+  title?: Maybe<Scalars['String']['output']>;
+};
+
+export type UploadResponseFilterInput = {
+  and?: InputMaybe<Array<UploadResponseFilterInput>>;
+  author?: InputMaybe<UserResponseFilterInput>;
+  description?: InputMaybe<StringOperationFilterInput>;
+  fileName?: InputMaybe<StringOperationFilterInput>;
+  fullUrl?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  length?: InputMaybe<IntOperationFilterInput>;
+  metaData?: InputMaybe<StringOperationFilterInput>;
+  mimeType?: InputMaybe<StringOperationFilterInput>;
+  modifiedDate?: InputMaybe<DateTimeOperationFilterInput>;
+  or?: InputMaybe<Array<UploadResponseFilterInput>>;
+  publishDate?: InputMaybe<DateTimeOperationFilterInput>;
+  relativeUrl?: InputMaybe<StringOperationFilterInput>;
+  title?: InputMaybe<StringOperationFilterInput>;
+};
+
+export type UploadResponseSortInput = {
+  author?: InputMaybe<UserResponseSortInput>;
+  description?: InputMaybe<SortEnumType>;
+  fileName?: InputMaybe<SortEnumType>;
+  fullUrl?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  length?: InputMaybe<SortEnumType>;
+  metaData?: InputMaybe<SortEnumType>;
+  mimeType?: InputMaybe<SortEnumType>;
+  modifiedDate?: InputMaybe<SortEnumType>;
+  publishDate?: InputMaybe<SortEnumType>;
+  relativeUrl?: InputMaybe<SortEnumType>;
+  title?: InputMaybe<SortEnumType>;
+};
+
+/** A connection to a list of items. */
+export type UploadsConnection = {
+  __typename?: 'UploadsConnection';
+  /** A list of edges. */
+  edges?: Maybe<Array<UploadsEdge>>;
+  /** A flattened list of the nodes. */
+  nodes?: Maybe<Array<UploadResponse>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** Identifies the total count of items in the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** An edge in a connection. */
+export type UploadsEdge = {
+  __typename?: 'UploadsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: UploadResponse;
 };
 
 export type UserResponse = {

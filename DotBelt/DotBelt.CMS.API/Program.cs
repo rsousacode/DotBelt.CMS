@@ -116,6 +116,8 @@ try
 
     app.MapGroup("/api/uploads")
         .MapUploadsApi();
+    
+    app.UseStaticFiles();
 
     await using (var scope = app.Services.CreateAsyncScope())
     {

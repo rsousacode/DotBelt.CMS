@@ -26,6 +26,7 @@
     environment:
       - SWAGER_URL=http://host.docker.internal:5044/swagger
       - API_URL=http://host.docker.internal:5044/api
+      - UPLOADS_URL=http://host.docker.internal:5044/uploads
       - SERVER_NAME=www.boilerplate.com
       - SERVER_ALIAS=*.boilerplate.com
       - FRONTEND_URL=http://host.docker.internal:5173

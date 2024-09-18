@@ -88,7 +88,7 @@ public class UploadsController
         {
             foreach (var tag in directory.Tags)
             {
-                metadata[$"{directory.Name} - {tag.Name}"] = tag.Description;
+                metadata[$"{directory.Name}:{tag.Name}"] = tag.Description;
             }
         }
 
@@ -104,8 +104,6 @@ public class UploadsController
         if (allowedMimeTypes == null || allowedMimeTypes.Length == 0) return null;
 
         var mime = file.ContentType;
-
-        if (mime == null) return null;
 
         if (!allowedMimeTypes.Contains(mime)) return null;
 
@@ -140,7 +138,9 @@ public class UploadsController
         await using (var stream = new FileStream(fullPath, FileMode.Create))
         {
             await file.CopyToAsync(stream, cancellationToken);
+            
             stream.Seek(0, SeekOrigin.Begin);
+            
             if (Mimes.IsImage(mime))
             {
                 var metaData = ExtractMetadata(stream);

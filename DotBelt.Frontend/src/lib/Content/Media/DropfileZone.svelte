@@ -1,28 +1,29 @@
 <script lang="ts">
   import {onMount} from "svelte";
 
-  function onDragEnter(e) {
+  function onDragEnter(e: DragEvent) {
     e.preventDefault();
     console.log('drag enter')
     //dropZone.classList.add(hoverClassName);
   }
 
-  function onDragover(e) {
+  function onDragover(e: DragEvent) {
     e.preventDefault();
     //dropZone.classList.add(hoverClassName);
   }
 
-  function onDragleave(e) {
+  function onDragleave(e: DragEvent) {
     e.preventDefault();
     //dropZone.classList.remove(hoverClassName);
   }
 
-  function onDrop(e) {
+  function onDrop(e: DragEvent) {
     e.preventDefault();
     //dropZone.classList.remove(hoverClassName);
 
+    if(e.dataTransfer === null) return;
+
     const files = Array.from(e.dataTransfer.files);
-    console.log(files);
 
     if (files.length > 0) {
       const data = new FormData();

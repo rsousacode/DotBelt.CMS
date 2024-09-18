@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Path = System.IO.Path;
 
 namespace DotBelt.CMS.Shared.CMS.Media;
 
@@ -35,6 +36,9 @@ public static class UploadsApiEndpointRouteBuilderExtensions
 
             return TypedResults.Ok(uploads);
         }).DisableAntiforgery();
+
+      
+ 
 
         return routeGroup;
        
