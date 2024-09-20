@@ -10,10 +10,15 @@ public class UploadResponse
     public required string FileName { get; set; }
     public required string MimeType { get; set; }
     public int Length { get; set; }
-    public required UserResponse Author { get; set; }
+    public UserResponse? Author { get; set; }
     public required string RelativeUrl { get; set; }
     public string? FullUrl { get; set; }
     public DateTimeOffset PublishDate { get; set; }
     public DateTimeOffset? ModifiedDate { get; set; }
     public string? MetaData { get; set; }
+    
+    public int? ParentId { get; set; }
+    
+    //public UploadResponse? Parent { get; set; }
+
 }

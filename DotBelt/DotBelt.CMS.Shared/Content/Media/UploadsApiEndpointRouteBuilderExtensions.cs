@@ -15,7 +15,7 @@ public static class UploadsApiEndpointRouteBuilderExtensions
     {
         var routeGroup = endpoints.MapGroup("");
 
-        routeGroup.MapPost("", async Task<Results<Ok<List<Upload>>, ValidationProblem>>
+        routeGroup.MapPost("", async Task<Results<Ok<IEnumerable<UploadResponse>>, ValidationProblem>>
             (HttpRequest request, HttpContext context, [FromServices] IServiceProvider sp) =>
         {
             using var scope = sp.CreateScope();
@@ -34,7 +34,10 @@ public static class UploadsApiEndpointRouteBuilderExtensions
           
             var uploads = await uploadsService.CreateUploadsAsync(files, userId);
 
-            return TypedResults.Ok(uploads);
+            var response = uploads.Select(x => x.ToUploadResponse());
+
+            return TypedResults.Ok(response);
+            
         }).DisableAntiforgery();
 
       

@@ -31,11 +31,12 @@ namespace DotBelt.CMS.Shared.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AbsolutePath")
-                        .HasColumnType("text");
-
                     b.Property<int>("AuthorId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("CropName")
+                        .HasMaxLength(90)
+                        .HasColumnType("character varying(90)");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -64,6 +65,9 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTimeOffset>("PublishDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -81,6 +85,10 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
+
+                    b.HasIndex("CropName");
+
+                    b.HasIndex("ParentId");
 
                     b.HasIndex("TenantId");
 
@@ -468,6 +476,10 @@ namespace DotBelt.CMS.Shared.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DotBelt.CMS.Shared.CMS.Media.Upload", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId");
+
                     b.HasOne("DotBelt.CMS.Shared.Tenants.Tenant", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantId")
@@ -475,6 +487,8 @@ namespace DotBelt.CMS.Shared.Migrations
                         .IsRequired();
 
                     b.Navigation("Author");
+
+                    b.Navigation("Parent");
 
                     b.Navigation("Tenant");
                 });
@@ -593,6 +607,11 @@ namespace DotBelt.CMS.Shared.Migrations
                         .HasForeignKey("TaxonomiesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Media.Upload", b =>
+                {
+                    b.Navigation("Children");
                 });
 
             modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Post", b =>

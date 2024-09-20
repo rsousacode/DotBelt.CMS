@@ -231,9 +231,9 @@ namespace DotBelt.CMS.Shared.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "text", nullable: true),
+                    CropName = table.Column<string>(type: "character varying(90)", maxLength: 90, nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     FileName = table.Column<string>(type: "text", nullable: false),
-                    AbsolutePath = table.Column<string>(type: "text", nullable: true),
                     MimeType = table.Column<string>(type: "text", nullable: false),
                     Length = table.Column<int>(type: "integer", nullable: false),
                     AuthorId = table.Column<int>(type: "integer", nullable: false),
@@ -243,7 +243,8 @@ namespace DotBelt.CMS.Shared.Migrations
                     PublishDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
-                    MetaData = table.Column<string>(type: "jsonb", nullable: true)
+                    MetaData = table.Column<string>(type: "jsonb", nullable: true),
+                    ParentId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -260,6 +261,11 @@ namespace DotBelt.CMS.Shared.Migrations
                         principalTable: "Tenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Uploads_Uploads_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "Uploads",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -416,6 +422,16 @@ namespace DotBelt.CMS.Shared.Migrations
                 name: "IX_Uploads_AuthorId",
                 table: "Uploads",
                 column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Uploads_CropName",
+                table: "Uploads",
+                column: "CropName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Uploads_ParentId",
+                table: "Uploads",
+                column: "ParentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Uploads_TenantId",

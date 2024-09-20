@@ -16,6 +16,12 @@ public class UploadConfiguration : IEntityTypeConfiguration<Upload>
         builder
             .Property(x => x.RelativeUrl)
             .HasMaxLength(255);
+   
+        builder
+            .Property(x => x.CropName)
+            .HasMaxLength(90);
+
+        builder.HasIndex(x => x.CropName);
 
         builder
             .Property(x => x.MetaData)
@@ -27,6 +33,8 @@ public class Upload : IContent
 {
     public int Id { get; set; }
     public string? Title { get; set; }
+    
+    public string? CropName { get; set; }
     public string? Description { get; set; }
     public required string FileName { get; set; }
     public required string MimeType { get; set; }
@@ -42,5 +50,9 @@ public class Upload : IContent
     public int TenantId { get; set; }
 
     public string? MetaData { get; set; }
+
+    public ICollection<Upload> Children { get; set; } = null!;
+      
+    public Upload? Parent { get; set; }
      
 }

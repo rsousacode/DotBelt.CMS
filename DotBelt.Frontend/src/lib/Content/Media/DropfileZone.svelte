@@ -50,7 +50,6 @@
 </script>
 
 
-
 <svelte:body  ondragover={onDragover}
               ondrop={onDrop}
               ondragenter={onDragEnter}

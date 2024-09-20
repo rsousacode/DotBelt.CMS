@@ -16,6 +16,7 @@ public class UploadsQueries
     {
         return context
             .Uploads
+            .Where(x => x.CropName == CropsSettings.UploadsLibraryCrop.Name)
             .ProjectToUploadResponse();
     }
 

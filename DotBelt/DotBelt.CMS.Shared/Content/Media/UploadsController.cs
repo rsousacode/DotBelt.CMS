@@ -51,12 +51,12 @@ public class UploadsController
         return fileName.Replace(" ", "_");
     }
 
-    public string GetRelativePath(string fileName)
+    public static string GetRelativePath(string fileName)
     {
         return Path.Combine("uploads", fileName);
     }
 
-    public string GetFullPath(string fileName)
+    public static string GetFullPath(string fileName)
     {
         return Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", GetRelativePath(fileName));
     }
@@ -129,6 +129,7 @@ public class UploadsController
             FileName = fileName,
             RelativeUrl = GetRelativePath(fileName),
             AuthorId = authorId,
+            Children = new List<Upload>(),
             Author = null!,
             PublishDate = DateTimeOffset.UtcNow,
             MimeType = mime,
@@ -145,6 +146,35 @@ public class UploadsController
             {
                 var metaData = ExtractMetadata(stream);
                 upload.MetaData = metaData;
+
+                foreach (var cropSetting in CropsSettings.Internal)
+                {
+                    try
+                    {
+                        stream.Seek(0, SeekOrigin.Begin);
+                        var cropFileName = CropProcessor.CropImage(stream, cropSetting.Width, cropSetting.Height, fileName);
+
+                        var crop = new Upload()
+                        {
+                            CropName = cropSetting.Name,
+                            Author = null!,
+                            AuthorId = authorId,
+                            FileName = cropFileName,
+                            MimeType = Mimes.WEBP,
+                            RelativeUrl = GetRelativePath(cropFileName),
+                            TenantId = tenantId,
+                            Tenant = null!
+                        };
+                        
+                        upload.Children.Add(crop);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        throw;
+                    }
+               
+                }
             }
         }
 
