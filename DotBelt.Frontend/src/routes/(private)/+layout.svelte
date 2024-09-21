@@ -22,7 +22,7 @@
         </div>
     </nav>
 </header>
-    <main>
+<main>
         <slot />
     </main>
 

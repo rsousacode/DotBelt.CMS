@@ -4,6 +4,20 @@ using Path = System.IO.Path;
 
 namespace DotBelt.CMS.Shared.CMS.Media;
 
+public enum CropPositionX
+{
+    Left,
+    Center,
+    Right
+}
+
+public enum CropPositionY
+{
+    Top,
+    Center,
+    Bottom
+}
+
 public static class CropProcessor
 {
     public static string GetCropFileName(int? width, int? height, string fileName)
@@ -28,75 +42,114 @@ public static class CropProcessor
         }
 
         return $"{fileNameWithoutExtension}{sb}.webp";
-        
     }
 
-public static string CropImage(Stream imageStream, int? width, int? height, string fileName)
-{
-    fileName = GetCropFileName(width, height, fileName);
-
-    using (var input = SKBitmap.Decode(imageStream))
+    public static string CropImage(
+        Stream imageStream,
+        string fileName,
+        int width,
+        int? height = null,
+        bool softCrop = true,
+        CropPositionX cropX = CropPositionX.Center,
+        CropPositionY cropY = CropPositionY.Center)
     {
-        if (width == null)
-            throw new NotImplementedException("Crop image with no width not implemented");
+        fileName = GetCropFileName(width, height, fileName);
 
-        if (height == null)
-            throw new NotImplementedException("Crop image with no height not implemented");
-
-        var frameWidth = width.Value;
-        var frameHeight = height.Value;
-
-        // Calculate the aspect ratio of the frame and the input image
-        float frameAspectRatio = (float)frameWidth / frameHeight;
-        float inputAspectRatio = (float)input.Width / input.Height;
-
-        // Calculate the cropping bounds
-        int cropWidth, cropHeight;
-        if (frameAspectRatio > inputAspectRatio)
+        using (var input = SKBitmap.Decode(imageStream))
         {
-            // Frame is wider than the input image; crop height
-            cropWidth = input.Width;
-            cropHeight = (int)(input.Width / frameAspectRatio);
+            int finalWidth = width > 0 ? width : input.Width;
+            int finalHeight = height.HasValue && height > 0
+                ? height.Value
+                : (int)(input.Height * ((float)finalWidth / input.Width));
+
+            SKBitmap outputBitmap;
+
+            if (softCrop)
+            {
+                // SOFT CROP: Scale the image to fit within the specified dimensions
+                outputBitmap = new SKBitmap(finalWidth, finalHeight);
+
+                using (var canvas = new SKCanvas(outputBitmap))
+                {
+                    canvas.Clear(SKColors.Transparent); // Optional: Clear with white or another background color
+
+                    float scale = Math.Min((float)finalWidth / input.Width, (float)finalHeight / input.Height);
+                    int newWidth = (int)(input.Width * scale);
+                    int newHeight = (int)(input.Height * scale);
+
+                    int offsetX = (finalWidth - newWidth) / 2;
+                    int offsetY = (finalHeight - newHeight) / 2;
+
+                    var destRect = new SKRect(offsetX, offsetY, offsetX + newWidth, offsetY + newHeight);
+                    canvas.DrawBitmap(input, new SKRect(0, 0, input.Width, input.Height), destRect,
+                        new SKPaint { FilterQuality = SKFilterQuality.High });
+                }
+            }
+            else
+            {
+                // HARD CROP: Resize and crop the image to fill the specified dimensions
+                float widthRatio = (float)finalWidth / input.Width;
+                float heightRatio = (float)finalHeight / input.Height;
+                float scale = Math.Max(widthRatio, heightRatio);
+
+                int scaledWidth = (int)(input.Width * scale);
+                int scaledHeight = (int)(input.Height * scale);
+
+                using (var resizedBitmap =
+                       input.Resize(new SKImageInfo(scaledWidth, scaledHeight), SKFilterQuality.High))
+                {
+                    outputBitmap = new SKBitmap(finalWidth, finalHeight);
+
+                    int offsetX = 0, offsetY = 0;
+
+                    switch (cropX)
+                    {
+                        case CropPositionX.Left:
+                            offsetX = 0;
+                            break;
+                        case CropPositionX.Center:
+                            offsetX = (scaledWidth - finalWidth) / 2;
+                            break;
+                        case CropPositionX.Right:
+                            offsetX = scaledWidth - finalWidth;
+                            break;
+                    }
+
+                    switch (cropY)
+                    {
+                        case CropPositionY.Top:
+                            offsetY = 0;
+                            break;
+                        case CropPositionY.Center:
+                            offsetY = (scaledHeight - finalHeight) / 2;
+                            break;
+                        case CropPositionY.Bottom:
+                            offsetY = scaledHeight - finalHeight;
+                            break;
+                    }
+
+                    using (var canvas = new SKCanvas(outputBitmap))
+                    {
+                        var sourceRect = new SKRect(offsetX, offsetY, offsetX + finalWidth, offsetY + finalHeight);
+                        var destRect = new SKRect(0, 0, finalWidth, finalHeight);
+
+                        canvas.Clear(SKColors.Transparent); // Optional: Clear with white or another background color
+                        canvas.DrawBitmap(resizedBitmap, sourceRect, destRect,
+                            new SKPaint { FilterQuality = SKFilterQuality.High });
+                    }
+                }
+            }
+
+            var pathToSave = UploadsController.GetFullPath(fileName);
+
+            using (var image = SKImage.FromBitmap(outputBitmap))
+            using (var data = image.Encode(SKEncodedImageFormat.Webp, 100))
+            using (var stream = File.OpenWrite(pathToSave))
+            {
+                data.SaveTo(stream);
+            }
+
+            return fileName;
         }
-        else
-        {
-            // Frame is taller than the input image; crop width
-            cropWidth = (int)(input.Height * frameAspectRatio);
-            cropHeight = input.Height;
-        }
-
-        // Calculate the cropping offset
-        int cropOffsetX = (input.Width - cropWidth) / 2;
-        int cropOffsetY = (input.Height - cropHeight) / 2;
-
-        // Define the cropping rectangle
-        var cropRect = new SKRectI(cropOffsetX, cropOffsetY, cropOffsetX + cropWidth, cropOffsetY + cropHeight);
-
-        // Create cropped and resized bitmap
-        var croppedBitmap = new SKBitmap(frameWidth, frameHeight);
-        var paint = new SKPaint
-        {
-            FilterQuality = SKFilterQuality.High,
-            IsAntialias = true
-        };
-
-        using (var canvas = new SKCanvas(croppedBitmap))
-        {
-            canvas.Clear(SKColors.Transparent); // Optional: Clear with white or any background color
-            var destRect = new SKRect(0, 0, frameWidth, frameHeight);
-            canvas.DrawBitmap(input, cropRect, destRect, paint);
-        }
-
-        var pathToSave = UploadsController.GetFullPath(fileName);
-
-        using (var image = SKImage.FromBitmap(croppedBitmap))
-        using (var data = image.Encode(SKEncodedImageFormat.Webp, 100))
-        using (var stream = File.OpenWrite(pathToSave))
-        {
-            data.SaveTo(stream);
-        }
-
-        return fileName;
     }
-}    
 }

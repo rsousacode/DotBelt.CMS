@@ -4,8 +4,6 @@
   import CloseIcon from "$lib/Utilities/Icons/CloseIcon.svelte";
   import ChevronLeft from "$lib/Utilities/Icons/ChevronLeft.svelte";
   import ChevronRight from "$lib/Utilities/Icons/ChevronRight.svelte";
-  import ApolloClientProvider from "$lib/API/GraphQL/ApolloClientProvider.svelte";
-  import DropfileZone from "$lib/Content/Media/DropfileZone.svelte";
 
   let body: Element;
 
@@ -114,70 +112,3 @@
       </div>
     </div>
 </div>
-<style>
-    .meta-data-title {
-        font-weight: bolder;
-    }
-
-    .overlay {
-        background-color: rgb(0 0 0 / 57%);
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-    }
-
-    .modal-header .modal-header-title {
-        font-size: 18px;
-    }
-
-    .modal-header {
-        display: flex;
-        flex-shrink: 0;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1rem 1rem;
-        border-top-left-radius: calc(.3rem - 1px);
-        border-top-right-radius: calc(.3rem - 1px);
-        background: var(--bs-tertiary-bg);
-        border: none !important;
-    }
-
-    .modal-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        background: var(--bs-body-bg);
-        margin: 30px;
-        padding-right: -30px;
-        border-top-right-radius: 10px;
-        border-top-left-radius: 10px;
-        z-index: 1;
-    }
-
-    .modal-content {
-        display: flex;
-        flex-direction: row;
-        padding: 20px;
-        width: 100%;
-        justify-content: space-evenly;
-        background: var(--bs-body-bg);
-    }
-
-    .media-image-container img,
-    .media-image-container {
-        max-width: 1000px;
-    }
-
-    .media-form-container {
-        padding-left: 20px;
-        width: 100%;
-    }
-
-    .image-meta-data {
-        padding-bottom: 40px;
-    }
-</style>

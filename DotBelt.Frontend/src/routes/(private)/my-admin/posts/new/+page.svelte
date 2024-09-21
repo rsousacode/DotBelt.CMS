@@ -3,7 +3,7 @@
     import DashboardContainer from "$lib/Dashboard/DashboardContainer.svelte";
     import {onMount} from "svelte";
     import { updateDashboardData } from "$lib/Dashboard/DashboardStore.svelte";
-    import PostEditor from "$lib/Content/Components/PostEditor.svelte";
+    import PostEditor from "$lib/Content/Posts/PostEditor.svelte";
 
 
     onMount(() => {

@@ -11,7 +11,7 @@ public static class Mimes
     public const string SVG = "image/svg+xml";
 
     public static string[] Images =
-        [WEBP, APNG, AVIF, GIV, JPEG, SVG];
+        [WEBP, APNG, AVIF, GIV, JPEG, SVG, PNG];
 
 
     public static bool IsImage(string mimeType)

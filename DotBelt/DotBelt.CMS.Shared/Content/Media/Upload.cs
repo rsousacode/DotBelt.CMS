@@ -54,5 +54,6 @@ public class Upload : IContent
     public ICollection<Upload> Children { get; set; } = null!;
       
     public Upload? Parent { get; set; }
+    public int? ParentId { get; set; }
      
 }

@@ -3,17 +3,17 @@ import {
   type Maybe,
   type UploadsConnection
 } from '$lib/API/GraphQL/generated'
-import type {ApolloClient, NormalizedCacheObject} from "@apollo/client/core/index.js";
+import type {ApolloClient, FetchPolicy, NormalizedCacheObject} from "@apollo/client/core/index.js";
 import {gql} from "@apollo/client/core/index.js";
 import type {PaginationQuery} from "$lib/API/GraphQL/PaginationQuery";
 
 
 export async function getUploads(
   client: ApolloClient<NormalizedCacheObject>,
-  pagination: PaginationQuery): Promise<Maybe<UploadsConnection | undefined>> {
+  pagination: PaginationQuery, fetchPolicy: FetchPolicy = 'cache-first' ): Promise<Maybe<UploadsConnection | undefined>> {
 
     const query = gql`
-        query GetPosts($first: Int, $last: Int, $before: String, $after: String) {
+        query GetUploads($first: Int, $last: Int, $before: String, $after: String) {
             uploads(first: $first,
                 last: $last,
                 order: { publishDate: DESC },
@@ -44,7 +44,8 @@ export async function getUploads(
         after: pagination.after,
         before: pagination.before,
         first: pagination.first
-      }
+      },
+    fetchPolicy: fetchPolicy,
   });
 
   return uploads;

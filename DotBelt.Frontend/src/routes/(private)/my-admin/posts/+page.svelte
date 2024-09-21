@@ -12,8 +12,6 @@
     import type {PaginationQuery} from "$lib/API/GraphQL/PaginationQuery";
     import {onMount} from "svelte";
     import {setDashboardData, updateDashboardFragment} from "$lib/Dashboard/DashboardStore.svelte";
-    import SaveIcon from "$lib/Utilities/Icons/SaveIcon.svelte";
-    import SuccessIcon from "$lib/Utilities/Icons/SuccessIcon.svelte";
 
     let apolloClientProvider: ApolloClientProvider;
     let postsResult: Maybe<PostsConnection> | undefined = $state(undefined);

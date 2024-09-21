@@ -55,8 +55,14 @@ try
     services
         .AddPooledDbContextFactory<ApplicationDbContext>(options =>
         {
-            options.UseNpgsql(dataSource,
-                npgsqlOptions => { npgsqlOptions.MigrationsAssembly("DotBelt.CMS.Shared"); });
+            options
+                .UseNpgsql(dataSource,
+                npgsqlOptions => 
+                {
+                    npgsqlOptions.MigrationsAssembly("DotBelt.CMS.Shared");
+                    
+                })
+                .EnableSensitiveDataLogging();
         });
 
     services.AddScoped<ApplicationDbContext>(serviceProvider =>

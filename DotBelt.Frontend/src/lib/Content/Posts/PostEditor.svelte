@@ -12,7 +12,7 @@
   import JsonIcon from "$lib/Utilities/Icons/JsonIcon.svelte";
   import BlocksIcon from "$lib/Utilities/Icons/BlocksIcon.svelte";
   import EditorJS from "$lib/Content/EditorJS/EditorJS.svelte";
-  import AceEditor from "$lib/Content/Components/AceEditor.svelte";
+  import AceEditor from "$lib/Utilities/AceEditor.svelte";
   import type {ChangeEventHandler} from "svelte/elements";
   import DropfileZone from "$lib/Content/Media/DropfileZone.svelte";
 

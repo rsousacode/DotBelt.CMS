@@ -4,7 +4,7 @@
   import {SITE_NAME} from "$lib/constants";
   import DashboardContainer from "$lib/Dashboard/DashboardContainer.svelte";
   import {updateDashboardData} from "$lib/Dashboard/DashboardStore.svelte";
-  import PostEditor from "$lib/Content/Components/PostEditor.svelte";
+  import PostEditor from "$lib/Content/Posts/PostEditor.svelte";
 
   let { data: { post } } = $page;
 
