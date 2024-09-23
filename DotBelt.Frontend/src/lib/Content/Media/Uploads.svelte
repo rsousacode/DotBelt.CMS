@@ -13,7 +13,9 @@
   import CheckMarkUnselected from "$lib/Utilities/Icons/CheckMarkUnselected.svelte";
   import CheckMarkSelected from "$lib/Utilities/Icons/CheckMarkSelected.svelte";
   import CloseIcon from "$lib/Utilities/Icons/CloseIcon.svelte";
-  import ReusablePopup from "$lib/Utilities/Popup/ReusablePopup.svelte";
+  import ReusablePopup from "$lib/Utilities/Modal/BoilerplateModal.svelte";
+  import BoilerplateModal from "$lib/Utilities/Modal/BoilerplateModal.svelte";
+  import {ModalType} from "$lib/Utilities/Modal/ModalType";
 
   let imageModalOpen = $state(false);
 
@@ -34,6 +36,8 @@
   let mode: UploadsMode = $state("selection");
 
   let selectedImages: Maybe<Array<number>> = $state();
+
+  let confirmDeletionModal: BoilerplateModal = $state();
 
 
   onMount(async () => {
@@ -133,6 +137,10 @@
     }
   }
 
+  function onDeleteFilesAction() {
+    console.log('delete files action')
+  }
+
 
   function imageIsSelected(imageId: number) {
     return selectedImages?.length && selectedImages.includes(imageId);
@@ -140,7 +148,8 @@
 
 
   function onDeleteFilesClicked() {
-
+    console.log(confirmDeletionModal)
+    confirmDeletionModal.openModal();
   }
 
 </script>
@@ -197,17 +206,12 @@
   {/if}
 
   {#if mode === 'selection'}
-
-    <button style="margin-left: 20px" class="btn btn-danger" type="button" onclick={onClickSelectionMode}>
+    <button style="margin-left: 20px" class="btn btn-danger" type="button" onclick={onDeleteFilesClicked}>
       Delete files
     </button>
-
-
     <button style="margin-left: 20px" class="icon-button" type="button" onclick={() => mode = 'default'}>
       <CloseIcon/>
     </button>
-
-
   {/if}
 
 
@@ -221,8 +225,10 @@
   />
 {/if}
 
-<ReusablePopup showPopup={true}>
-  <p>You sure?</p>
+<ReusablePopup modalType={ModalType.Action}
+               onModalConfirm={onDeleteFilesAction}>
+               bind:this={confirmDeletionModal}>
+  <p>Are you sure you want to remove {selectedImages?.length} image(s)?</p>
 </ReusablePopup>
 
 <style>
