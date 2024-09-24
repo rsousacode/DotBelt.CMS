@@ -25,6 +25,10 @@ type CreatePostPayload {
   post: Post
 }
 
+type DeleteUploadsPayload {
+  removeUploadsResult: RemoveUploadsResult
+}
+
 type EditPostPayload {
   editPostResult: EditPostResult
 }
@@ -36,6 +40,7 @@ type EditPostResult {
 type GraphQLMutation {
   editPost(input: EditPostInput!): EditPostPayload! @authorize
   createPost(input: CreatePostInput!): CreatePostPayload! @authorize
+  deleteUploads(input: DeleteUploadsInput!): DeleteUploadsPayload! @authorize
 }
 
 type GraphQLQuery {
@@ -122,6 +127,10 @@ type PostsEdge {
   node: PostResponse!
 }
 
+type RemoveUploadsResult {
+  deletedIds: [Int!]
+}
+
 type SessionData {
   id: Int
   email: String
@@ -189,6 +198,7 @@ type Tenant {
 type Upload {
   id: Int!
   title: String
+  cropName: String
   description: String
   fileName: String!
   mimeType: String!
@@ -203,6 +213,9 @@ type Upload {
   tenant: Tenant!
   tenantId: Int!
   metaData: String
+  children: [Upload!]!
+  parent: Upload
+  parentId: Int
 }
 
 type UploadResponse {
@@ -212,12 +225,12 @@ type UploadResponse {
   fileName: String!
   mimeType: String!
   length: Int!
-  author: UserResponse!
   relativeUrl: String!
   fullUrl: String
   publishDate: DateTime!
   modifiedDate: DateTime
   metaData: String
+  parentId: Int
 }
 
 "A connection to a list of items."
@@ -341,6 +354,10 @@ input DateTimeOperationFilterInput {
   nlte: DateTime
 }
 
+input DeleteUploadsInput {
+  uploadIds: [Int!]!
+}
+
 input EditPostInput {
   postId: Int!
   payload: Edit_PostRequestInput!
@@ -386,6 +403,13 @@ input ListFilterInputTypeOfTaxonomyResponseFilterInput {
   all: TaxonomyResponseFilterInput
   none: TaxonomyResponseFilterInput
   some: TaxonomyResponseFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfUploadFilterInput {
+  all: UploadFilterInput
+  none: UploadFilterInput
+  some: UploadFilterInput
   any: Boolean
 }
 
@@ -558,6 +582,7 @@ input UploadFilterInput {
   or: [UploadFilterInput!]
   id: IntOperationFilterInput
   title: StringOperationFilterInput
+  cropName: StringOperationFilterInput
   description: StringOperationFilterInput
   fileName: StringOperationFilterInput
   mimeType: StringOperationFilterInput
@@ -572,6 +597,9 @@ input UploadFilterInput {
   tenant: TenantFilterInput
   tenantId: IntOperationFilterInput
   metaData: StringOperationFilterInput
+  children: ListFilterInputTypeOfUploadFilterInput
+  parent: UploadFilterInput
+  parentId: IntOperationFilterInput
 }
 
 input UploadResponseFilterInput {
@@ -583,12 +611,12 @@ input UploadResponseFilterInput {
   fileName: StringOperationFilterInput
   mimeType: StringOperationFilterInput
   length: IntOperationFilterInput
-  author: UserResponseFilterInput
   relativeUrl: StringOperationFilterInput
   fullUrl: StringOperationFilterInput
   publishDate: DateTimeOperationFilterInput
   modifiedDate: DateTimeOperationFilterInput
   metaData: StringOperationFilterInput
+  parentId: IntOperationFilterInput
 }
 
 input UploadResponseSortInput {
@@ -598,12 +626,12 @@ input UploadResponseSortInput {
   fileName: SortEnumType
   mimeType: SortEnumType
   length: SortEnumType
-  author: UserResponseSortInput
   relativeUrl: SortEnumType
   fullUrl: SortEnumType
   publishDate: SortEnumType
   modifiedDate: SortEnumType
   metaData: SortEnumType
+  parentId: SortEnumType
 }
 
 input UserResponseFilterInput {

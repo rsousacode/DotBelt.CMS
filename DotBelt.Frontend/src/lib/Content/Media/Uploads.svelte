@@ -4,12 +4,12 @@
   import {setDashboardData, updateDashboardFragment} from "$lib/Dashboard/DashboardStore.svelte";
   import MediaPopup from "$lib/Content/Media/MediaPopup.svelte";
   import type {Maybe} from "yup";
-  import type {UploadResponse, UploadsConnection} from "$lib/API/GraphQL/generated";
+  import type {GraphQlMutation, GraphQlQuery, UploadResponse, UploadsConnection} from "$lib/API/GraphQL/generated";
   import ApolloClientProvider from "$lib/API/GraphQL/ApolloClientProvider.svelte";
   import type {PaginationQuery} from "$lib/API/GraphQL/PaginationQuery";
   import {getUploads} from "$lib/Content/Media/GetUploads";
   import DropfileZone from "$lib/Content/Media/DropfileZone.svelte";
-  import type {FetchPolicy} from "@apollo/client/core/index.js";
+  import {type FetchPolicy, gql} from "@apollo/client/core/index.js";
   import CheckMarkUnselected from "$lib/Utilities/Icons/CheckMarkUnselected.svelte";
   import CheckMarkSelected from "$lib/Utilities/Icons/CheckMarkSelected.svelte";
   import CloseIcon from "$lib/Utilities/Icons/CloseIcon.svelte";
@@ -37,23 +37,28 @@
 
   let selectedImages: Maybe<Array<number>> = $state();
 
-  let confirmDeletionModal: BoilerplateModal = $state();
+  let confirmDeletionModal: BoilerplateModal;
 
 
   onMount(async () => {
     setDashboardData({title: "Media", subtitle: "Manage your media here"})
     updateDashboardFragment(uploadButton);
 
+    await fetchAndReset();
+  });
+
+  async function fetchAndReset(fetchPolicy: FetchPolicy = 'cache-first') {
+
     await fetchUploads({
       first: postsPerPage,
       last: undefined,
       before: undefined,
       after: undefined,
-    });
+    }, fetchPolicy);
 
     resetData();
 
-  })
+  }
 
   async function fetchUploads(variables: PaginationQuery, fetchPolicy: FetchPolicy = 'cache-first') {
     const apolloClient = apolloClientProvider.GetApolloSvelteClient();
@@ -69,14 +74,7 @@
   }
 
   async function onUploadSuccess() {
-    await fetchUploads({
-      first: postsPerPage,
-      last: undefined,
-      before: undefined,
-      after: undefined,
-    }, 'network-only');
-
-    resetData();
+    await fetchAndReset();
   }
 
   function onClickSelectionMode() {
@@ -117,8 +115,8 @@
   }
 
   function onClickImageSelectionMode(image: UploadResponse) {
-    if(selectedImages) {
-      if(selectedImages.includes(image.id)) {
+    if (selectedImages) {
+      if (selectedImages.includes(image.id)) {
         selectedImages = selectedImages.filter(x => x !== image.id);
       } else {
         selectedImages = [...selectedImages, image.id]
@@ -137,18 +135,48 @@
     }
   }
 
-  function onDeleteFilesAction() {
-    console.log('delete files action')
-  }
-
 
   function imageIsSelected(imageId: number) {
     return selectedImages?.length && selectedImages.includes(imageId);
   }
 
+  async function deleteFiles() {
+
+    if (!selectedImages) {
+      console.error("there's nothing to delete");
+      return;
+    }
+
+    const client = apolloClientProvider.GetApolloSvelteClient();
+    if (client === null) {
+      return;
+    }
+
+    const mutation = gql`
+  mutation deleteFiles($uploadIds: [Int!]!) {
+      deleteUploads(input: {uploadIds: $uploadIds}) {
+          removeUploadsResult {
+              deletedIds
+          }
+      }
+  }
+`;
+    const {errors} = await client.mutate<GraphQlMutation>({
+      mutation: mutation,
+      variables: {
+        uploadIds: selectedImages
+      }
+    });
+
+    if(!errors) {
+      await fetchAndReset('network-only');
+      selectedImages = [];
+    }
+
+  }
+
 
   function onDeleteFilesClicked() {
-    console.log(confirmDeletionModal)
     confirmDeletionModal.openModal();
   }
 
@@ -176,7 +204,6 @@
                   {/if}
                 </div>
               {/if}
-
               <img src={`/${upload.relativeUrl}`}/>
             </div>
           {/each}
@@ -206,7 +233,7 @@
   {/if}
 
   {#if mode === 'selection'}
-    <button style="margin-left: 20px" class="btn btn-danger" type="button" onclick={onDeleteFilesClicked}>
+    <button disabled={!(selectedImages?.length && selectedImages.length > 0)} style="margin-left: 20px" class="btn btn-danger" type="button" onclick={onDeleteFilesClicked}>
       Delete files
     </button>
     <button style="margin-left: 20px" class="icon-button" type="button" onclick={() => mode = 'default'}>
@@ -226,8 +253,9 @@
 {/if}
 
 <ReusablePopup modalType={ModalType.Action}
-               onModalConfirm={onDeleteFilesAction}>
-               bind:this={confirmDeletionModal}>
+               bind:this={confirmDeletionModal}
+               onModalConfirm={deleteFiles}>
+
   <p>Are you sure you want to remove {selectedImages?.length} image(s)?</p>
 </ReusablePopup>
 

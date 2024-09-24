@@ -3,7 +3,7 @@
 
   type Props = { onUploadSuccess: () => void, onUploadError: () => void, uploadOverlayOpen: boolean };
 
-  let {onUploadSuccess, onUploadError, uploadOverlayOpen = $bindable<boolean>(false)}: Props = $props();
+  let {onUploadSuccess, onUploadError , uploadOverlayOpen = $bindable<boolean>(false)}: Props = $props();
 
   let filesInArea = $state<boolean>(false);
 

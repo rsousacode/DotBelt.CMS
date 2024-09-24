@@ -24,12 +24,14 @@ public class UploadsController
         _tenantController = tenantController;
     }
     
-    public async Task DeleteUploadsAsync(List<int> uploadsToDelete, CancellationToken cancellationToken = default) 
+    public async Task<RemoveUploadsResult> DeleteUploadsAsync(List<int> uploadsToDelete, CancellationToken cancellationToken = default) 
     {
         foreach (var uploadId in uploadsToDelete)
         {
             var upload = await _context
                 .Uploads
+                .Include(x => x.Parent)
+                .Include(x => x.Children)
                 .FirstOrDefaultAsync(x => x.Id == uploadId, cancellationToken);
           
 
@@ -41,12 +43,19 @@ public class UploadsController
                 {
                     File.Delete(fullPath);
                 }
-
+                if(upload.Parent != null) 
+                {
+                    _context.Uploads.Remove(upload.Parent);
+                }
+                
+                _context.Uploads.RemoveRange(upload.Children);
                 _context.Uploads.Remove(upload);
+
+                await _context.SaveChangesAsync(cancellationToken);
             }
         }
 
-        await _context.SaveChangesAsync(cancellationToken);
+        return new RemoveUploadsResult(uploadsToDelete);
     }
 
     public async Task CreateUploadsAsync(IFormFileCollection files, int? userId,
