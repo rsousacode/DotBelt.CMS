@@ -33,7 +33,7 @@
 
   type UploadsMode = "default" | "selection";
 
-  let mode: UploadsMode = $state("selection");
+  let mode: UploadsMode = $state("default");
 
   let selectedImages: Maybe<Array<number>> = $state();
 
@@ -74,7 +74,7 @@
   }
 
   async function onUploadSuccess() {
-    await fetchAndReset();
+    await fetchAndReset("network-only");
   }
 
   function onClickSelectionMode() {

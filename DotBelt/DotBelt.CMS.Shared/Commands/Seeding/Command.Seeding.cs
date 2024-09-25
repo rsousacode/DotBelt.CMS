@@ -36,7 +36,7 @@ public class Command_Seeding : Command
         {
             AllowedFileTypes = Mimes.Images,
             Name = "boilerplate.com",
-
+            FullUrl = "https://boilerplate.com"
         };
 
         dbContext.Add(tenant);

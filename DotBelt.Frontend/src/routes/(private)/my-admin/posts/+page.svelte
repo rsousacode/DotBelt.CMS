@@ -90,21 +90,23 @@
           <tr>
             <th scope="col">Title</th>
             <th scope="col">Published Date</th>
+            <th scope="col">Author</th>
             <th scope="col"></th>
           </tr>
           </thead>
           <tbody>
 
-          {#if postsResult.nodes.length > 0}
+          {#if postsResult?.nodes?.length &&  postsResult.nodes.length > 0}
             {#each postsResult.nodes as post}
               <tr>
-                <td>{post.title}</td>
+                <td>{post.title === "" ? "No title" : post.title}</td>
                 <td>{post.publishDate}</td>
+                <td>{post.author?.userName}</td>
                 <td class="table-actions">
                   <a href={`/my-admin/posts/${post.id}`} target="_blank" class="cms-action-icon">
                     <EditIcon/>
                   </a>
-                  <a class="cms-action-icon" target="_blank" href={`/${post.urlName}`}>
+                  <a class="cms-action-icon" target="_blank" href={`/${post.relativeUrl}`}>
                     <ViewPublishedIcon/>
                   </a>
                 </td>

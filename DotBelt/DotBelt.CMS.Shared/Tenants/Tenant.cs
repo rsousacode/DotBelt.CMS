@@ -7,6 +7,8 @@ public class Tenant
     public int Id { get; set; }
 
     public required string Name { get; set; }
+    
+    public required string FullUrl { get; set; }
 
     public required string[] AllowedFileTypes { get; set; }
 

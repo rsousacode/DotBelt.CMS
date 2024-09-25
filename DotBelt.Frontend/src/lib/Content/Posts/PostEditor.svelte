@@ -14,7 +14,6 @@
   import EditorJS from "$lib/Content/EditorJS/EditorJS.svelte";
   import AceEditor from "$lib/Utilities/AceEditor.svelte";
   import type {ChangeEventHandler} from "svelte/elements";
-  import DropfileZone from "$lib/Content/Media/DropfileZone.svelte";
 
 
   let {post = $bindable({content: "{}", relativeUrl: ""})}: { post: Post } = $props();
@@ -43,7 +42,7 @@
     return permalink;
   }
 
-  function handlePermalinkChanged(e: ChangeEventHandler<HTMLInputElement>) {
+  function handlePermalinkChanged() {
     post.relativeUrl = sanitizePermalink(post.relativeUrl);
   }
 
@@ -112,37 +111,40 @@
 {/snippet}
 <ApolloClientProvider>
   <form method="POST" action="" onsubmit={handleSubmit}>
-    <div class="row">
-      <div class="col">
-        <div class="editor-container">
-          <div class="editor-container-header">
-            <div class="permalink-editor-container">
-              <span style="color: #919191;">https://my-website.com/</span>
-              <input class="classy-input permalink-input" onchange={handlePermalinkChanged} type="text"
-                     placeholder="write-your-url" bind:value={post.relativeUrl}>
-            </div>
-            <div>
-              <input class="classy-input" type="text" placeholder="Write your title here"
-                     bind:value={post.title}>
 
-            </div>
+    <div class="post-editor-container">
+      <div class="editor-container">
+        <div class="editor-container-header">
+          <div class="permalink-editor-container">
+            <span style="color: #919191;">https://my-website.com/</span>
+            <input class="classy-input permalink-input" onchange={handlePermalinkChanged} type="text"
+                   placeholder="write-your-url" bind:value={post.relativeUrl}>
           </div>
-          <hr>
+          <div>
+            <input class="classy-input" type="text" placeholder="Write your title here"
+                   bind:value={post.title}>
 
-          {#if currentMode === 'editor'}
-            <EditorJS bind:content={post.content}/>
-          {:else}
-            <AceEditor bind:code={post.content}/>
-          {/if}
-
+          </div>
         </div>
+        <hr>
+
+        {#if currentMode === 'editor'}
+          <EditorJS bind:content={post.content}/>
+        {:else}
+          <AceEditor bind:code={post.content}/>
+        {/if}
+
       </div>
+      <div class="post-editor-sidebar-container">
+        <h1>Hello sidebar</h1>
+      </div>
+
     </div>
   </form>
 </ApolloClientProvider>
 
-<form action="/api/uploads" method="post" enctype="multipart/form-data">
-  <input type="file" multiple name="files">
-  <input type="submit" value="Submit">
-</form>
-<DropfileZone/>
+<style>
+  .post-editor-container {
+      display: flex;
+  }
+</style>
