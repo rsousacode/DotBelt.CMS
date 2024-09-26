@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotBelt.CMS.Shared.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240919232645_Initial")]
+    [Migration("20240925175056_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -247,6 +247,10 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.Property<string[]>("AllowedFileTypes")
                         .IsRequired()
                         .HasColumnType("text[]");
+
+                    b.Property<string>("FullUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()

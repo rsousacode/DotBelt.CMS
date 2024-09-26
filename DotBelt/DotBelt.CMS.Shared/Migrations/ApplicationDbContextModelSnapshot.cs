@@ -245,6 +245,10 @@ namespace DotBelt.CMS.Shared.Migrations
                         .IsRequired()
                         .HasColumnType("text[]");
 
+                    b.Property<string>("FullUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
