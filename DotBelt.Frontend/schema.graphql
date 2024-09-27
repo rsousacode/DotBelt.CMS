@@ -44,14 +44,58 @@ type GraphQLMutation {
 }
 
 type GraphQLQuery {
-  posts("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: PostResponseFilterInput order: [PostResponseSortInput!]): PostsConnection @authorize
+  posts(
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+    where: PostResponseFilterInput
+    order: [PostResponseSortInput!]
+  ): PostsConnection @authorize
   postById(id: Int!): [PostResponse!]! @authorize
   postByUrl(url: String!): [PostResponse!]!
-  taxonomies("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: TaxonomyFilterInput order: [TaxonomySortInput!]): TaxonomiesConnection
+  taxonomies(
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+    where: TaxonomyFilterInput
+    order: [TaxonomySortInput!]
+  ): TaxonomiesConnection
   taxonomyById(id: Int!): [Taxonomy!]!
-  users("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: UserResponseFilterInput order: [UserResponseSortInput!]): UsersConnection
+  users(
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+    where: UserResponseFilterInput
+    order: [UserResponseSortInput!]
+  ): UsersConnection
   session: SessionData!
-  uploads("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: UploadResponseFilterInput order: [UploadResponseSortInput!]): UploadsConnection @authorize
+  uploads(
+    "Returns the first _n_ elements from the list."
+    first: Int
+    "Returns the elements in the list that come after the specified cursor."
+    after: String
+    "Returns the last _n_ elements from the list."
+    last: Int
+    "Returns the elements in the list that come before the specified cursor."
+    before: String
+    where: UploadResponseFilterInput
+    order: [UploadResponseSortInput!]
+  ): UploadsConnection @authorize
 }
 
 "Information about pagination in a connection."
@@ -682,7 +726,14 @@ enum TaxonomyTypeEnum {
   TAG
 }
 
-directive @authorize("The name of the authorization policy that determines access to the annotated resource." policy: String "Roles that are allowed to access the annotated resource." roles: [String!] "Defines when when the authorize directive shall be applied.By default the authorize directives are applied during the validation phase." apply: ApplyPolicy! = BEFORE_RESOLVER) repeatable on OBJECT | FIELD_DEFINITION
+directive @authorize(
+  "The name of the authorization policy that determines access to the annotated resource."
+  policy: String
+  "Roles that are allowed to access the annotated resource."
+  roles: [String!]
+  "Defines when when the authorize directive shall be applied.By default the authorize directives are applied during the validation phase."
+  apply: ApplyPolicy! = BEFORE_RESOLVER
+) repeatable on OBJECT | FIELD_DEFINITION
 
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."
-scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
+scalar DateTime @specifiedBy(url: "https://www.graphql-scalars.com/date-time")

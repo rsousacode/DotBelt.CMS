@@ -1,19 +1,32 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T,
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
+    };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
   /** The `DateTime` scalar represents an ISO-8601 compliant date time type. */
-  DateTime: { input: any; output: any; }
+  DateTime: { input: any; output: any };
 };
 
 export type ApplicationUser = {
@@ -76,7 +89,7 @@ export type ApplicationUserSortInput = {
 export enum ApplyPolicy {
   AfterResolver = 'AFTER_RESOLVER',
   BeforeResolver = 'BEFORE_RESOLVER',
-  Validation = 'VALIDATION'
+  Validation = 'VALIDATION',
 }
 
 export type BooleanOperationFilterInput = {
@@ -154,16 +167,13 @@ export type GraphQlMutation = {
   editPost: EditPostPayload;
 };
 
-
 export type GraphQlMutationCreatePostArgs = {
   input: CreatePostInput;
 };
 
-
 export type GraphQlMutationDeleteUploadsArgs = {
   input: DeleteUploadsInput;
 };
-
 
 export type GraphQlMutationEditPostArgs = {
   input: EditPostInput;
@@ -181,16 +191,13 @@ export type GraphQlQuery = {
   users?: Maybe<UsersConnection>;
 };
 
-
 export type GraphQlQueryPostByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
-
 export type GraphQlQueryPostByUrlArgs = {
   url: Scalars['String']['input'];
 };
-
 
 export type GraphQlQueryPostsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
@@ -201,7 +208,6 @@ export type GraphQlQueryPostsArgs = {
   where?: InputMaybe<PostResponseFilterInput>;
 };
 
-
 export type GraphQlQueryTaxonomiesArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
@@ -211,11 +217,9 @@ export type GraphQlQueryTaxonomiesArgs = {
   where?: InputMaybe<TaxonomyFilterInput>;
 };
 
-
 export type GraphQlQueryTaxonomyByIdArgs = {
   id: Scalars['Int']['input'];
 };
-
 
 export type GraphQlQueryUploadsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
@@ -225,7 +229,6 @@ export type GraphQlQueryUploadsArgs = {
   order?: InputMaybe<Array<UploadResponseSortInput>>;
   where?: InputMaybe<UploadResponseFilterInput>;
 };
-
 
 export type GraphQlQueryUsersArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
@@ -407,7 +410,7 @@ export enum PostTypeEnum {
   MenuItem = 'MENU_ITEM',
   Page = 'PAGE',
   Post = 'POST',
-  Undefined = 'UNDEFINED'
+  Undefined = 'UNDEFINED',
 }
 
 export type PostTypeEnumOperationFilterInput = {
@@ -454,7 +457,7 @@ export type SessionData = {
 
 export enum SortEnumType {
   Asc = 'ASC',
-  Desc = 'DESC'
+  Desc = 'DESC',
 }
 
 export type StringOperationFilterInput = {
@@ -580,7 +583,7 @@ export type TaxonomySortInput = {
 export enum TaxonomyTypeEnum {
   Category = 'CATEGORY',
   Tag = 'TAG',
-  Undefined = 'UNDEFINED'
+  Undefined = 'UNDEFINED',
 }
 
 export type TaxonomyTypeEnumOperationFilterInput = {

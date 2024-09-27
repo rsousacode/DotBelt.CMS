@@ -3,5 +3,5 @@ export enum AccountManagementPages {
   Email,
   Password,
   TwoFactorAuthentication,
-  PersonalData
+  PersonalData,
 }

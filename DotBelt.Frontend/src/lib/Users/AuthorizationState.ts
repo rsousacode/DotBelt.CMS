@@ -1,4 +1,4 @@
 export enum AuthorizationState {
   LoggedIn,
-  LoggedOut
+  LoggedOut,
 }

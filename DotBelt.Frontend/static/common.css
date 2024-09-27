@@ -1,22 +1,22 @@
 .header-icon {
-    display: flex;
-    font-size: 24px;
+  display: flex;
+  font-size: 24px;
 }
 
 .bi {
-    width: 1em;
-    height: 1em;
-    vertical-align: -.125em;
-    fill: currentcolor;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  fill: currentcolor;
 }
 
 .success-register {
-    max-width: 400px;
-    margin: auto;
-    text-align: center;
+  max-width: 400px;
+  margin: auto;
+  text-align: center;
 }
 
 .account-icon > svg {
-    font-size: 21px;
-    margin-top: -3px;
+  font-size: 21px;
+  margin-top: -3px;
 }
