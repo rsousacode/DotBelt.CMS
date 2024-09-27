@@ -9,10 +9,7 @@ export type ClassProp<C extends Record<string, any>> =
 // Shamelessly yoinked from https://github.com/rgossiaux/svelte-headlessui/blob/master/src/lib/hooks/use-actions.ts
 // Which yoinked from https://github.com/hperrin/svelte-material-ui/blob/master/packages/common/src/internal/useActions.ts
 // :)
-export type SvelteSVGActionType<P> = (
-  node: SVGElement,
-  params?: P,
-) => SvelteActionReturnType<P>;
+export type SvelteSVGActionType<P> = (node: SVGElement, params?: P) => SvelteActionReturnType<P>;
 
 export type SVGActionEntry<P extends any = any> =
   | SvelteSVGActionType<P>
@@ -22,20 +19,15 @@ export type SVGActionArray = SVGActionEntry[];
 
 export type ActionArray = HTMLActionArray | SVGActionArray;
 
-export function useActions(
-  node: HTMLElement | SVGElement,
-  actions: ActionArray,
-) {
-  let actionReturns: SvelteActionReturnType<any>[] = [];
+export function useActions(node: HTMLElement | SVGElement, actions: ActionArray) {
+  const actionReturns: SvelteActionReturnType<any>[] = [];
 
   if (actions) {
     for (let i = 0; i < actions.length; i++) {
       const actionEntry = actions[i];
       const action = Array.isArray(actionEntry) ? actionEntry[0] : actionEntry;
       if (Array.isArray(actionEntry) && actionEntry.length > 1) {
-        actionReturns.push(
-          action(node as HTMLElement & SVGElement, actionEntry[1]),
-        );
+        actionReturns.push(action(node as HTMLElement & SVGElement, actionEntry[1]));
       } else {
         actionReturns.push(action(node as HTMLElement & SVGElement));
       }
@@ -79,10 +71,7 @@ export type SvelteActionReturnType<P> = {
   destroy?: () => void;
 } | void;
 
-export type SvelteHTMLActionType<P> = (
-  node: HTMLElement,
-  params?: P,
-) => SvelteActionReturnType<P>;
+export type SvelteHTMLActionType<P> = (node: HTMLElement, params?: P) => SvelteActionReturnType<P>;
 
 export type HTMLActionEntry<P extends any = any> =
   | SvelteHTMLActionType<P>
@@ -90,10 +79,7 @@ export type HTMLActionEntry<P extends any = any> =
 
 export type HTMLActionArray = HTMLActionEntry[];
 
-export interface Props<
-  T extends HTMLElement,
-  C extends Record<string, any> = any,
-> {
+export interface Props<T extends HTMLElement, C extends Record<string, any> = any> {
   children: Snippet<[C]>;
   /**
    * Any svelte actions you wish to pass to the underlying HTML element.
@@ -148,12 +134,6 @@ export interface ToastTitleProps extends Props<HTMLHeadingElement> {}
 
 export interface ToastMessageProps extends Props<HTMLParagraphElement> {}
 
-export type JsonValue =
-  | null
-  | boolean
-  | number
-  | string
-  | JsonValue[]
-  | JsonObject;
+export type JsonValue = null | boolean | number | string | JsonValue[] | JsonObject;
 
 export type JsonObject = { [key: string]: JsonValue };

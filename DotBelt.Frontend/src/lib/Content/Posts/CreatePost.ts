@@ -3,10 +3,7 @@ import {
   type GraphQlMutation,
   PostTypeEnum,
 } from '$lib/API/GraphQL/generated';
-import type {
-  ApolloClient,
-  NormalizedCacheObject,
-} from '@apollo/client/core/index.js';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core/index.js';
 import { gql } from '@apollo/client/core/index.js';
 
 export async function createPost(
@@ -15,10 +12,7 @@ export async function createPost(
   type: PostTypeEnum,
 ) {
   const mutation = gql`
-    mutation createPost(
-      $input: Create_PostRequestInput!
-      $type: PostTypeEnum!
-    ) {
+    mutation createPost($input: Create_PostRequestInput!, $type: PostTypeEnum!) {
       createPost(input: { payload: $input, type: $type }) {
         post {
           id

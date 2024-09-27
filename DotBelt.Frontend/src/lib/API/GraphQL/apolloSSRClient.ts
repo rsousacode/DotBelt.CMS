@@ -1,9 +1,5 @@
 import { PUBLIC_GRAPHQL_HTTP_API_URL } from '$env/static/public';
-import {
-  ApolloClient,
-  InMemoryCache,
-  HttpLink,
-} from '@apollo/client/core/index.js';
+import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core/index.js';
 
 /**
  Returns a GraphQL Client that is ready to use.

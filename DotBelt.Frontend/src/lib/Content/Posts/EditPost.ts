@@ -1,11 +1,5 @@
-import type {
-  Edit_PostRequestInput,
-  GraphQlMutation,
-} from '$lib/API/GraphQL/generated';
-import type {
-  ApolloClient,
-  NormalizedCacheObject,
-} from '@apollo/client/core/index.js';
+import type { Edit_PostRequestInput, GraphQlMutation } from '$lib/API/GraphQL/generated';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core/index.js';
 import { gql } from '@apollo/client/core/index.js';
 
 export async function editPost(
@@ -24,7 +18,7 @@ export async function editPost(
       }
     `;
 
-    const { data, errors } = await client.mutate<GraphQlMutation>({
+    const { data } = await client.mutate<GraphQlMutation>({
       mutation: mutation,
       variables: { input: input, postId: id },
     });

@@ -17,11 +17,11 @@
 </script>
 
 {#if $state === "first"}
-  <div style="position: static" in:scale={{delay: 500, duration: 300}} out:fade={{duration: 300}} on:outroend={onOutro}>
+  <div style="position: static" in:scale={{delay: 500, duration: 300}} out:fade={{duration: 300}} onoutroend={onOutro}>
     <svelte:component this={component1}/>
   </div>
 {:else if $state === "second"}
-  <div style="position: static" in:fade={{delay: 100, duration: 400}} out:fade={{duration: 300}} on:outroend={onOutro}>
+  <div style="position: static" in:fade={{delay: 100, duration: 400}} out:fade={{duration: 300}} onoutroend={onOutro}>
 
     <svelte:component this={component2}/>
   </div>

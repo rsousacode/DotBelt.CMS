@@ -1,14 +1,8 @@
-import {
-  type GraphQlQuery,
-  type Maybe,
-  type SessionData,
-} from '$lib/API/GraphQL/generated';
+import { type GraphQlQuery, type Maybe, type SessionData } from '$lib/API/GraphQL/generated';
 import { gql } from '@apollo/client/core/index.js';
 import { getApolloSSRClient } from '$lib/API/GraphQL/apolloSSRClient';
 
-export async function getSessionSSR(
-  fetch: any,
-): Promise<Maybe<SessionData | undefined>> {
+export async function getSessionSSR(fetch: any): Promise<Maybe<SessionData | undefined>> {
   // @ts-ignore
   const client = getApolloSSRClient(fetch);
 

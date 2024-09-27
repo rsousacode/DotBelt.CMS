@@ -4,10 +4,7 @@ import {
   type PostsConnection,
   PostTypeEnum,
 } from '$lib/API/GraphQL/generated';
-import type {
-  ApolloClient,
-  NormalizedCacheObject,
-} from '@apollo/client/core/index.js';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core/index.js';
 import { gql } from '@apollo/client/core/index.js';
 import type { PaginationQuery } from '$lib/API/GraphQL/PaginationQuery';
 
@@ -17,13 +14,7 @@ export async function getPosts(
   pagination: PaginationQuery,
 ): Promise<Maybe<PostsConnection | undefined>> {
   const query = gql`
-    query GetPosts(
-      $type: PostTypeEnum!
-      $first: Int
-      $last: Int
-      $before: String
-      $after: String
-    ) {
+    query GetPosts($type: PostTypeEnum!, $first: Int, $last: Int, $before: String, $after: String) {
       posts(
         first: $first
         last: $last

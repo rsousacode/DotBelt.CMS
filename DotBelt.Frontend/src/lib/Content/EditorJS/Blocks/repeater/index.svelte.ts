@@ -28,16 +28,10 @@ export default class Repeater {
     this.data = data;
   }
 
-  async getPosts(
-    type: PostTypeEnum,
-  ): Promise<Maybe<PostsConnection | undefined>> {
+  async getPosts(type: PostTypeEnum): Promise<Maybe<PostsConnection | undefined>> {
     const query = gql`
       query GetPosts($type: PostTypeEnum!, $first: Int) {
-        posts(
-          first: $first
-          order: { publishDate: DESC }
-          where: { postType: { eq: $type } }
-        ) {
+        posts(first: $first, order: { publishDate: DESC }, where: { postType: { eq: $type } }) {
           nodes {
             id
             title

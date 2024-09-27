@@ -15,7 +15,6 @@
 <script lang="ts">
     import {SITE_NAME} from "$lib/constants";
 
-    import {onMount} from "svelte";
     import YupForm from "$lib/Utilities/YupForm.svelte";
     import {Api} from "$lib/API/Swagger/generated/Api";
     import {goto} from "$app/navigation";
@@ -29,7 +28,7 @@
         beltCms.api.authRegisterCreate({
             email: data.email,
             password: data.password,
-        }).then(async successData => {
+        }).then(async () => {
             await goto("/account/register/success")
         }).catch(async err => {
             const errors = await err.json();

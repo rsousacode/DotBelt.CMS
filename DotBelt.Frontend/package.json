@@ -11,6 +11,8 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "codegen": "graphql-codegen",
     "lint": "prettier --check . && eslint .",
+    "lint-fix": "eslint . --fix",
+
     "format": "prettier --write ."
   },
   "dependencies": {

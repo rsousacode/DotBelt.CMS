@@ -5,10 +5,7 @@
     <link rel="icon" href="%sveltekit.assets%/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="%sveltekit.assets%/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="%sveltekit.assets%/bootstrap/dist/css/bootstrap.min.css"
-    />
+    <link rel="stylesheet" href="%sveltekit.assets%/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="%sveltekit.assets%/common.css" />
     %sveltekit.head%
   </head>
@@ -34,12 +31,8 @@
 
       const themeSwitcherText = document.querySelector('#bd-theme-text');
       const activeThemeIcon = document.querySelector('.theme-icon-active use');
-      const btnToActive = document.querySelector(
-        `[data-bs-theme-value="${theme}"]`,
-      );
-      const svgOfActiveBtn = btnToActive
-        .querySelector('svg use')
-        .getAttribute('href');
+      const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`);
+      const svgOfActiveBtn = btnToActive.querySelector('svg use').getAttribute('href');
 
       document.querySelectorAll('[data-bs-theme-value]').forEach((element) => {
         element.classList.remove('active');
@@ -66,18 +59,14 @@
         return storedTheme;
       }
 
-      return window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     };
 
     window.setTheme = (theme) => {
       if (theme === 'auto') {
         document.documentElement.setAttribute(
           'data-bs-theme',
-          window.matchMedia('(prefers-color-scheme: dark)').matches
-            ? 'dark'
-            : 'light',
+          window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
         );
       } else {
         document.documentElement.setAttribute('data-bs-theme', theme);

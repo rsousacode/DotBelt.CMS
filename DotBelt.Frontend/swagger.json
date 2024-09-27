@@ -598,13 +598,7 @@
         "additionalProperties": false
       },
       "Post": {
-        "required": [
-          "author",
-          "authorId",
-          "description",
-          "relativeUrl",
-          "tenant"
-        ],
+        "required": ["author", "authorId", "description", "relativeUrl", "tenant"],
         "type": "object",
         "properties": {
           "id": {
@@ -760,13 +754,7 @@
         "additionalProperties": false
       },
       "Taxonomy": {
-        "required": [
-          "author",
-          "authorId",
-          "description",
-          "relativeUrl",
-          "tenant"
-        ],
+        "required": ["author", "authorId", "description", "relativeUrl", "tenant"],
         "type": "object",
         "properties": {
           "id": {
@@ -899,12 +887,7 @@
         "additionalProperties": false
       },
       "TwoFactorResponse": {
-        "required": [
-          "isMachineRemembered",
-          "isTwoFactorEnabled",
-          "recoveryCodesLeft",
-          "sharedKey"
-        ],
+        "required": ["isMachineRemembered", "isTwoFactorEnabled", "recoveryCodesLeft", "sharedKey"],
         "type": "object",
         "properties": {
           "sharedKey": {

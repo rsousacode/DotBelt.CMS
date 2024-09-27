@@ -5,15 +5,10 @@ import { tick } from 'svelte';
  * @param target The element to be portaled to.\
  * Default = `body`.
  */
-export const usePortal = (
-  node: HTMLElement,
-  target: HTMLElement | string = '#layers',
-) => {
+export const usePortal = (node: HTMLElement, target: HTMLElement | string = '#layers') => {
   const update = async (newTarget: HTMLElement | string) => {
-    let el: HTMLElement | null =
-      typeof newTarget === 'string'
-        ? document.querySelector(newTarget)
-        : newTarget;
+    const el: HTMLElement | null =
+      typeof newTarget === 'string' ? document.querySelector(newTarget) : newTarget;
 
     await tick();
 

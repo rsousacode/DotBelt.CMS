@@ -1,14 +1,14 @@
 <script lang="ts">
 
   import CloseIcon from "$lib/Utilities/Icons/CloseIcon.svelte";
-  import {onMount} from "svelte";
+  import { onMount, type Snippet } from 'svelte';
   import {beforeNavigate} from "$app/navigation";
   import {ModalType} from "$lib/Utilities/Modal/ModalType";
 
   type Props = {
     showPopup: boolean,
     onModalConfirm: (...params: any) => any,
-    children: any,
+    children: Snippet,
     modalType: ModalType,
   }
   let {

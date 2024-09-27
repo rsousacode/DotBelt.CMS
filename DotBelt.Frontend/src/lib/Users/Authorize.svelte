@@ -2,8 +2,9 @@
   import {AuthorizationState} from "$lib/Users/AuthorizationState";
   import type {SessionData} from "$lib/API/GraphQL/generated";
   import {page} from "$app/stores";
+  import type { Snippet } from 'svelte';
 
-  type Props = {state: AuthorizationState, children: any}
+  type Props = {state: AuthorizationState, children: Snippet}
 
   let {state, children} : Props = $props();
 

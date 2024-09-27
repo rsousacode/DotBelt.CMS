@@ -1,8 +1,4 @@
-import {
-  type GraphQlQuery,
-  type Maybe,
-  type UploadsConnection,
-} from '$lib/API/GraphQL/generated';
+import { type GraphQlQuery, type Maybe, type UploadsConnection } from '$lib/API/GraphQL/generated';
 import type {
   ApolloClient,
   FetchPolicy,
@@ -44,7 +40,6 @@ export async function getUploads(
 
   const {
     data: { uploads },
-    errors,
   } = await client.query<GraphQlQuery>({
     query: query,
     variables: {

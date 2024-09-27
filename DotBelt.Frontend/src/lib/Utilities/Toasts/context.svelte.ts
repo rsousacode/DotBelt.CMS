@@ -1,20 +1,15 @@
 import type { Toast, ToastConfig, ToastType } from './types.js';
-import {
-  createUID,
-  defaultConfig,
-  parseDuration,
-  type UID,
-} from '$lib/Misc/Toasts/utils.svelte';
+import { createUID, defaultConfig, parseDuration, type UID } from '$lib/Misc/Toasts/utils.svelte';
 import { getContext, onDestroy } from 'svelte';
 
-export let toasts = $state<Toast[]>([]);
+export const toasts = $state<Toast[]>([]);
 
 /**
  * Helper function to create a svelte context with a unique name to avoid naming collisions.
  * @param name The name of the context
  */
 export const setupContext = <T>() => {
-  let { uid } = createUID('context');
+  const { uid } = createUID('context');
   return {
     contextName: uid(),
     context: () => getContext<T>(uid()),

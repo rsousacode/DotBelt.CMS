@@ -1,8 +1,5 @@
 import type { GraphQlQuery, PostResponse } from '$lib/API/GraphQL/generated';
-import type {
-  ApolloClient,
-  NormalizedCacheObject,
-} from '@apollo/client/core/index.js';
+import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core/index.js';
 import { gql } from '@apollo/client/core/index.js';
 
 export async function getPostById(

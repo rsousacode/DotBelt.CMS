@@ -45,9 +45,7 @@ export const defaultConfig = <const T>(
 export const parseDuration = (value: number | string): number => {
   if (typeof value === 'number') return value;
   if (!/ms|s$/.test(value))
-    throw console.error(
-      '`duration` prop was given a string but not a leading identifier (ms/s).',
-    );
+    throw console.error('`duration` prop was given a string but not a leading identifier (ms/s).');
 
   const duration: number = parseFloat(value.split(/ms|s/)[0]);
 
@@ -59,10 +57,7 @@ export const parseDuration = (value: number | string): number => {
  * @param klass The `class` component prop.
  * @param props Any state to be passed down to the function.
  */
-export const classProp = <T extends Record<string, any>>(
-  klass: ClassProp<T>,
-  props?: T,
-) => {
+export const classProp = <T extends Record<string, any>>(klass: ClassProp<T>, props?: T) => {
   const _props = props || ({} as T);
   const cls = $derived(typeof klass === 'function' ? klass(_props) : klass);
   return cls;
