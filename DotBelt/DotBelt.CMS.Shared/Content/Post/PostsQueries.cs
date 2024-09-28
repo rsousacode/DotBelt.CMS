@@ -9,7 +9,7 @@ using HotChocolate.Types;
 
 namespace DotBelt.Queries;
 
-[ExtendObjectType<GraphQLQuery>]
+[ExtendObjectType<DotBeltQuery>]
 
 public class PostsQueries
 {

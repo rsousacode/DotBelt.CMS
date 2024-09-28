@@ -15,7 +15,7 @@ public class SessionData
 
 }
 
-[ExtendObjectType<GraphQLQuery>]
+[ExtendObjectType<DotBeltQuery>]
 public class Session
 {
     public SessionData GetSession([Service] IHttpContextAccessor httpContextAccessor)

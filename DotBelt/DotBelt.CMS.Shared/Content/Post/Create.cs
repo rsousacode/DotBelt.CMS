@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotBelt.Mutations.Posts.Create;
 
-[ExtendObjectType(typeof(GraphQLMutation))]
+[ExtendObjectType(typeof(DotBeltMutation))]
 public class Create
 {
     [Authorize]

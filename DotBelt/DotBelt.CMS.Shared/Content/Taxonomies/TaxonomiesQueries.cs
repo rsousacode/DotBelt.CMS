@@ -7,7 +7,7 @@ using HotChocolate.Types;
 
 namespace DotBelt.Queries;
 
-[ExtendObjectType(typeof(GraphQLQuery))]
+[ExtendObjectType(typeof(DotBeltQuery))]
 public class TaxonomiesQueries
 {
     // TODO: Use DTOs

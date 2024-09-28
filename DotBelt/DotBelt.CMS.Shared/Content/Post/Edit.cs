@@ -14,7 +14,7 @@ public class EditPostResult
     public bool Success { get; set; }
 }
 
-[ExtendObjectType(typeof(GraphQLMutation))]
+[ExtendObjectType(typeof(DotBeltMutation))]
 public class Edit
 {
     [Authorize]
