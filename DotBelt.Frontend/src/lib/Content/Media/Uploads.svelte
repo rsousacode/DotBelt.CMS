@@ -4,8 +4,11 @@
   import {setDashboardData, updateDashboardFragment} from "$lib/Dashboard/DashboardStore.svelte";
   import MediaPopup from "$lib/Content/Media/MediaPopup.svelte";
   import type {Maybe} from "yup";
-  import type {GraphQlMutation, GraphQlQuery, UploadResponse, UploadsConnection} from "$lib/API/GraphQL/generated";
-  import ApolloClientProvider from "$lib/API/GraphQL/ApolloClientProvider.svelte";
+  import type {
+    GraphQlMutation,
+    ThumbnailResponse,
+    UploadsConnection
+  } from "$lib/API/GraphQL/generated";
   import type {PaginationQuery} from "$lib/API/GraphQL/PaginationQuery";
   import {getUploads} from "$lib/Content/Media/GetUploads";
   import DropfileZone from "$lib/Content/Media/DropfileZone.svelte";
@@ -16,16 +19,11 @@
   import ReusablePopup from "$lib/Utilities/Modal/BoilerplateModal.svelte";
   import BoilerplateModal from "$lib/Utilities/Modal/BoilerplateModal.svelte";
   import {ModalType} from "$lib/Utilities/Modal/ModalType";
-
-  let imageModalOpen = $state(false);
-
-  let selectedImage: UploadResponse | undefined = $state(undefined)
+  import {apolloClientStore} from "$lib/API/GraphQL/apolloClientStore";
 
   let uploadsResult: Maybe<UploadsConnection> = $state();
 
-  let uploads: Maybe<Array<UploadResponse>> = $state();
-
-  let apolloClientProvider: ApolloClientProvider;
+  let uploads: Maybe<Array<ThumbnailResponse>> = $state();
 
   let postsPerPage = $state(50);
 
@@ -33,16 +31,25 @@
 
   type UploadsMode = "default" | "selection";
 
+  type UploadsContext = 'Page' | 'OneMediaSelection' | 'MultipleMediaSelection';
+
   let mode: UploadsMode = $state("default");
 
   let selectedImages: Maybe<Array<number>> = $state();
 
+  let mediaPopup : MediaPopup;
+
   let confirmDeletionModal: BoilerplateModal;
+
+  let {context = 'Page'} : {context: UploadsContext} = $props();
 
 
   onMount(async () => {
-    setDashboardData({title: "Media", subtitle: "Manage your media here"})
-    updateDashboardFragment(uploadButton);
+
+    if (context === 'Page') {
+      setDashboardData({title: "Media", subtitle: "Manage your media here"})
+      updateDashboardFragment(uploadButton);
+    }
 
     await fetchAndReset();
   });
@@ -61,7 +68,8 @@
   }
 
   async function fetchUploads(variables: PaginationQuery, fetchPolicy: FetchPolicy = 'cache-first') {
-    const apolloClient = apolloClientProvider.GetApolloSvelteClient();
+    const apolloClient = apolloClientStore.getClient();
+
     if (!apolloClient) {
       console.error("API Client not available");
       return;
@@ -109,24 +117,23 @@
     }
   }
 
-  function onClickImageDefaultMode(image: UploadResponse) {
-    selectedImage = image;
-    imageModalOpen = true;
+  function onClickImageDefaultMode(image: ThumbnailResponse) {
+    mediaPopup.openMediaPopup(image.uploadId);
   }
 
-  function onClickImageSelectionMode(image: UploadResponse) {
+  function onClickImageSelectionMode(image: ThumbnailResponse) {
     if (selectedImages) {
-      if (selectedImages.includes(image.id)) {
-        selectedImages = selectedImages.filter(x => x !== image.id);
+      if (selectedImages.includes(image.uploadId)) {
+        selectedImages = selectedImages.filter(x => x !== image.uploadId);
       } else {
-        selectedImages = [...selectedImages, image.id]
+        selectedImages = [...selectedImages, image.uploadId]
       }
     } else {
-      selectedImages = [image.id]
+      selectedImages = [image.uploadId]
     }
   }
 
-  function onClickImage(image: UploadResponse) {
+  function onClickImage(image: ThumbnailResponse) {
     if (mode === 'default') {
       onClickImageDefaultMode(image);
     }
@@ -147,7 +154,8 @@
       return;
     }
 
-    const client = apolloClientProvider.GetApolloSvelteClient();
+    const client = apolloClientStore.getClient();
+
     if (client === null) {
       return;
     }
@@ -182,43 +190,39 @@
 
 </script>
 
-{#if imageModalOpen}
-  <MediaPopup image={selectedImage} onClose={() => imageModalOpen = false}/>
-{/if}
+<MediaPopup bind:this={mediaPopup}/>
 
 <DashboardContainer>
-  <ApolloClientProvider bind:this={apolloClientProvider}>
-    <div class="media-section">
-      <div class="media-images-container">
-        {#if uploads && uploads.length}
-          {#each uploads as upload}
-            <div
-              class="image-item {mode === 'selection' ? 'image-selection-mode' : ''}  {imageIsSelected(upload.id) ? 'selected' : ''}"
-              onclick={() => onClickImage(upload)}>
-              {#if mode === 'selection'}
-                <div class="check-mark-selection-mode">
-                  {#if imageIsSelected(upload.id)}
-                    <CheckMarkSelected/>
-                  {:else}
-                    <CheckMarkUnselected/>
-                  {/if}
-                </div>
-              {/if}
-              <img src={`/${upload.relativeUrl}`}/>
-            </div>
-          {/each}
-        {:else}
-          <p>No media found</p>
-        {/if}
-      </div>
-      <div class="load-more-section">
-        <button disabled={!uploadsResult?.pageInfo.hasNextPage} class="btn btn-secondary" onclick={onLoadMoreClicked}>
-          Load more
-        </button>
-      </div>
+  <div class="media-section">
+    <div class="media-images-container">
+      {#if uploads && uploads.length}
+        {#each uploads as upload}
+          <div
+            class="image-item {mode === 'selection' ? 'image-selection-mode' : ''}  {imageIsSelected(upload.id) ? 'selected' : ''}"
+            onclick={() => onClickImage(upload)}>
+            {#if mode === 'selection'}
+              <div class="check-mark-selection-mode">
+                {#if imageIsSelected(upload.id)}
+                  <CheckMarkSelected/>
+                {:else}
+                  <CheckMarkUnselected/>
+                {/if}
+              </div>
+            {/if}
+            <img src={`/${upload.relativeUrl}`}/>
+          </div>
+        {/each}
+      {:else}
+        <p>No media found</p>
+      {/if}
     </div>
+    <div class="load-more-section">
+      <button disabled={!uploadsResult?.pageInfo.hasNextPage} class="btn btn-secondary" onclick={onLoadMoreClicked}>
+        Load more
+      </button>
+    </div>
+  </div>
 
-  </ApolloClientProvider>
 </DashboardContainer>
 
 {#snippet uploadButton()}

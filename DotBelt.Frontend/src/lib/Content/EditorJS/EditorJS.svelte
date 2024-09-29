@@ -1,11 +1,11 @@
 <script lang="ts">
 
-import {onDestroy, onMount, setContext} from "svelte";
-import Repeater from "$lib/Content/EditorJS/Blocks/repeater/index.svelte.js";
+  import {onDestroy, onMount, setContext} from "svelte";
+  import Repeater from "$lib/Content/EditorJS/Blocks/repeater/index.svelte.js";
 
-let { content = $bindable() } = $props();
+  let { content = $bindable() } = $props();
 
-let editor : any = undefined;
+let editor : unknown | undefined = undefined;
 
 setContext('EditorJS', getData);
 
@@ -16,12 +16,13 @@ export async function getData() {
 onDestroy(() => {
   if(editor) {
       editor.destroy();
-
   }
 })
 
   onMount(async () => {
-    const EditorJS = (await import('@editorjs/editorjs')).default ;
+    const editorJsModule = (await import('@editorjs/editorjs'));
+    const LogLevels = editorJsModule.LogLevels;
+    const EditorJS = editorJsModule.default ;
     const List = (await import('@editorjs/list')).default;
     const Header = (await import('@editorjs/header')).default;
     const Underline = (await import('@editorjs/underline')).default;
@@ -29,9 +30,9 @@ onDestroy(() => {
 
 
     editor = new EditorJS({
-      logLevel: 'ERROR',
+      logLevel: LogLevels.ERROR,
 
-      onChange: async (api, event) => {
+      onChange: async () => {
           content = JSON.stringify(await getData(), undefined, 2);
       },
 

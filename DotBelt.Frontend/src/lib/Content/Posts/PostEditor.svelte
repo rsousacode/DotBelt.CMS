@@ -3,7 +3,6 @@
   import {goto, invalidateAll} from "$app/navigation";
   import type {ActionResult} from "@sveltejs/kit";
   import type {Post} from "$lib/API/GraphQL/generated";
-  import ApolloClientProvider from "$lib/API/GraphQL/ApolloClientProvider.svelte";
   import {onMount} from "svelte";
   import {updateDashboardFragment} from "$lib/Dashboard/DashboardStore.svelte.js";
   import SaveIcon from "$lib/Utilities/Icons/SaveIcon.svelte";
@@ -13,7 +12,6 @@
   import BlocksIcon from "$lib/Utilities/Icons/BlocksIcon.svelte";
   import EditorJS from "$lib/Content/EditorJS/EditorJS.svelte";
   import AceEditor from "$lib/Utilities/AceEditor.svelte";
-  import type {ChangeEventHandler} from "svelte/elements";
 
 
   let {post = $bindable({content: "{}", relativeUrl: ""})}: { post: Post } = $props();
@@ -109,42 +107,45 @@
     {/if}
   </button>
 {/snippet}
-<ApolloClientProvider>
-  <form method="POST" action="" onsubmit={handleSubmit}>
-
-    <div class="post-editor-container">
-      <div class="editor-container">
-        <div class="editor-container-header">
-          <div class="permalink-editor-container">
-            <span style="color: #919191;">https://my-website.com/</span>
-            <input class="classy-input permalink-input" onchange={handlePermalinkChanged} type="text"
-                   placeholder="write-your-url" bind:value={post.relativeUrl}>
-          </div>
-          <div>
-            <input class="classy-input" type="text" placeholder="Write your title here"
-                   bind:value={post.title}>
-
-          </div>
+<form method="POST" action="" onsubmit={handleSubmit}>
+  <div class="post-editor-container">
+    <div class="editor-container">
+      <div class="editor-container-header">
+        <div class="permalink-editor-container">
+          <span style="color: #919191;">https://my-website.com/</span>
+          <input class="classy-input permalink-input" onchange={handlePermalinkChanged} type="text"
+                 placeholder="write-your-url" bind:value={post.relativeUrl}>
         </div>
-        <hr>
+        <div>
+          <input class="classy-input" type="text" placeholder="Write your title here"
+                 bind:value={post.title}>
 
-        {#if currentMode === 'editor'}
-          <EditorJS bind:content={post.content}/>
-        {:else}
-          <AceEditor bind:code={post.content}/>
-        {/if}
+        </div>
+      </div>
+      <hr>
 
-      </div>
-      <div class="post-editor-sidebar-container">
-        <h1>Hello sidebar</h1>
-      </div>
+      {#if currentMode === 'editor'}
+        <EditorJS bind:content={post.content}/>
+      {:else}
+        <AceEditor bind:code={post.content}/>
+      {/if}
 
     </div>
-  </form>
-</ApolloClientProvider>
+    <div class="post-editor-sidebar-container">
+      <div class="sidebar-item">
+        <div class="sidebar-item-title">
+          Featured image
+        </div>
+        <div class="featured-image">
+          <img src="/images/placeholder-image.png" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
 
 <style>
-  .post-editor-container {
-      display: flex;
+  .featured-image > img {
+      max-width: 100%;
   }
 </style>

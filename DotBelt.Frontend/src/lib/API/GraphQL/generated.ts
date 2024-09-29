@@ -177,6 +177,7 @@ export type GraphQlQuery = {
   session: SessionData;
   taxonomies?: Maybe<TaxonomiesConnection>;
   taxonomyById: Array<Taxonomy>;
+  uploadById: Array<UploadResponse>;
   uploads?: Maybe<UploadsConnection>;
   users?: Maybe<UsersConnection>;
 };
@@ -217,13 +218,18 @@ export type GraphQlQueryTaxonomyByIdArgs = {
 };
 
 
+export type GraphQlQueryUploadByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
 export type GraphQlQueryUploadsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
-  order?: InputMaybe<Array<UploadResponseSortInput>>;
-  where?: InputMaybe<UploadResponseFilterInput>;
+  order?: InputMaybe<Array<ThumbnailResponseSortInput>>;
+  where?: InputMaybe<ThumbnailResponseFilterInput>;
 };
 
 
@@ -272,11 +278,11 @@ export type ListFilterInputTypeOfTaxonomyResponseFilterInput = {
   some?: InputMaybe<TaxonomyResponseFilterInput>;
 };
 
-export type ListFilterInputTypeOfUploadFilterInput = {
-  all?: InputMaybe<UploadFilterInput>;
+export type ListFilterInputTypeOfThumbnailFilterInput = {
+  all?: InputMaybe<ThumbnailFilterInput>;
   any?: InputMaybe<Scalars['Boolean']['input']>;
-  none?: InputMaybe<UploadFilterInput>;
-  some?: InputMaybe<UploadFilterInput>;
+  none?: InputMaybe<ThumbnailFilterInput>;
+  some?: InputMaybe<ThumbnailFilterInput>;
 };
 
 export type ListStringOperationFilterInput = {
@@ -593,6 +599,7 @@ export type TaxonomyTypeEnumOperationFilterInput = {
 export type Tenant = {
   __typename?: 'Tenant';
   allowedFileTypes: Array<Scalars['String']['output']>;
+  fullUrl: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   posts: Array<Post>;
@@ -602,6 +609,7 @@ export type Tenant = {
 export type TenantFilterInput = {
   allowedFileTypes?: InputMaybe<ListStringOperationFilterInput>;
   and?: InputMaybe<Array<TenantFilterInput>>;
+  fullUrl?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<IntOperationFilterInput>;
   name?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<TenantFilterInput>>;
@@ -610,16 +618,81 @@ export type TenantFilterInput = {
 };
 
 export type TenantSortInput = {
+  fullUrl?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   name?: InputMaybe<SortEnumType>;
+};
+
+export type Thumbnail = {
+  __typename?: 'Thumbnail';
+  fileName: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  length: Scalars['Int']['output'];
+  mimeType: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  publishDate: Scalars['DateTime']['output'];
+  relativeUrl: Scalars['String']['output'];
+  upload: Upload;
+  uploadId: Scalars['Int']['output'];
+};
+
+export type ThumbnailFilterInput = {
+  and?: InputMaybe<Array<ThumbnailFilterInput>>;
+  fileName?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  length?: InputMaybe<IntOperationFilterInput>;
+  mimeType?: InputMaybe<StringOperationFilterInput>;
+  name?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<ThumbnailFilterInput>>;
+  publishDate?: InputMaybe<DateTimeOperationFilterInput>;
+  relativeUrl?: InputMaybe<StringOperationFilterInput>;
+  upload?: InputMaybe<UploadFilterInput>;
+  uploadId?: InputMaybe<IntOperationFilterInput>;
+};
+
+export type ThumbnailResponse = {
+  __typename?: 'ThumbnailResponse';
+  fileName: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  length: Scalars['Int']['output'];
+  mimeType: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  publishDate: Scalars['DateTime']['output'];
+  relativeUrl: Scalars['String']['output'];
+  upload: UploadResponse;
+  uploadId: Scalars['Int']['output'];
+};
+
+export type ThumbnailResponseFilterInput = {
+  and?: InputMaybe<Array<ThumbnailResponseFilterInput>>;
+  fileName?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  length?: InputMaybe<IntOperationFilterInput>;
+  mimeType?: InputMaybe<StringOperationFilterInput>;
+  name?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<ThumbnailResponseFilterInput>>;
+  publishDate?: InputMaybe<DateTimeOperationFilterInput>;
+  relativeUrl?: InputMaybe<StringOperationFilterInput>;
+  upload?: InputMaybe<UploadResponseFilterInput>;
+  uploadId?: InputMaybe<IntOperationFilterInput>;
+};
+
+export type ThumbnailResponseSortInput = {
+  fileName?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  length?: InputMaybe<SortEnumType>;
+  mimeType?: InputMaybe<SortEnumType>;
+  name?: InputMaybe<SortEnumType>;
+  publishDate?: InputMaybe<SortEnumType>;
+  relativeUrl?: InputMaybe<SortEnumType>;
+  upload?: InputMaybe<UploadResponseSortInput>;
+  uploadId?: InputMaybe<SortEnumType>;
 };
 
 export type Upload = {
   __typename?: 'Upload';
   author: ApplicationUser;
   authorId: Scalars['Int']['output'];
-  children: Array<Upload>;
-  cropName?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   fileName: Scalars['String']['output'];
   fullUrl?: Maybe<Scalars['String']['output']>;
@@ -635,6 +708,7 @@ export type Upload = {
   relativeUrl: Scalars['String']['output'];
   tenant: Tenant;
   tenantId: Scalars['Int']['output'];
+  thumbnails: Array<Thumbnail>;
   title?: Maybe<Scalars['String']['output']>;
 };
 
@@ -642,8 +716,6 @@ export type UploadFilterInput = {
   and?: InputMaybe<Array<UploadFilterInput>>;
   author?: InputMaybe<ApplicationUserFilterInput>;
   authorId?: InputMaybe<IntOperationFilterInput>;
-  children?: InputMaybe<ListFilterInputTypeOfUploadFilterInput>;
-  cropName?: InputMaybe<StringOperationFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
   fileName?: InputMaybe<StringOperationFilterInput>;
   fullUrl?: InputMaybe<StringOperationFilterInput>;
@@ -660,6 +732,7 @@ export type UploadFilterInput = {
   relativeUrl?: InputMaybe<StringOperationFilterInput>;
   tenant?: InputMaybe<TenantFilterInput>;
   tenantId?: InputMaybe<IntOperationFilterInput>;
+  thumbnails?: InputMaybe<ListFilterInputTypeOfThumbnailFilterInput>;
   title?: InputMaybe<StringOperationFilterInput>;
 };
 
@@ -717,11 +790,9 @@ export type UploadsConnection = {
   /** A list of edges. */
   edges?: Maybe<Array<UploadsEdge>>;
   /** A flattened list of the nodes. */
-  nodes?: Maybe<Array<UploadResponse>>;
+  nodes?: Maybe<Array<ThumbnailResponse>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** Identifies the total count of items in the connection. */
-  totalCount: Scalars['Int']['output'];
 };
 
 /** An edge in a connection. */
@@ -730,7 +801,7 @@ export type UploadsEdge = {
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
-  node: UploadResponse;
+  node: ThumbnailResponse;
 };
 
 export type UserResponse = {

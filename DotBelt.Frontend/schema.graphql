@@ -51,7 +51,8 @@ type GraphQLQuery {
   taxonomyById(id: Int!): [Taxonomy!]!
   users("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: UserResponseFilterInput order: [UserResponseSortInput!]): UsersConnection
   session: SessionData!
-  uploads("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: UploadResponseFilterInput order: [UploadResponseSortInput!]): UploadsConnection @authorize
+  uploads("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ThumbnailResponseFilterInput order: [ThumbnailResponseSortInput!]): UploadsConnection @authorize
+  uploadById(id: Int!): [UploadResponse!]! @authorize
 }
 
 "Information about pagination in a connection."
@@ -190,15 +191,39 @@ type TaxonomyResponse {
 type Tenant {
   id: Int!
   name: String!
+  fullUrl: String!
   allowedFileTypes: [String!]!
   posts: [Post!]!
   taxonomies: [Taxonomy!]!
 }
 
+type Thumbnail {
+  id: Int!
+  name: String!
+  upload: Upload!
+  uploadId: Int!
+  publishDate: DateTime!
+  mimeType: String!
+  fileName: String!
+  relativeUrl: String!
+  length: Int!
+}
+
+type ThumbnailResponse {
+  id: Int!
+  name: String!
+  upload: UploadResponse!
+  uploadId: Int!
+  publishDate: DateTime!
+  mimeType: String!
+  fileName: String!
+  relativeUrl: String!
+  length: Int!
+}
+
 type Upload {
   id: Int!
   title: String
-  cropName: String
   description: String
   fileName: String!
   mimeType: String!
@@ -213,7 +238,7 @@ type Upload {
   tenant: Tenant!
   tenantId: Int!
   metaData: String
-  children: [Upload!]!
+  thumbnails: [Thumbnail!]!
   parent: Upload
   parentId: Int
 }
@@ -240,9 +265,7 @@ type UploadsConnection {
   "A list of edges."
   edges: [UploadsEdge!]
   "A flattened list of the nodes."
-  nodes: [UploadResponse!]
-  "Identifies the total count of items in the connection."
-  totalCount: Int!
+  nodes: [ThumbnailResponse!]
 }
 
 "An edge in a connection."
@@ -250,7 +273,7 @@ type UploadsEdge {
   "A cursor for use in pagination."
   cursor: String!
   "The item at the end of the edge."
-  node: UploadResponse!
+  node: ThumbnailResponse!
 }
 
 type UserResponse {
@@ -406,10 +429,10 @@ input ListFilterInputTypeOfTaxonomyResponseFilterInput {
   any: Boolean
 }
 
-input ListFilterInputTypeOfUploadFilterInput {
-  all: UploadFilterInput
-  none: UploadFilterInput
-  some: UploadFilterInput
+input ListFilterInputTypeOfThumbnailFilterInput {
+  all: ThumbnailFilterInput
+  none: ThumbnailFilterInput
+  some: ThumbnailFilterInput
   any: Boolean
 }
 
@@ -567,6 +590,7 @@ input TenantFilterInput {
   or: [TenantFilterInput!]
   id: IntOperationFilterInput
   name: StringOperationFilterInput
+  fullUrl: StringOperationFilterInput
   allowedFileTypes: ListStringOperationFilterInput
   posts: ListFilterInputTypeOfPostFilterInput
   taxonomies: ListFilterInputTypeOfTaxonomyFilterInput
@@ -575,6 +599,47 @@ input TenantFilterInput {
 input TenantSortInput {
   id: SortEnumType
   name: SortEnumType
+  fullUrl: SortEnumType
+}
+
+input ThumbnailFilterInput {
+  and: [ThumbnailFilterInput!]
+  or: [ThumbnailFilterInput!]
+  id: IntOperationFilterInput
+  name: StringOperationFilterInput
+  upload: UploadFilterInput
+  uploadId: IntOperationFilterInput
+  publishDate: DateTimeOperationFilterInput
+  mimeType: StringOperationFilterInput
+  fileName: StringOperationFilterInput
+  relativeUrl: StringOperationFilterInput
+  length: IntOperationFilterInput
+}
+
+input ThumbnailResponseFilterInput {
+  and: [ThumbnailResponseFilterInput!]
+  or: [ThumbnailResponseFilterInput!]
+  id: IntOperationFilterInput
+  name: StringOperationFilterInput
+  upload: UploadResponseFilterInput
+  uploadId: IntOperationFilterInput
+  publishDate: DateTimeOperationFilterInput
+  mimeType: StringOperationFilterInput
+  fileName: StringOperationFilterInput
+  relativeUrl: StringOperationFilterInput
+  length: IntOperationFilterInput
+}
+
+input ThumbnailResponseSortInput {
+  id: SortEnumType
+  name: SortEnumType
+  upload: UploadResponseSortInput
+  uploadId: SortEnumType
+  publishDate: SortEnumType
+  mimeType: SortEnumType
+  fileName: SortEnumType
+  relativeUrl: SortEnumType
+  length: SortEnumType
 }
 
 input UploadFilterInput {
@@ -582,7 +647,6 @@ input UploadFilterInput {
   or: [UploadFilterInput!]
   id: IntOperationFilterInput
   title: StringOperationFilterInput
-  cropName: StringOperationFilterInput
   description: StringOperationFilterInput
   fileName: StringOperationFilterInput
   mimeType: StringOperationFilterInput
@@ -597,7 +661,7 @@ input UploadFilterInput {
   tenant: TenantFilterInput
   tenantId: IntOperationFilterInput
   metaData: StringOperationFilterInput
-  children: ListFilterInputTypeOfUploadFilterInput
+  thumbnails: ListFilterInputTypeOfThumbnailFilterInput
   parent: UploadFilterInput
   parentId: IntOperationFilterInput
 }

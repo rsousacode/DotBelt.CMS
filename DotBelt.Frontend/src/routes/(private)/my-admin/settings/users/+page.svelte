@@ -1,7 +1,6 @@
 <script lang="ts">
   import DashboardContainer from "$lib/Dashboard/DashboardContainer.svelte";
   import {SITE_NAME} from "$lib/constants";
-  import ApolloClientProvider from "$lib/API/GraphQL/ApolloClientProvider.svelte";
   import {type UsersConnection} from "$lib/API/GraphQL/generated";
   import type {Maybe} from "yup";
   import EditIcon from "$lib/Utilities/Icons/EditIcon.svelte";
@@ -9,8 +8,8 @@
   import {onMount} from "svelte";
   import {setDashboardData} from "$lib/Dashboard/DashboardStore.svelte";
   import {getUsers} from "$lib/Users/GetUsers";
+  import {apolloClientStore} from "$lib/API/GraphQL/apolloClientStore";
 
-  let apolloClientProvider: ApolloClientProvider;
   let usersResult: Maybe<UsersConnection> | undefined = $state(undefined);
   let usersPerPage = $state(5);
 
@@ -25,7 +24,7 @@
   })
 
   async function fetchUsers(variables: PaginationQuery) {
-    const apolloClient = apolloClientProvider.GetApolloSvelteClient();
+    const apolloClient = apolloClientStore.getClient();
     if (!apolloClient) {
       console.error("API Client not available");
       return;
@@ -60,52 +59,50 @@
   <title>Posts - {SITE_NAME} </title>
 </svelte:head>
 
-<ApolloClientProvider bind:this={apolloClientProvider}>
-  <DashboardContainer>
-    {#if usersResult}
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-          <tr>
-            <th scope="col">UserName</th>
-            <th scope="col">Email</th>
-            <th scope="col">Email Confirmed</th>
-            <th scope="col"></th>
-          </tr>
-          </thead>
-          <tbody>
+<DashboardContainer>
+  {#if usersResult}
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+        <tr>
+          <th scope="col">UserName</th>
+          <th scope="col">Email</th>
+          <th scope="col">Email Confirmed</th>
+          <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
 
-          {#if usersResult.nodes?.length && usersResult.nodes?.length > 0}
-            {#each usersResult.nodes as user}
-              <tr>
-                <td>{user.userName}</td>
-                <td>{user.email}</td>
-                <td>{user.emailConfirmed}</td>
-
-                <td class="table-actions">
-                  <a href={`/my-admin/settings/users/${user.id}`} target="_blank" class="cms-action-icon">
-                    <EditIcon/>
-                  </a>
-                </td>
-              </tr>
-            {/each}
-          {:else}
+        {#if usersResult.nodes?.length && usersResult.nodes?.length > 0}
+          {#each usersResult.nodes as user}
             <tr>
-              <td colspan="6" style="height: 250px;">
-                No data found
+              <td>{user.userName}</td>
+              <td>{user.email}</td>
+              <td>{user.emailConfirmed}</td>
+
+              <td class="table-actions">
+                <a href={`/my-admin/settings/users/${user.id}`} target="_blank" class="cms-action-icon">
+                  <EditIcon/>
+                </a>
               </td>
             </tr>
+          {/each}
+        {:else}
+          <tr>
+            <td colspan="6" style="height: 250px;">
+              No data found
+            </td>
+          </tr>
 
-          {/if}
+        {/if}
 
-          </tbody>
-        </table>
-      </div>
-      <button onclick={onPreviousPageClicked} disabled="{!usersResult.pageInfo.hasPreviousPage}">Previous page</button>
-      <button onclick={onNextPageClicked} disabled="{!usersResult.pageInfo.hasNextPage}">Next Page</button>
-    {/if}
-  </DashboardContainer>
-</ApolloClientProvider>
+        </tbody>
+      </table>
+    </div>
+    <button onclick={onPreviousPageClicked} disabled="{!usersResult.pageInfo.hasPreviousPage}">Previous page</button>
+    <button onclick={onNextPageClicked} disabled="{!usersResult.pageInfo.hasNextPage}">Next Page</button>
+  {/if}
+</DashboardContainer>
 
 <style>
     .table-actions {

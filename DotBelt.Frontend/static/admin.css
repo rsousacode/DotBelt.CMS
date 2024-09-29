@@ -88,6 +88,7 @@ body {
 
 .editor-container {
     margin-left: 30px;
+    width: 100%;
 }
 
 
@@ -254,4 +255,23 @@ body {
 
 .image-meta-data {
     padding-bottom: 40px;
+}
+
+.sidebar-item {
+    padding: 5px;
+    background: var(--bs-secondary-bg);
+    border-radius: 5px;
+    text-align: center;
+}
+
+.post-editor-container {
+    display: flex;
+}
+
+.post-editor-sidebar-container {
+    max-width: 250px;
+}
+
+.modal-header > .chevron-buttons {
+    display: flex;
 }

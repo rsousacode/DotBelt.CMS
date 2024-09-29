@@ -1,15 +1,16 @@
 // src/stores/dashboardStore.ts
 
 import {writable} from 'svelte/store';
+import type {Snippet} from "svelte";
 
 
 interface DashboardData {
     title: string;
     subtitle: string;
-    dashboardFragment : any;
+    dashboardFragment : Snippet | undefined;
 }
 
-const dashboardData = writable<DashboardData>({ title: '', subtitle: '', dashboardFragment: null });
+const dashboardData = writable<DashboardData>({ title: '', subtitle: '', dashboardFragment: undefined });
 
 function updateDashboardData(data: { title: string; subtitle: string; }) {
     dashboardData.update(currentData => {
@@ -32,11 +33,10 @@ function setDashboardData(data: { title: string; subtitle: string; }) {
 
 function updateDashboardFragment(fragment: any) {
     dashboardData.update(currentData => {
-        let newData = {
+        return {
             ...currentData,
             dashboardFragment: fragment
         };
-        return newData;
     });
 
 }

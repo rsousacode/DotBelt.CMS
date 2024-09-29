@@ -10,7 +10,7 @@ import type {PaginationQuery} from "$lib/API/GraphQL/PaginationQuery";
 
 export async function getUploads(
   client: ApolloClient<NormalizedCacheObject>,
-  pagination: PaginationQuery, fetchPolicy: FetchPolicy = 'cache-first' ): Promise<Maybe<UploadsConnection | undefined>> {
+  pagination: PaginationQuery, fetchPolicy: FetchPolicy = 'cache-first'): Promise<Maybe<UploadsConnection | undefined>> {
 
     const query = gql`
         query GetUploads($first: Int, $last: Int, $before: String, $after: String) {
@@ -19,7 +19,6 @@ export async function getUploads(
                 order: { publishDate: DESC },
                 after: $after,
                 before: $before) {
-                totalCount
                 pageInfo {
                     endCursor
                     hasNextPage
@@ -28,7 +27,6 @@ export async function getUploads(
                 }
                 nodes {
                     id
-                    title
                     publishDate
                     relativeUrl
                 }
@@ -36,7 +34,7 @@ export async function getUploads(
         }
     `
 
-  const {data: {uploads}, errors} = await client.query<GraphQlQuery>({
+  const {data: {uploads}} = await client.query<GraphQlQuery>({
     query: query,
     variables:
       {
