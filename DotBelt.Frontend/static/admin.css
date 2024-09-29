@@ -244,7 +244,9 @@ body {
     background: var(--bs-body-bg);
 }
 
-.media-image-container img,
+.media-image-container img {
+    max-width: 100%;
+}
 .media-image-container {
     max-width: 1000px;
 }
@@ -276,4 +278,8 @@ body {
 
 .modal-header > .chevron-buttons {
     display: flex;
+}
+
+.meta-data-item {
+    margin-bottom: 6px;
 }
