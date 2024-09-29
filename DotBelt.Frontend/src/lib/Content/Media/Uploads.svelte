@@ -74,6 +74,7 @@
       console.error("API Client not available");
       return;
     }
+
     uploadsResult = await getUploads(apolloClient, variables, fetchPolicy);
   }
 
@@ -92,6 +93,8 @@
   function resetData() {
     if (uploadsResult?.nodes && uploadsResult.nodes.length) {
       uploads = [...uploadsResult.nodes];
+    } else {
+      uploads = [];
     }
   }
 
@@ -177,7 +180,7 @@
     });
 
     if(!errors) {
-      await fetchAndReset('network-only');
+      await fetchAndReset('no-cache');
       selectedImages = [];
     }
 
@@ -251,7 +254,7 @@
 {#if mode === 'default'}
   <DropfileZone
     onUploadSuccess={onUploadSuccess}
-    onUploadError={() => console.log('error uploading image')}
+    onUploadError={() => console.error('error uploading image')}
     bind:uploadOverlayOpen={uploadOverlayOpen}
   />
 {/if}

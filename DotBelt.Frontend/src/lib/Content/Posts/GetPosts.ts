@@ -44,8 +44,7 @@ export async function getPosts(
   `;
 
   const {
-    data: { posts },
-    errors,
+    data: { posts }
   } = await client.query<DotBeltQuery>({
     query: query,
     variables: {

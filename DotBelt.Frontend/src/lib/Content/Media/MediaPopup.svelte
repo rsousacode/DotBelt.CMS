@@ -1,6 +1,6 @@
 <script lang="ts">
   import {onDestroy, onMount} from "svelte";
-  import {beforeNavigate} from "$app/navigation";
+  import convertSize from "convert-size";
   import CloseIcon from "$lib/Utilities/Icons/CloseIcon.svelte";
   import ChevronLeft from "$lib/Utilities/Icons/ChevronLeft.svelte";
   import ChevronRight from "$lib/Utilities/Icons/ChevronRight.svelte";
@@ -16,6 +16,8 @@
   let loading = $state(false);
 
   let upload : UploadResponse | undefined = $state();
+
+  let metaData : Record<string, unknown> | undefined = $state();
 
   function onClose() {
     upload = undefined;
@@ -56,7 +58,11 @@
 
     loading = false;
     popupOpen = true;
-    console.log(upload.metaData)
+
+    if(upload && upload.metaData != null) {
+      metaData = JSON.parse(upload.metaData);
+      console.log(metaData);
+    }
     //setOverflowHidden();
   }
 
@@ -125,16 +131,16 @@
               <span class="meta-data-title">File type: </span>
               <span>{upload.mimeType}</span>
             </div>
-
-            <div class="meta-data-item">
-              <span class="meta-data-title">File size: </span>
-              <span>38 KB</span>
-            </div>
-
-            <div class="meta-data-item">
-              <span class="meta-data-title">Dimensions: </span>
-              <span>960 by 540 pixels</span>
-            </div>
+            {#if metaData}
+              <div class="meta-data-item">
+                <span class="meta-data-title">File size: </span>
+                <span>{convertSize(typeof metaData["Size"] === 'number' ? metaData["Size"] : 0)}</span>
+              </div>
+              <div class="meta-data-item">
+                <span class="meta-data-title">Dimensions: </span>
+                <span>{metaData["Width"]} by {metaData["Height"]} pixels</span>
+              </div>
+            {/if}
           </div>
           <form>
             <div class="form-group">
