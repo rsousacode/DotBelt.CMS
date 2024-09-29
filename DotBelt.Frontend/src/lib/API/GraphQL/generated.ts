@@ -1,31 +1,19 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
-  [_ in K]?: never;
-};
-export type Incremental<T> =
-  | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
   /** The `DateTime` scalar represents an ISO-8601 compliant date time type. */
-  DateTime: { input: any; output: any };
+  DateTime: { input: any; output: any; }
 };
 
 export type ApplicationUser = {
@@ -88,7 +76,7 @@ export type ApplicationUserSortInput = {
 export enum ApplyPolicy {
   AfterResolver = 'AFTER_RESOLVER',
   BeforeResolver = 'BEFORE_RESOLVER',
-  Validation = 'VALIDATION',
+  Validation = 'VALIDATION'
 }
 
 export type BooleanOperationFilterInput = {
@@ -137,6 +125,101 @@ export type DeleteUploadsPayload = {
   removeUploadsResult?: Maybe<RemoveUploadsResult>;
 };
 
+export type DotBeltMutation = {
+  __typename?: 'DotBeltMutation';
+  createPost: CreatePostPayload;
+  deleteUploads: DeleteUploadsPayload;
+  editPost: EditPostPayload;
+};
+
+
+export type DotBeltMutationCreatePostArgs = {
+  input: CreatePostInput;
+};
+
+
+export type DotBeltMutationDeleteUploadsArgs = {
+  input: DeleteUploadsInput;
+};
+
+
+export type DotBeltMutationEditPostArgs = {
+  input: EditPostInput;
+};
+
+export type DotBeltQuery = {
+  __typename?: 'DotBeltQuery';
+  postById: Array<PostResponse>;
+  postByUrl: Array<PostResponse>;
+  posts?: Maybe<PostsConnection>;
+  session: SessionData;
+  taxonomies?: Maybe<TaxonomiesConnection>;
+  taxonomyById: Array<Taxonomy>;
+  uploadById: Array<UploadResponse>;
+  uploads?: Maybe<UploadsConnection>;
+  users?: Maybe<UsersConnection>;
+};
+
+
+export type DotBeltQueryPostByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type DotBeltQueryPostByUrlArgs = {
+  url: Scalars['String']['input'];
+};
+
+
+export type DotBeltQueryPostsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Array<PostResponseSortInput>>;
+  where?: InputMaybe<PostResponseFilterInput>;
+};
+
+
+export type DotBeltQueryTaxonomiesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Array<TaxonomySortInput>>;
+  where?: InputMaybe<TaxonomyFilterInput>;
+};
+
+
+export type DotBeltQueryTaxonomyByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type DotBeltQueryUploadByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type DotBeltQueryUploadsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Array<ThumbnailResponseSortInput>>;
+  where?: InputMaybe<ThumbnailResponseFilterInput>;
+};
+
+
+export type DotBeltQueryUsersArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Array<UserResponseSortInput>>;
+  where?: InputMaybe<UserResponseFilterInput>;
+};
+
 export type EditPostInput = {
   payload: Edit_PostRequestInput;
   postId: Scalars['Int']['input'];
@@ -157,85 +240,6 @@ export type Edit_PostRequestInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   relativeUrl?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type GraphQlMutation = {
-  __typename?: 'GraphQLMutation';
-  createPost: CreatePostPayload;
-  deleteUploads: DeleteUploadsPayload;
-  editPost: EditPostPayload;
-};
-
-export type GraphQlMutationCreatePostArgs = {
-  input: CreatePostInput;
-};
-
-export type GraphQlMutationDeleteUploadsArgs = {
-  input: DeleteUploadsInput;
-};
-
-export type GraphQlMutationEditPostArgs = {
-  input: EditPostInput;
-};
-
-export type GraphQlQuery = {
-  __typename?: 'GraphQLQuery';
-  postById: Array<PostResponse>;
-  postByUrl: Array<PostResponse>;
-  posts?: Maybe<PostsConnection>;
-  session: SessionData;
-  taxonomies?: Maybe<TaxonomiesConnection>;
-  taxonomyById: Array<Taxonomy>;
-  uploads?: Maybe<UploadsConnection>;
-  users?: Maybe<UsersConnection>;
-};
-
-export type GraphQlQueryPostByIdArgs = {
-  id: Scalars['Int']['input'];
-};
-
-export type GraphQlQueryPostByUrlArgs = {
-  url: Scalars['String']['input'];
-};
-
-export type GraphQlQueryPostsArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  order?: InputMaybe<Array<PostResponseSortInput>>;
-  where?: InputMaybe<PostResponseFilterInput>;
-};
-
-export type GraphQlQueryTaxonomiesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  order?: InputMaybe<Array<TaxonomySortInput>>;
-  where?: InputMaybe<TaxonomyFilterInput>;
-};
-
-export type GraphQlQueryTaxonomyByIdArgs = {
-  id: Scalars['Int']['input'];
-};
-
-export type GraphQlQueryUploadsArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  order?: InputMaybe<Array<UploadResponseSortInput>>;
-  where?: InputMaybe<UploadResponseFilterInput>;
-};
-
-export type GraphQlQueryUsersArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
-  order?: InputMaybe<Array<UserResponseSortInput>>;
-  where?: InputMaybe<UserResponseFilterInput>;
 };
 
 export type IntOperationFilterInput = {
@@ -274,11 +278,11 @@ export type ListFilterInputTypeOfTaxonomyResponseFilterInput = {
   some?: InputMaybe<TaxonomyResponseFilterInput>;
 };
 
-export type ListFilterInputTypeOfUploadFilterInput = {
-  all?: InputMaybe<UploadFilterInput>;
+export type ListFilterInputTypeOfThumbnailFilterInput = {
+  all?: InputMaybe<ThumbnailFilterInput>;
   any?: InputMaybe<Scalars['Boolean']['input']>;
-  none?: InputMaybe<UploadFilterInput>;
-  some?: InputMaybe<UploadFilterInput>;
+  none?: InputMaybe<ThumbnailFilterInput>;
+  some?: InputMaybe<ThumbnailFilterInput>;
 };
 
 export type ListStringOperationFilterInput = {
@@ -409,7 +413,7 @@ export enum PostTypeEnum {
   MenuItem = 'MENU_ITEM',
   Page = 'PAGE',
   Post = 'POST',
-  Undefined = 'UNDEFINED',
+  Undefined = 'UNDEFINED'
 }
 
 export type PostTypeEnumOperationFilterInput = {
@@ -456,7 +460,7 @@ export type SessionData = {
 
 export enum SortEnumType {
   Asc = 'ASC',
-  Desc = 'DESC',
+  Desc = 'DESC'
 }
 
 export type StringOperationFilterInput = {
@@ -582,7 +586,7 @@ export type TaxonomySortInput = {
 export enum TaxonomyTypeEnum {
   Category = 'CATEGORY',
   Tag = 'TAG',
-  Undefined = 'UNDEFINED',
+  Undefined = 'UNDEFINED'
 }
 
 export type TaxonomyTypeEnumOperationFilterInput = {
@@ -595,6 +599,7 @@ export type TaxonomyTypeEnumOperationFilterInput = {
 export type Tenant = {
   __typename?: 'Tenant';
   allowedFileTypes: Array<Scalars['String']['output']>;
+  fullUrl: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   posts: Array<Post>;
@@ -604,6 +609,7 @@ export type Tenant = {
 export type TenantFilterInput = {
   allowedFileTypes?: InputMaybe<ListStringOperationFilterInput>;
   and?: InputMaybe<Array<TenantFilterInput>>;
+  fullUrl?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<IntOperationFilterInput>;
   name?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<TenantFilterInput>>;
@@ -612,16 +618,81 @@ export type TenantFilterInput = {
 };
 
 export type TenantSortInput = {
+  fullUrl?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   name?: InputMaybe<SortEnumType>;
+};
+
+export type Thumbnail = {
+  __typename?: 'Thumbnail';
+  fileName: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  length: Scalars['Int']['output'];
+  mimeType: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  publishDate: Scalars['DateTime']['output'];
+  relativeUrl: Scalars['String']['output'];
+  upload: Upload;
+  uploadId: Scalars['Int']['output'];
+};
+
+export type ThumbnailFilterInput = {
+  and?: InputMaybe<Array<ThumbnailFilterInput>>;
+  fileName?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  length?: InputMaybe<IntOperationFilterInput>;
+  mimeType?: InputMaybe<StringOperationFilterInput>;
+  name?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<ThumbnailFilterInput>>;
+  publishDate?: InputMaybe<DateTimeOperationFilterInput>;
+  relativeUrl?: InputMaybe<StringOperationFilterInput>;
+  upload?: InputMaybe<UploadFilterInput>;
+  uploadId?: InputMaybe<IntOperationFilterInput>;
+};
+
+export type ThumbnailResponse = {
+  __typename?: 'ThumbnailResponse';
+  fileName: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  length: Scalars['Int']['output'];
+  mimeType: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  publishDate: Scalars['DateTime']['output'];
+  relativeUrl: Scalars['String']['output'];
+  upload: UploadResponse;
+  uploadId: Scalars['Int']['output'];
+};
+
+export type ThumbnailResponseFilterInput = {
+  and?: InputMaybe<Array<ThumbnailResponseFilterInput>>;
+  fileName?: InputMaybe<StringOperationFilterInput>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  length?: InputMaybe<IntOperationFilterInput>;
+  mimeType?: InputMaybe<StringOperationFilterInput>;
+  name?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<ThumbnailResponseFilterInput>>;
+  publishDate?: InputMaybe<DateTimeOperationFilterInput>;
+  relativeUrl?: InputMaybe<StringOperationFilterInput>;
+  upload?: InputMaybe<UploadResponseFilterInput>;
+  uploadId?: InputMaybe<IntOperationFilterInput>;
+};
+
+export type ThumbnailResponseSortInput = {
+  fileName?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  length?: InputMaybe<SortEnumType>;
+  mimeType?: InputMaybe<SortEnumType>;
+  name?: InputMaybe<SortEnumType>;
+  publishDate?: InputMaybe<SortEnumType>;
+  relativeUrl?: InputMaybe<SortEnumType>;
+  upload?: InputMaybe<UploadResponseSortInput>;
+  uploadId?: InputMaybe<SortEnumType>;
 };
 
 export type Upload = {
   __typename?: 'Upload';
   author: ApplicationUser;
   authorId: Scalars['Int']['output'];
-  children: Array<Upload>;
-  cropName?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   fileName: Scalars['String']['output'];
   fullUrl?: Maybe<Scalars['String']['output']>;
@@ -637,6 +708,7 @@ export type Upload = {
   relativeUrl: Scalars['String']['output'];
   tenant: Tenant;
   tenantId: Scalars['Int']['output'];
+  thumbnails: Array<Thumbnail>;
   title?: Maybe<Scalars['String']['output']>;
 };
 
@@ -644,8 +716,6 @@ export type UploadFilterInput = {
   and?: InputMaybe<Array<UploadFilterInput>>;
   author?: InputMaybe<ApplicationUserFilterInput>;
   authorId?: InputMaybe<IntOperationFilterInput>;
-  children?: InputMaybe<ListFilterInputTypeOfUploadFilterInput>;
-  cropName?: InputMaybe<StringOperationFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
   fileName?: InputMaybe<StringOperationFilterInput>;
   fullUrl?: InputMaybe<StringOperationFilterInput>;
@@ -662,6 +732,7 @@ export type UploadFilterInput = {
   relativeUrl?: InputMaybe<StringOperationFilterInput>;
   tenant?: InputMaybe<TenantFilterInput>;
   tenantId?: InputMaybe<IntOperationFilterInput>;
+  thumbnails?: InputMaybe<ListFilterInputTypeOfThumbnailFilterInput>;
   title?: InputMaybe<StringOperationFilterInput>;
 };
 
@@ -719,11 +790,9 @@ export type UploadsConnection = {
   /** A list of edges. */
   edges?: Maybe<Array<UploadsEdge>>;
   /** A flattened list of the nodes. */
-  nodes?: Maybe<Array<UploadResponse>>;
+  nodes?: Maybe<Array<ThumbnailResponse>>;
   /** Information to aid in pagination. */
   pageInfo: PageInfo;
-  /** Identifies the total count of items in the connection. */
-  totalCount: Scalars['Int']['output'];
 };
 
 /** An edge in a connection. */
@@ -732,7 +801,7 @@ export type UploadsEdge = {
   /** A cursor for use in pagination. */
   cursor: Scalars['String']['output'];
   /** The item at the end of the edge. */
-  node: UploadResponse;
+  node: ThumbnailResponse;
 };
 
 export type UserResponse = {
