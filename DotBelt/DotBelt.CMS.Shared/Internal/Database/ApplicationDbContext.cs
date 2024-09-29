@@ -32,6 +32,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Taxonomy> Taxonomies { get; set; }
     
     public DbSet<Upload> Uploads { get; set; }
+     
+    public DbSet<Thumbnail> Thumbnails { get; set; }
     
     public DbSet<Tenant> Tenants { get; set; }
     

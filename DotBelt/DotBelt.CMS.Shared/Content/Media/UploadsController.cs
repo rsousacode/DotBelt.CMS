@@ -31,7 +31,7 @@ public class UploadsController
             var upload = await _context
                 .Uploads
                 .Include(x => x.Parent)
-                .Include(x => x.Children)
+                .Include(x => x.Thumbnails)
                 .FirstOrDefaultAsync(x => x.Id == uploadId, cancellationToken);
           
 
@@ -48,7 +48,7 @@ public class UploadsController
                     _context.Uploads.Remove(upload.Parent);
                 }
                 
-                _context.Uploads.RemoveRange(upload.Children);
+                _context.Thumbnails.RemoveRange(upload.Thumbnails);
                 _context.Uploads.Remove(upload);
 
                 await _context.SaveChangesAsync(cancellationToken);
@@ -169,7 +169,7 @@ public class UploadsController
             FileName = fileName,
             RelativeUrl = GetRelativePath(fileName),
             AuthorId = authorId,
-            Children = new List<Upload>(),
+            Thumbnails = new List<Thumbnail>(),
             Author = null!,
             PublishDate = DateTimeOffset.UtcNow,
             MimeType = mime,
@@ -197,20 +197,19 @@ public class UploadsController
                             cropSetting.Width, 
                             cropSetting.Height, false, CropPositionX.Left, CropPositionY.Top);
 
-                        var crop = new Upload()
+                        var crop = new Thumbnail()
                         {
-                            CropName = cropSetting.Name,
-                            Author = null!,
-                            AuthorId = authorId,
+                            Name = cropSetting.Name,
+         
+                            Upload = upload,
                             FileName = cropFileName,
                             MimeType = Mimes.WEBP,
                             PublishDate = upload.PublishDate,
                             RelativeUrl = GetRelativePath(cropFileName),
-                            TenantId = tenantId,
-                            Tenant = null!
+                   
                         };
                         
-                        upload.Children.Add(crop);
+                        upload.Thumbnails.Add(crop);
                     }
                     catch (Exception e)
                     {

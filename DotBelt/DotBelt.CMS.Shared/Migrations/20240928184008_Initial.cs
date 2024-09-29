@@ -76,6 +76,7 @@ namespace DotBelt.CMS.Shared.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
+                    FullUrl = table.Column<string>(type: "text", nullable: false),
                     AllowedFileTypes = table.Column<string[]>(type: "text[]", nullable: false)
                 },
                 constraints: table =>
@@ -231,7 +232,6 @@ namespace DotBelt.CMS.Shared.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "text", nullable: true),
-                    CropName = table.Column<string>(type: "character varying(90)", maxLength: 90, nullable: true),
                     Description = table.Column<string>(type: "text", nullable: true),
                     FileName = table.Column<string>(type: "text", nullable: false),
                     MimeType = table.Column<string>(type: "text", nullable: false),
@@ -314,6 +314,31 @@ namespace DotBelt.CMS.Shared.Migrations
                         column: x => x.FeaturedImageId,
                         principalTable: "Uploads",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Thumbnails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    UploadId = table.Column<int>(type: "integer", nullable: false),
+                    PublishDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    MimeType = table.Column<string>(type: "text", nullable: false),
+                    FileName = table.Column<string>(type: "text", nullable: false),
+                    RelativeUrl = table.Column<string>(type: "text", nullable: false),
+                    Length = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Thumbnails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Thumbnails_Uploads_UploadId",
+                        column: x => x.UploadId,
+                        principalTable: "Uploads",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -419,14 +444,14 @@ namespace DotBelt.CMS.Shared.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Thumbnails_UploadId",
+                table: "Thumbnails",
+                column: "UploadId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Uploads_AuthorId",
                 table: "Uploads",
                 column: "AuthorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Uploads_CropName",
-                table: "Uploads",
-                column: "CropName");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Uploads_ParentId",
@@ -462,6 +487,9 @@ namespace DotBelt.CMS.Shared.Migrations
 
             migrationBuilder.DropTable(
                 name: "PostTaxonomy");
+
+            migrationBuilder.DropTable(
+                name: "Thumbnails");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

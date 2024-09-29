@@ -14,6 +14,8 @@ public static partial class ContentMapperExtensions
     public static partial IQueryable<UploadResponse> ProjectToUploadResponse(this IQueryable<Upload> q);
      
     public static partial UploadResponse ToUploadResponse(this Upload upload);
+       
+    public static partial IQueryable<ThumbnailResponse> ProjectToThumbnailResponse(this IQueryable<Thumbnail> thumbnail);
    
     
 }

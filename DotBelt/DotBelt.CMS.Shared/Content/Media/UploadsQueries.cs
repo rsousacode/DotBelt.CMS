@@ -7,16 +7,26 @@ namespace DotBelt.CMS.Shared.CMS.Media;
 public class UploadsQueries
 {
     [Authorize]
-    [UsePaging(IncludeTotalCount = true)]
+    [UsePaging]
     [UseProjection]
     [UseFiltering]
     [UseSorting]
 
-    public IQueryable<UploadResponse> GetUploads(ApplicationDbContext context)
+    public IQueryable<ThumbnailResponse> GetUploads (ApplicationDbContext context)
+    {
+        return context
+            .Thumbnails
+            .Where(x => x.Name == CropsSettings.UploadsLibraryCrop.Name)
+            .ProjectToThumbnailResponse();
+    }
+    
+    [Authorize]
+    [UseProjection]
+    public IQueryable<UploadResponse> GetUploadById(int id, ApplicationDbContext context)
     {
         return context
             .Uploads
-            .Where(x => x.CropName == CropsSettings.UploadsLibraryCrop.Name)
+            .Where(x => x.Id == id)
             .ProjectToUploadResponse();
     }
 

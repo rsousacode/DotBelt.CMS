@@ -29,7 +29,7 @@ public class Command_Seeding : Command
         
         if(dbContext == null) 
         {
-            throw new InvalidOperationException("Could not find ApplicationDbContext");
+            throw new InvalidOperationException("Could not fi§nd ApplicationDbContext");
         }
 
         var tenant = new Tenant()

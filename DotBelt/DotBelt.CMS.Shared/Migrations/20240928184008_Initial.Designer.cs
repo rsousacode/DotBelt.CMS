@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotBelt.CMS.Shared.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240919232645_Initial")]
+    [Migration("20240928184008_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -26,6 +26,46 @@ namespace DotBelt.CMS.Shared.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Media.Thumbnail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Length")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("PublishDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RelativeUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UploadId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UploadId");
+
+                    b.ToTable("Thumbnails");
+                });
+
             modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Media.Upload", b =>
                 {
                     b.Property<int>("Id")
@@ -36,10 +76,6 @@ namespace DotBelt.CMS.Shared.Migrations
 
                     b.Property<int>("AuthorId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("CropName")
-                        .HasMaxLength(90)
-                        .HasColumnType("character varying(90)");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -88,8 +124,6 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
-
-                    b.HasIndex("CropName");
 
                     b.HasIndex("ParentId");
 
@@ -247,6 +281,10 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.Property<string[]>("AllowedFileTypes")
                         .IsRequired()
                         .HasColumnType("text[]");
+
+                    b.Property<string>("FullUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -471,6 +509,17 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.ToTable("PostTaxonomy");
                 });
 
+            modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Media.Thumbnail", b =>
+                {
+                    b.HasOne("DotBelt.CMS.Shared.CMS.Media.Upload", "Upload")
+                        .WithMany("Thumbnails")
+                        .HasForeignKey("UploadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Upload");
+                });
+
             modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Media.Upload", b =>
                 {
                     b.HasOne("DotBelt.CMS.Shared.Users.ApplicationUser", "Author")
@@ -480,7 +529,7 @@ namespace DotBelt.CMS.Shared.Migrations
                         .IsRequired();
 
                     b.HasOne("DotBelt.CMS.Shared.CMS.Media.Upload", "Parent")
-                        .WithMany("Children")
+                        .WithMany()
                         .HasForeignKey("ParentId");
 
                     b.HasOne("DotBelt.CMS.Shared.Tenants.Tenant", "Tenant")
@@ -614,7 +663,7 @@ namespace DotBelt.CMS.Shared.Migrations
 
             modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Media.Upload", b =>
                 {
-                    b.Navigation("Children");
+                    b.Navigation("Thumbnails");
                 });
 
             modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Post", b =>
