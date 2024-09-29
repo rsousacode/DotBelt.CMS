@@ -6,6 +6,7 @@
     import SettingsIcon from "$lib/Utilities/Icons/SettingsIcon.svelte";
     import MediaIcon from "$lib/Utilities/Icons/MediaIcon.svelte";
     import DebugIcon from "$lib/Utilities/Icons/DebugIcon.svelte";
+    import MenuIcon from '$lib/Utilities/Icons/MenuIcon.svelte';
 </script>
 
 <div class="dashboard-container">
@@ -83,6 +84,14 @@
                 },
               ]
           }}/>
+          <Menu menu={{
+              name: "Menus",
+              href: "/my-admin/visual/menus",
+              icon: MenuIcon,
+              openNewTab: false,
+              items: []
+          }}/>
+
           <Menu menu={{
               name: "Settings",
               href: "",

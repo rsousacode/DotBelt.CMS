@@ -4,13 +4,20 @@
   import {quadInOut} from "svelte/easing";
   import {slide} from "svelte/transition";
   import {menuState} from "$lib/Dashboard/MenuItems/MenuState.svelte";
+  import { goto } from '$app/navigation';
 
   let { menu } : { menu: MenuItem} = $props();
 
   let nameElement : Element;
 
 
-  function onMenuClicked(e) {
+  async function onMenuClicked(e: InputEvent) {
+
+    if(menu.items.length <= 0) {
+      await goto(menu.href);
+      return;
+    }
+
     if(e.target === nameElement) {
       return;
     }
