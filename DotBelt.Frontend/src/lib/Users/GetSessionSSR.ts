@@ -1,4 +1,4 @@
-import { type GraphQlQuery, type Maybe, type SessionData } from '$lib/API/GraphQL/generated';
+import { type DotBeltQuery, type Maybe, type SessionData } from '$lib/API/GraphQL/generated';
 import { gql } from '@apollo/client/core/index.js';
 import { getApolloSSRClient } from '$lib/API/GraphQL/apolloSSRClient';
 
@@ -21,7 +21,7 @@ export async function getSessionSSR(fetch: any): Promise<Maybe<SessionData | und
     const {
       data: { session },
       errors,
-    } = await client.query<GraphQlQuery>({
+    } = await client.query<DotBeltQuery>({
       query: query,
     });
 

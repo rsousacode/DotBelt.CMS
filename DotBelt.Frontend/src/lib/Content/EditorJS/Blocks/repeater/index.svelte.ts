@@ -2,7 +2,7 @@ import RepeaterSvelte from './RepeaterSvelte.svelte';
 import { mount } from 'svelte';
 import type { API, BlockTune } from '@editorjs/editorjs';
 import {
-  type GraphQlQuery,
+  type DotBeltQuery,
   type Maybe,
   type Post,
   type PostsConnection,
@@ -47,7 +47,7 @@ export default class Repeater {
     const {
       data: { posts },
       errors,
-    } = await client.query<GraphQlQuery>({
+    } = await client.query<DotBeltQuery>({
       query: query,
       variables: { type: type },
     });

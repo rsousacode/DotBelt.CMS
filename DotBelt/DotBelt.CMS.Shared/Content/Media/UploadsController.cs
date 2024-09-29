@@ -4,6 +4,7 @@ using DotBelt.CMS.Shared.Tenants;
 using MetadataExtractor;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using SkiaSharp;
 using Directory = System.IO.Directory;
 using Path = System.IO.Path;
 
@@ -117,10 +118,9 @@ public class UploadsController
         return input.Replace("\u0000", string.Empty);
     }
 
-    public static string ExtractMetadata(Stream fileStream)
+    public static string ExtractAdditionalMetadata(Stream fileStream, Dictionary<string, object> metadata)
     {
         var directories = ImageMetadataReader.ReadMetadata(fileStream);
-        var metadata = new Dictionary<string, string?>();
 
         foreach (var directory in directories)
         {
@@ -128,7 +128,10 @@ public class UploadsController
             {
                 string key = SanitizeString($"{directory.Name}:{tag.Name}");
                 string? value = tag.Description != null ? SanitizeString(tag.Description) : null;
-                metadata[key] = value;
+                if (value != null)
+                {
+                    metadata[key] = value;
+                }
             }
         }
 
@@ -171,9 +174,12 @@ public class UploadsController
             AuthorId = authorId,
             Thumbnails = new List<Thumbnail>(),
             Author = null!,
+            MetaData = string.Empty,
             PublishDate = DateTimeOffset.UtcNow,
             MimeType = mime,
         };
+
+        var imageMetaData = new Dictionary<string, object>();
 
         await using (var stream = new FileStream(fullPath, FileMode.Create))
         {
@@ -181,10 +187,31 @@ public class UploadsController
             
             stream.Seek(0, SeekOrigin.Begin);
             
+ 
             if (Mimes.IsImage(mime))
             {
-                var metaData = ExtractMetadata(stream);
-                upload.MetaData = metaData;
+                
+                // Get image dimensions and size using SkiaSharp
+                using (var skStream = new SKManagedStream(stream))
+                {
+                    using (var skImage = SKBitmap.Decode(skStream))
+                    {
+                        int width = skImage.Width;
+                        int height = skImage.Height;
+                        long size = stream.Length; // Size in bytes
+
+                        imageMetaData["Width"] = width;
+                        imageMetaData["Height"] = height;
+                        imageMetaData["Size"] = size;
+                        
+                    }
+                }
+                stream.Seek(0, SeekOrigin.Begin);
+
+                
+                ExtractAdditionalMetadata(stream, imageMetaData);
+
+                upload.MetaData = JsonSerializer.Serialize(imageMetaData);
 
                 foreach (var cropSetting in CropsSettings.Internal)
                 {

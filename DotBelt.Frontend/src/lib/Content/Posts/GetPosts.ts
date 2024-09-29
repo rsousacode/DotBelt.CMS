@@ -1,5 +1,5 @@
 import {
-  type GraphQlQuery,
+  type DotBeltQuery,
   type Maybe,
   type PostsConnection,
   PostTypeEnum,
@@ -46,7 +46,7 @@ export async function getPosts(
   const {
     data: { posts },
     errors,
-  } = await client.query<GraphQlQuery>({
+  } = await client.query<DotBeltQuery>({
     query: query,
     variables: {
       type: type,

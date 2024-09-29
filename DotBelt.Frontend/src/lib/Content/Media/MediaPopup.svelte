@@ -6,11 +6,10 @@
   import ChevronRight from "$lib/Utilities/Icons/ChevronRight.svelte";
   import {gql} from "@apollo/client/core/index.js";
   import {apolloClientStore} from "$lib/API/GraphQL/apolloClientStore";
-  import type {GraphQlQuery, UploadResponse} from "$lib/API/GraphQL/generated";
+  import type {DotBeltQuery, UploadResponse} from "$lib/API/GraphQL/generated";
 
   let body: Element;
 
-  let {onClose, image}: { onClose: () => void, image: any } = $props();
 
   let popupOpen : boolean = $state(false);
 
@@ -18,8 +17,15 @@
 
   let upload : UploadResponse | undefined = $state();
 
+  function onClose() {
+    upload = undefined;
+    popupOpen = false;
+    loading = false;
+  }
+
   export async function openMediaPopup(imageId: number) {
     loading = true;
+    console.log(imageId)
 
     const query = gql`
       query getUpload ($id: Int!) {
@@ -28,13 +34,20 @@
              mimeType,
              description,
              title,
-             metaData
+             metaData,
+             relativeUrl,
+             fileName
+             publishDate,
+             author {
+                userName
+             }
+
           }
       }
     `;
 
     const client = apolloClientStore.getClient();
-    const {data: {uploadById}} = await client.query<GraphQlQuery>({
+    const {data: {uploadById}} = await client.query<DotBeltQuery>({
       query: query,
       variables: {id: imageId}
     })
@@ -42,6 +55,8 @@
     upload = uploadById[0];
 
     loading = false;
+    popupOpen = true;
+    console.log(upload.metaData)
     //setOverflowHidden();
   }
 
@@ -65,7 +80,8 @@
 </script>
 
 <svelte:body bind:this={body}/>
-{#if popupOpen}
+{#if popupOpen && upload}
+  <p>{upload.metaData}</p>
   <div class="overlay"></div>
   <div class="modal-container">
       <div class="modal-header">
@@ -86,33 +102,28 @@
       </div>
       <div class="modal-content">
         <div class="media-image-container">
-          <img src={`/${image.relativeUrl}`} alt="">
+          <img src={`/${upload.relativeUrl}`} alt="">
         </div>
         <div class="media-form-container">
           <div class="image-meta-data">
             <div class="meta-data-item">
               <span class="meta-data-title">Uploaded on: </span>
-              <span>September 18, 2020</span>
+              <span>{new Date(upload.publishDate).toLocaleString()}</span>
             </div>
 
             <div class="meta-data-item">
               <span class="meta-data-title">Uploaded by: </span>
-              <span>User</span>
-            </div>
-
-            <div class="meta-data-item">
-              <span class="meta-data-title">Uploaded to: </span>
-              <span>Page Name</span>
+              <span>{upload.author?.userName}</span>
             </div>
 
             <div class="meta-data-item">
               <span class="meta-data-title">Filename: </span>
-              <span>WinterComeFeatured.jpg</span>
+              <span>{upload.fileName}</span>
             </div>
 
             <div class="meta-data-item">
               <span class="meta-data-title">File type: </span>
-              <span>image/jpeg</span>
+              <span>{upload.mimeType}</span>
             </div>
 
             <div class="meta-data-item">
@@ -140,16 +151,7 @@
                 <option>5</option>
               </select>
             </div>
-            <div class="form-group">
-              <label for="exampleFormControlSelect2">Example multiple select</label>
-              <select multiple class="form-control" id="exampleFormControlSelect2">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
-            </div>
+
             <div class="form-group">
               <label for="exampleFormControlTextarea1">Example textarea</label>
               <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>

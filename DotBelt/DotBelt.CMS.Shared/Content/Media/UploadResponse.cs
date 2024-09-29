@@ -14,7 +14,10 @@ public class UploadResponse
     public string? FullUrl { get; set; }
     public DateTimeOffset PublishDate { get; set; }
     public DateTimeOffset? ModifiedDate { get; set; }
-    public string? MetaData { get; set; }
+    
+    public string? MetaData { get; set; } = null!;
+    
+    public UserResponse? Author { get; set; }
     
     public int? ParentId { get; set; }
     

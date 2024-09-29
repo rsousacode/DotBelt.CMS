@@ -1,4 +1,4 @@
-import { type GraphQlQuery, type Maybe, type UsersConnection } from '$lib/API/GraphQL/generated';
+import { type DotBeltQuery, type Maybe, type UsersConnection } from '$lib/API/GraphQL/generated';
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core/index.js';
 import { gql } from '@apollo/client/core/index.js';
 import type { PaginationQuery } from '$lib/API/GraphQL/PaginationQuery';
@@ -30,7 +30,7 @@ export async function getUsers(
     const {
       data: { users },
       errors,
-    } = await client.query<GraphQlQuery>({
+    } = await client.query<DotBeltQuery>({
       query: query,
       variables: {
         last: pagination.last,

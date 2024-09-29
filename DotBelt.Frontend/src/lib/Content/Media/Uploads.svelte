@@ -5,7 +5,7 @@
   import MediaPopup from "$lib/Content/Media/MediaPopup.svelte";
   import type {Maybe} from "yup";
   import type {
-    GraphQlMutation,
+    DotBeltMutation,
     ThumbnailResponse,
     UploadsConnection
   } from "$lib/API/GraphQL/generated";
@@ -169,7 +169,7 @@
       }
   }
 `;
-    const {errors} = await client.mutate<GraphQlMutation>({
+    const {errors} = await client.mutate<DotBeltMutation>({
       mutation: mutation,
       variables: {
         uploadIds: selectedImages

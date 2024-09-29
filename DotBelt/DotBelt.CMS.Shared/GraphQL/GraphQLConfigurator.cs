@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
@@ -57,6 +58,7 @@ namespace DotBelt.QueriesMutations
                 .AddMutationConventions()
                 .AddQueryType<DotBeltQuery>()
                 .AddMutationType<DotBeltMutation>()
+                .BindRuntimeType<IDictionary<string, object>, AnyType>()
                 .AddGraphQlTypeExtensions()
                 .AddApolloTracing()
                 .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled);

@@ -42,7 +42,7 @@ public class Upload : IContent
     public required Tenant Tenant { get; set; }
     public int TenantId { get; set; }
 
-    public string? MetaData { get; set; }
+    public string? MetaData { get; set; } = null!;
 
     public ICollection<Thumbnail> Thumbnails { get; set; } = null!;
       

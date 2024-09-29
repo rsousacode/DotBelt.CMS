@@ -738,6 +738,7 @@ export type UploadFilterInput = {
 
 export type UploadResponse = {
   __typename?: 'UploadResponse';
+  author?: Maybe<UserResponse>;
   description?: Maybe<Scalars['String']['output']>;
   fileName: Scalars['String']['output'];
   fullUrl?: Maybe<Scalars['String']['output']>;
@@ -754,6 +755,7 @@ export type UploadResponse = {
 
 export type UploadResponseFilterInput = {
   and?: InputMaybe<Array<UploadResponseFilterInput>>;
+  author?: InputMaybe<UserResponseFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
   fileName?: InputMaybe<StringOperationFilterInput>;
   fullUrl?: InputMaybe<StringOperationFilterInput>;
@@ -770,6 +772,7 @@ export type UploadResponseFilterInput = {
 };
 
 export type UploadResponseSortInput = {
+  author?: InputMaybe<UserResponseSortInput>;
   description?: InputMaybe<SortEnumType>;
   fileName?: InputMaybe<SortEnumType>;
   fullUrl?: InputMaybe<SortEnumType>;

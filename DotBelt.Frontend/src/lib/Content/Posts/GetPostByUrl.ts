@@ -1,4 +1,4 @@
-import type { GraphQlQuery, PostResponse } from '$lib/API/GraphQL/generated';
+import type { DotBeltQuery, PostResponse } from '$lib/API/GraphQL/generated';
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core/index.js';
 import { gql } from '@apollo/client/core/index.js';
 
@@ -19,7 +19,7 @@ export async function getPostByUrl(
   const {
     data: { postByUrl },
     errors,
-  } = await client.query<GraphQlQuery>({
+  } = await client.query<DotBeltQuery>({
     query: query,
     variables: { url: url },
   });

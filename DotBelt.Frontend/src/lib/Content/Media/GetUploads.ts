@@ -1,5 +1,5 @@
 import {
-    type GraphQlQuery,
+    type DotBeltQuery,
     type Maybe,
     type UploadsConnection
 } from '$lib/API/GraphQL/generated'
@@ -28,13 +28,14 @@ export async function getUploads(
                 nodes {
                     id
                     publishDate
-                    relativeUrl
+                    relativeUrl,
+                    uploadId
                 }
             }
         }
     `
 
-    const {data: {uploads}} = await client.query<GraphQlQuery>({
+    const {data: {uploads}} = await client.query<DotBeltQuery>({
         query: query,
         variables:
             {

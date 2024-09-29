@@ -255,6 +255,7 @@ type UploadResponse {
   publishDate: DateTime!
   modifiedDate: DateTime
   metaData: String
+  author: UserResponse
   parentId: Int
 }
 
@@ -680,6 +681,7 @@ input UploadResponseFilterInput {
   publishDate: DateTimeOperationFilterInput
   modifiedDate: DateTimeOperationFilterInput
   metaData: StringOperationFilterInput
+  author: UserResponseFilterInput
   parentId: IntOperationFilterInput
 }
 
@@ -695,6 +697,7 @@ input UploadResponseSortInput {
   publishDate: SortEnumType
   modifiedDate: SortEnumType
   metaData: SortEnumType
+  author: UserResponseSortInput
   parentId: SortEnumType
 }
 

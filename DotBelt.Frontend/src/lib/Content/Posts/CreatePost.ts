@@ -1,6 +1,6 @@
 import {
   type Edit_PostRequestInput,
-  type GraphQlMutation,
+  type DotBeltMutation,
   PostTypeEnum,
 } from '$lib/API/GraphQL/generated';
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core/index.js';
@@ -24,7 +24,7 @@ export async function createPost(
     }
   `;
 
-  const { data, errors } = await client.mutate<GraphQlMutation>({
+  const { data, errors } = await client.mutate<DotBeltMutation>({
     mutation: mutation,
     variables: { input: input, type: type },
   });
