@@ -19,7 +19,7 @@
 
         editor.session.setMode(new JsonMode());
 
-       editor.session.on('change', function(delta) {
+       editor.session.on('change', function() {
            // delta.start, delta.end, delta.lines, delta.action
            code = editor.getValue();
        });

@@ -10,6 +10,7 @@ using DotBelt.Identity;
 using DotBelt.QueriesMutations;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -28,7 +29,10 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
     
-    //builder.WebHost.UseUrls("http://0.0.0.0:5994");
+    if (args.Length is not 0 )
+    {
+        builder.WebHost.UseUrls("http://0.0.0.0:8656");
+    }
     
     var configuration = builder.Configuration;
 

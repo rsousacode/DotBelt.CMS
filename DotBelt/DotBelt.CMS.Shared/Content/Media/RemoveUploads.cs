@@ -3,7 +3,7 @@ using HotChocolate.Authorization;
 
 namespace DotBelt.CMS.Shared.CMS.Media;
 
-[ExtendObjectType<GraphQLMutation>]
+[ExtendObjectType<DotBeltMutation>]
 public class RemoveUploads
 {
     [Authorize]

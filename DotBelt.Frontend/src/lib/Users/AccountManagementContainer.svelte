@@ -1,7 +1,8 @@
 <script lang="ts">
   import {AccountManagementPages} from "$lib/Users/AccountManagementPages";
+  import type { Snippet } from 'svelte';
 
-  type Props = { children: any, page: AccountManagementPages }
+  type Props = { children: Snippet, page: AccountManagementPages }
 
   let {children, page}: Props = $props();
 

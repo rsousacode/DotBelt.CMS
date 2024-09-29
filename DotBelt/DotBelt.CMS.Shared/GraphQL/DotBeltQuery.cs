@@ -1,6 +1,6 @@
 namespace DotBelt.QueriesMutations;
 
-public class GraphQLQuery
+public class DotBeltQuery
 {
     
 }

@@ -49,7 +49,7 @@
         uploadOverlayOpen = false;
         onUploadSuccess();
       })
-        .catch(reason => {
+        .catch(() => {
           onUploadError();
         });
     }

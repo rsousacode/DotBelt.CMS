@@ -1,4 +1,4 @@
 export enum ModalType {
   Default,
-  Action
+  Action,
 }

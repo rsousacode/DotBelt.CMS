@@ -3,7 +3,7 @@ using HotChocolate.Authorization;
 
 namespace DotBelt.CMS.Shared.CMS.Media;
 
-[ExtendObjectType<GraphQLQuery>]
+[ExtendObjectType<DotBeltQuery>]
 public class UploadsQueries
 {
     [Authorize]

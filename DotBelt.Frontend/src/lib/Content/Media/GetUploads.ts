@@ -1,7 +1,7 @@
 import {
-  type GraphQlQuery,
-  type Maybe,
-  type UploadsConnection
+    type GraphQlQuery,
+    type Maybe,
+    type UploadsConnection
 } from '$lib/API/GraphQL/generated'
 import type {ApolloClient, FetchPolicy, NormalizedCacheObject} from "@apollo/client/core/index.js";
 import {gql} from "@apollo/client/core/index.js";
@@ -9,8 +9,8 @@ import type {PaginationQuery} from "$lib/API/GraphQL/PaginationQuery";
 
 
 export async function getUploads(
-  client: ApolloClient<NormalizedCacheObject>,
-  pagination: PaginationQuery, fetchPolicy: FetchPolicy = 'cache-first'): Promise<Maybe<UploadsConnection | undefined>> {
+    client: ApolloClient<NormalizedCacheObject>,
+    pagination: PaginationQuery, fetchPolicy: FetchPolicy = 'cache-first'): Promise<Maybe<UploadsConnection | undefined>> {
 
     const query = gql`
         query GetUploads($first: Int, $last: Int, $before: String, $after: String) {
@@ -34,17 +34,17 @@ export async function getUploads(
         }
     `
 
-  const {data: {uploads}} = await client.query<GraphQlQuery>({
-    query: query,
-    variables:
-      {
-        last: pagination.last,
-        after: pagination.after,
-        before: pagination.before,
-        first: pagination.first
-      },
-    fetchPolicy: fetchPolicy,
-  });
+    const {data: {uploads}} = await client.query<GraphQlQuery>({
+        query: query,
+        variables:
+            {
+                last: pagination.last,
+                after: pagination.after,
+                before: pagination.before,
+                first: pagination.first
+            },
+        fetchPolicy: fetchPolicy,
+    });
 
-  return uploads;
+    return uploads;
 }

@@ -1,8 +1,8 @@
-import type {CodegenConfig} from '@graphql-codegen/cli'
+import type { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
   schema: './schema.graphql',
-/*
+  /*
   documents: './src/!**!/!*.graphql',
 */
   generates: {
@@ -10,6 +10,6 @@ const config: CodegenConfig = {
       plugins: ['typescript', 'typescript-operations'],
     },
   },
-}
+};
 
-export default config
+export default config;

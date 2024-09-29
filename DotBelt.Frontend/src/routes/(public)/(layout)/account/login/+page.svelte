@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<script lang="ts" module>
   import * as yup from "yup";
 
   const loginSchema = yup.object({
@@ -21,8 +21,6 @@
 <script lang="ts">
   import {SITE_NAME} from "$lib/constants";
 
-  import {onMount} from "svelte";
-  import {page} from "$app/stores";
   import {Api} from "$lib/API/Swagger/generated/Api";
   import {goto, invalidateAll} from "$app/navigation";
   import YupForm from "$lib/Utilities/YupForm.svelte";

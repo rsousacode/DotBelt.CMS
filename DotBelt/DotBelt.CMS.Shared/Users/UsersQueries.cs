@@ -2,7 +2,7 @@ using DotBelt.QueriesMutations;
 
 namespace DotBelt.CMS.Shared.Users;
 
-[ExtendObjectType<GraphQLQuery>]
+[ExtendObjectType<DotBeltQuery>]
 public class UsersQueries
 {
         

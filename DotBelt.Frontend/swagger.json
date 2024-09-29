@@ -7,9 +7,7 @@
   "paths": {
     "/api/auth/register": {
       "post": {
-        "tags": [
-          "DotBelt.CMS.API"
-        ],
+        "tags": ["DotBelt.CMS.API"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -39,9 +37,7 @@
     },
     "/api/auth/login": {
       "post": {
-        "tags": [
-          "DotBelt.CMS.API"
-        ],
+        "tags": ["DotBelt.CMS.API"],
         "parameters": [
           {
             "name": "useCookies",
@@ -84,9 +80,7 @@
     },
     "/api/auth/logout": {
       "post": {
-        "tags": [
-          "DotBelt.CMS.API"
-        ],
+        "tags": ["DotBelt.CMS.API"],
         "responses": {
           "200": {
             "description": "OK"
@@ -96,9 +90,7 @@
     },
     "/api/auth/refresh": {
       "post": {
-        "tags": [
-          "DotBelt.CMS.API"
-        ],
+        "tags": ["DotBelt.CMS.API"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -125,9 +117,7 @@
     },
     "/api/auth/confirmEmail": {
       "get": {
-        "tags": [
-          "DotBelt.CMS.API"
-        ],
+        "tags": ["DotBelt.CMS.API"],
         "operationId": "MapIdentityApi-/api/auth/confirmEmail",
         "parameters": [
           {
@@ -163,9 +153,7 @@
     },
     "/api/auth/resendConfirmationEmail": {
       "post": {
-        "tags": [
-          "DotBelt.CMS.API"
-        ],
+        "tags": ["DotBelt.CMS.API"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -185,9 +173,7 @@
     },
     "/api/auth/forgotPassword": {
       "post": {
-        "tags": [
-          "DotBelt.CMS.API"
-        ],
+        "tags": ["DotBelt.CMS.API"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -217,9 +203,7 @@
     },
     "/api/auth/resetPassword": {
       "post": {
-        "tags": [
-          "DotBelt.CMS.API"
-        ],
+        "tags": ["DotBelt.CMS.API"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -249,9 +233,7 @@
     },
     "/api/auth/manage/2fa": {
       "post": {
-        "tags": [
-          "DotBelt.CMS.API"
-        ],
+        "tags": ["DotBelt.CMS.API"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -291,9 +273,7 @@
     },
     "/api/auth/manage/info": {
       "get": {
-        "tags": [
-          "DotBelt.CMS.API"
-        ],
+        "tags": ["DotBelt.CMS.API"],
         "responses": {
           "200": {
             "description": "OK",
@@ -321,9 +301,7 @@
         }
       },
       "post": {
-        "tags": [
-          "DotBelt.CMS.API"
-        ],
+        "tags": ["DotBelt.CMS.API"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -363,9 +341,7 @@
     },
     "/api/uploads": {
       "post": {
-        "tags": [
-          "DotBelt.CMS.API"
-        ],
+        "tags": ["DotBelt.CMS.API"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -410,11 +386,7 @@
   "components": {
     "schemas": {
       "AccessTokenResponse": {
-        "required": [
-          "accessToken",
-          "expiresIn",
-          "refreshToken"
-        ],
+        "required": ["accessToken", "expiresIn", "refreshToken"],
         "type": "object",
         "properties": {
           "tokenType": {
@@ -501,9 +473,7 @@
         "additionalProperties": false
       },
       "ForgotPasswordRequest": {
-        "required": [
-          "email"
-        ],
+        "required": ["email"],
         "type": "object",
         "properties": {
           "email": {
@@ -548,7 +518,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {}
       },
       "IFile": {
         "type": "object",
@@ -591,10 +561,7 @@
         "additionalProperties": false
       },
       "InfoResponse": {
-        "required": [
-          "email",
-          "isEmailConfirmed"
-        ],
+        "required": ["email", "isEmailConfirmed"],
         "type": "object",
         "properties": {
           "email": {
@@ -608,10 +575,7 @@
         "additionalProperties": false
       },
       "LoginRequest": {
-        "required": [
-          "email",
-          "password"
-        ],
+        "required": ["email", "password"],
         "type": "object",
         "properties": {
           "email": {
@@ -634,13 +598,7 @@
         "additionalProperties": false
       },
       "Post": {
-        "required": [
-          "author",
-          "authorId",
-          "description",
-          "relativeUrl",
-          "tenant"
-        ],
+        "required": ["author", "authorId", "description", "relativeUrl", "tenant"],
         "type": "object",
         "properties": {
           "id": {
@@ -735,19 +693,12 @@
         "additionalProperties": false
       },
       "PostTypeEnum": {
-        "enum": [
-          0,
-          1,
-          2,
-          3
-        ],
+        "enum": [0, 1, 2, 3],
         "type": "integer",
         "format": "int32"
       },
       "RefreshRequest": {
-        "required": [
-          "refreshToken"
-        ],
+        "required": ["refreshToken"],
         "type": "object",
         "properties": {
           "refreshToken": {
@@ -758,10 +709,7 @@
         "additionalProperties": false
       },
       "RegisterRequest": {
-        "required": [
-          "email",
-          "password"
-        ],
+        "required": ["email", "password"],
         "type": "object",
         "properties": {
           "email": {
@@ -776,9 +724,7 @@
         "additionalProperties": false
       },
       "ResendConfirmationEmailRequest": {
-        "required": [
-          "email"
-        ],
+        "required": ["email"],
         "type": "object",
         "properties": {
           "email": {
@@ -789,11 +735,7 @@
         "additionalProperties": false
       },
       "ResetPasswordRequest": {
-        "required": [
-          "email",
-          "newPassword",
-          "resetCode"
-        ],
+        "required": ["email", "newPassword", "resetCode"],
         "type": "object",
         "properties": {
           "email": {
@@ -812,13 +754,7 @@
         "additionalProperties": false
       },
       "Taxonomy": {
-        "required": [
-          "author",
-          "authorId",
-          "description",
-          "relativeUrl",
-          "tenant"
-        ],
+        "required": ["author", "authorId", "description", "relativeUrl", "tenant"],
         "type": "object",
         "properties": {
           "id": {
@@ -887,19 +823,12 @@
         "additionalProperties": false
       },
       "TaxonomyTypeEnum": {
-        "enum": [
-          0,
-          1,
-          2
-        ],
+        "enum": [0, 1, 2],
         "type": "integer",
         "format": "int32"
       },
       "Tenant": {
-        "required": [
-          "allowedFileTypes",
-          "name"
-        ],
+        "required": ["allowedFileTypes", "name"],
         "type": "object",
         "properties": {
           "id": {
@@ -958,12 +887,7 @@
         "additionalProperties": false
       },
       "TwoFactorResponse": {
-        "required": [
-          "isMachineRemembered",
-          "isTwoFactorEnabled",
-          "recoveryCodesLeft",
-          "sharedKey"
-        ],
+        "required": ["isMachineRemembered", "isTwoFactorEnabled", "recoveryCodesLeft", "sharedKey"],
         "type": "object",
         "properties": {
           "sharedKey": {
@@ -991,13 +915,7 @@
         "additionalProperties": false
       },
       "Upload": {
-        "required": [
-          "author",
-          "fileName",
-          "mimeType",
-          "relativeUrl",
-          "tenant"
-        ],
+        "required": ["author", "fileName", "mimeType", "relativeUrl", "tenant"],
         "type": "object",
         "properties": {
           "id": {

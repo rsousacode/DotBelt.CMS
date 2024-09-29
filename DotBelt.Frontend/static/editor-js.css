@@ -1,38 +1,36 @@
-
 .ce-block__content,
 .ce-toolbar__content {
-    max-width: unset;
+  max-width: unset;
 }
 
 .ce-popover__container {
-    background: var(--bs-body-bg);
+  background: var(--bs-body-bg);
 }
 
 .ce-popover-item {
-    color: var(--bs-body-color);
+  color: var(--bs-body-color);
 }
 
 .ce-toolbar__plus {
-    color: var(--bs-body-color);
-
+  color: var(--bs-body-color);
 }
 
 .ce-popover-item:hover:not(.ce-popover-item--no-hover) {
-    background-color: var(--bs-btn-hover-color);
+  background-color: var(--bs-btn-hover-color);
 }
 
 .cdx-search-field {
-    background: var(--bs-body-bg);
+  background: var(--bs-body-bg);
 }
 .ce-toolbar__settings-btn {
-    color: var(--bs-body-color);
+  color: var(--bs-body-color);
 }
 
 .ce-toolbar__plus:hover,
 .ce-toolbar__settings-btn:hover {
-    background-color: unset;
+  background-color: unset;
 }
 
 .ce-block--selected .ce-block__content {
-    background: var(--bs-tertiary-bg);
+  background: var(--bs-tertiary-bg);
 }

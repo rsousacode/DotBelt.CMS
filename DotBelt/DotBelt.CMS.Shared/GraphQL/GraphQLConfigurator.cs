@@ -55,8 +55,8 @@ namespace DotBelt.QueriesMutations
                 .AddFiltering()
                 .AddSorting()
                 .AddMutationConventions()
-                .AddQueryType<GraphQLQuery>()
-                .AddMutationType<GraphQLMutation>()
+                .AddQueryType<DotBeltQuery>()
+                .AddMutationType<DotBeltMutation>()
                 .AddGraphQlTypeExtensions()
                 .AddApolloTracing()
                 .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled);

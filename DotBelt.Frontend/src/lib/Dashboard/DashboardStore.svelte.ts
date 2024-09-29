@@ -24,9 +24,9 @@ function updateDashboardData(data: { title: string; subtitle: string; }) {
 
 function setDashboardData(data: { title: string; subtitle: string; }) {
     dashboardData.set({
-            dashboardFragment: undefined,
-            title: data.title,
-            subtitle: data.subtitle
+        dashboardFragment: undefined,
+        title: data.title,
+        subtitle: data.subtitle
     });
 }
 

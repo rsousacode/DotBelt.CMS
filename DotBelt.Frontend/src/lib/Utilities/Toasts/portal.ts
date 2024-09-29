@@ -6,27 +6,28 @@ import { tick } from 'svelte';
  * Default = `body`.
  */
 export const usePortal = (node: HTMLElement, target: HTMLElement | string = '#layers') => {
-    const update = async (newTarget: HTMLElement | string) => {
-        let el: HTMLElement | null = typeof newTarget === 'string' ? document.querySelector(newTarget) : newTarget;
+  const update = async (newTarget: HTMLElement | string) => {
+    const el: HTMLElement | null =
+      typeof newTarget === 'string' ? document.querySelector(newTarget) : newTarget;
 
-        await tick();
+    await tick();
 
-        if (!el) {
-            console.error(`Cannot find the given target element: ${target}`);
-            return;
-        }
+    if (!el) {
+      console.error(`Cannot find the given target element: ${target}`);
+      return;
+    }
 
-        el.appendChild(node);
-    };
-    const destroy = async () => {
-        await tick();
-        if (node) node.remove();
-    };
+    el.appendChild(node);
+  };
+  const destroy = async () => {
+    await tick();
+    if (node) node.remove();
+  };
 
-    update(target);
+  update(target);
 
-    return {
-        update,
-        destroy
-    };
+  return {
+    update,
+    destroy,
+  };
 };
