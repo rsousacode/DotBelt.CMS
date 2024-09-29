@@ -37,7 +37,7 @@
 
   let selectedImages: Maybe<Array<number>> = $state();
 
-  let mediaPopup : MediaPopup;
+  let mediaPopup :  MediaPopup;
 
   let confirmDeletionModal: BoilerplateModal;
 
