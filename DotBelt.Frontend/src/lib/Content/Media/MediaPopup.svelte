@@ -16,8 +16,12 @@
   let loading = $state(false);
 
   let upload : UploadResponse | undefined = $state();
+  let uploads: UploadResponse[] | undefined = $state();
 
   let metaData : Record<string, unknown> | undefined = $state();
+
+  let previousElementId : number | undefined = $state();
+  let nextElementId : number | undefined = $state();
 
   function onClose() {
     upload = undefined;
@@ -25,9 +29,10 @@
     loading = false;
   }
 
-  export async function openMediaPopup(imageId: number) {
+  export async function openMediaPopup(imageId: number, uploads: UploadResponse[] | undefined = undefined) {
+    popupOpen = false;
     loading = true;
-    console.log(imageId)
+    uploads = uploads;
 
     const query = gql`
       query getUpload ($id: Int!) {
@@ -58,6 +63,8 @@
 
     loading = false;
     popupOpen = true;
+    previousElementId = previousElementId;
+    nextElementId = nextElementId;
 
     if(upload && upload.metaData != null) {
       metaData = JSON.parse(upload.metaData);

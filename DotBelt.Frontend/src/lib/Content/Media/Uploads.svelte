@@ -20,6 +20,7 @@
   import BoilerplateModal from "$lib/Utilities/Modal/BoilerplateModal.svelte";
   import {ModalType} from "$lib/Utilities/Modal/ModalType";
   import {apolloClientStore} from "$lib/API/GraphQL/apolloClientStore";
+  import { ArrayUtils } from '$lib/Utilities/ArrayUtils';
 
   let uploadsResult: Maybe<UploadsConnection> = $state();
 
@@ -121,7 +122,14 @@
   }
 
   function onClickImageDefaultMode(image: ThumbnailResponse) {
-    mediaPopup.openMediaPopup(image.uploadId);
+    if (!uploads) {
+      return;
+    }
+
+    const nextElement = ArrayUtils.getNextElement(uploads, image.id);
+    const previousElement = ArrayUtils.getPreviousElement(uploads, image.id);
+    mediaPopup.openMediaPopup(image.uploadId, nextElement?.id, previousElement?.id);
+
   }
 
   function onClickImageSelectionMode(image: ThumbnailResponse) {
