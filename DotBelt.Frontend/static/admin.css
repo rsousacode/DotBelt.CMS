@@ -254,6 +254,7 @@ body {
 .media-form-container {
     padding-left: 20px;
     width: 100%;
+    min-width: 250px;
 }
 
 .image-meta-data {

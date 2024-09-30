@@ -296,6 +296,7 @@
         flex-wrap: wrap;
         align-self: center;
         justify-content: flex-start;
+        width: 100%;
     }
 
     .image-item img,
