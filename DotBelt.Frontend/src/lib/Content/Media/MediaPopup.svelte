@@ -6,7 +6,7 @@
   import ChevronRight from "$lib/Utilities/Icons/ChevronRight.svelte";
   import {gql} from "@apollo/client/core/index.js";
   import {apolloClientStore} from "$lib/API/GraphQL/apolloClientStore";
-  import type {DotBeltQuery, UploadResponse} from "$lib/API/GraphQL/generated";
+  import type {DotBeltQuery, ThumbnailResponse, UploadResponse} from "$lib/API/GraphQL/generated";
 
   let body: Element;
 
@@ -16,12 +16,11 @@
   let loading = $state(false);
 
   let upload : UploadResponse | undefined = $state();
-  let uploads: UploadResponse[] | undefined = $state();
+  let thumbnails: ThumbnailResponse[] | undefined = $state();
 
   let metaData : Record<string, unknown> | undefined = $state();
 
-  let previousElementId : number | undefined = $state();
-  let nextElementId : number | undefined = $state();
+  let imageElement : HTMLImageElement = $state();
 
   function onClose() {
     upload = undefined;
@@ -29,11 +28,14 @@
     loading = false;
   }
 
-  export async function openMediaPopup(imageId: number, uploads: UploadResponse[] | undefined = undefined) {
-    popupOpen = false;
-    loading = true;
-    uploads = uploads;
+  export async function openMediaPopup(imageId: number, uploads: ThumbnailResponse[] | undefined = undefined) {
+    thumbnails = uploads;
+    await loadImage(imageId);
+    //setOverflowHidden();
+  }
 
+  async function loadImage(imageId: number) {
+    loading = true;
     const query = gql`
       query getUpload ($id: Int!) {
           uploadById(id: $id) {
@@ -61,51 +63,85 @@
 
     upload = uploadById[0];
 
-    loading = false;
-    popupOpen = true;
-    previousElementId = previousElementId;
-    nextElementId = nextElementId;
+
 
     if(upload && upload.metaData != null) {
       metaData = JSON.parse(upload.metaData);
-      console.log(metaData);
     }
-    //setOverflowHidden();
+    imageElement.src = `/${upload.relativeUrl}`
+    await imageElement.decode();
+
+    loading = false;
+    popupOpen = true;
   }
 
-  function closeModal() {
-    unsetOverflowHidden();
+  const getNextThumbnail = (array: ThumbnailResponse[], id: number ): ThumbnailResponse | undefined => {
+    const index = array.findIndex(el => el.uploadId === id);
+    if (index !== -1 && index < array.length - 1) {
+      return array[index + 1];
+    }
+    return undefined;
   }
 
-  onDestroy(() => {
-    //unsetOverflowHidden();
-  })
-
-  function setOverflowHidden() {
-    body.classList.add("overflow-hidden");
+  const getPreviousThumbnail = (array: ThumbnailResponse[], id: number ): ThumbnailResponse | undefined => {
+    const index = array.findIndex(el => el.uploadId === id);
+    if (index > 0) {
+      return array[index - 1];
+    }
+    return undefined;
   }
 
-  function unsetOverflowHidden() {
-    body.classList.remove("overflow-hidden");
+  async function onPreviousClicked() {
+    if (!upload || !thumbnails) return;
+    const previousElement = getPreviousThumbnail(thumbnails, upload.id);
+    if(!previousElement) return;
+    await loadImage(previousElement.id);
+  }
+
+  async function onNextClicked() {
+    if (!upload || !thumbnails) return;
+    const nextElement = getNextThumbnail(thumbnails, upload.id);
+    if(!nextElement) return;
+    await loadImage(nextElement.id);
+  }
+
+  function onKeyUp(e: KeyboardEvent) {
+    const key = e.key;
+
+    if(key === 'ArrowLeft') {
+      onPreviousClicked();
+    }
+
+    if(key === 'ArrowRight') {
+      onNextClicked();
+    }
+
+    if(key === 'Escape') {
+      onClose()
+    }
 
   }
+
 
 </script>
+<svelte:body onkeyup={(e) => popupOpen ? onKeyUp(e) : {}}  />
 
-<svelte:body bind:this={body}/>
-{#if popupOpen && upload}
-  <p>{upload.metaData}</p>
+<div class={(popupOpen && upload) ? '' : 'hide' }>
+
   <div class="overlay"></div>
-  <div class="modal-container">
+  <div class="modal-container" >
       <div class="modal-header">
-        <div class="chevron-buttons">
-          <button style="font-size: 24px;" class="dashboard-icon" onclick={onClose}>
-            <ChevronLeft/>
-          </button>
-          <button style="font-size: 24px;" class="dashboard-icon" onclick={onClose}>
-            <ChevronRight/>
-          </button>
-        </div>
+        {#if upload && thumbnails}
+          <div class="chevron-buttons">
+            <button disabled={!thumbnails || !getPreviousThumbnail(thumbnails, upload.id)} style="font-size: 24px;" class="dashboard-icon" onclick={onPreviousClicked}>
+              <ChevronLeft/>
+            </button>
+            <button disabled={!thumbnails || !getNextThumbnail(thumbnails, upload.id)} style="font-size: 24px;" class="dashboard-icon" onclick={onNextClicked}>
+              <ChevronRight/>
+            </button>
+          </div>
+        {/if}
+
         <span class="text-white modal-header-title"></span>
 
         <button class="dashboard-icon" onclick={onClose}>
@@ -115,60 +151,69 @@
       </div>
       <div class="modal-content">
         <div class="media-image-container">
-          <img src={`/${upload.relativeUrl}`} alt="">
+          <img bind:this={imageElement} src="/images/placeholder-image.png" alt="">
         </div>
-        <div class="media-form-container">
-          <div class="image-meta-data">
-            <div class="meta-data-item">
-              <span class="meta-data-title">Uploaded on: </span>
-              <span>{new Date(upload.publishDate).toLocaleString()}</span>
-            </div>
-
-            <div class="meta-data-item">
-              <span class="meta-data-title">Uploaded by: </span>
-              <span>{upload.author?.userName}</span>
-            </div>
-
-            <div class="meta-data-item">
-              <span class="meta-data-title">Filename: </span>
-              <span>{upload.fileName}</span>
-            </div>
-
-            <div class="meta-data-item">
-              <span class="meta-data-title">File type: </span>
-              <span>{upload.mimeType}</span>
-            </div>
-            {#if metaData}
+        {#if upload}
+          <div class="media-form-container">
+            <div class="image-meta-data">
               <div class="meta-data-item">
-                <span class="meta-data-title">File size: </span>
-                <span>{convertSize(typeof metaData["Size"] === 'number' ? metaData["Size"] : 0)}</span>
+                <span class="meta-data-title">Uploaded on: </span>
+                <span>{new Date(upload.publishDate).toLocaleString()}</span>
               </div>
+
               <div class="meta-data-item">
-                <span class="meta-data-title">Dimensions: </span>
-                <span>{metaData["Width"]} by {metaData["Height"]} pixels</span>
+                <span class="meta-data-title">Uploaded by: </span>
+                <span>{upload.author?.userName}</span>
               </div>
-            {/if}
+
+              <div class="meta-data-item">
+                <span class="meta-data-title">Filename: </span>
+                <span>{upload.fileName}</span>
+              </div>
+
+              <div class="meta-data-item">
+                <span class="meta-data-title">File type: </span>
+                <span>{upload.mimeType}</span>
+              </div>
+              {#if metaData}
+                <div class="meta-data-item">
+                  <span class="meta-data-title">File size: </span>
+                  <span>{convertSize(typeof metaData["Size"] === 'number' ? metaData["Size"] : 0)}</span>
+                </div>
+                <div class="meta-data-item">
+                  <span class="meta-data-title">Dimensions: </span>
+                  <span>{metaData["Width"]} by {metaData["Height"]} pixels</span>
+                </div>
+              {/if}
+            </div>
+            <form>
+              <div class="form-group mb-3">
+                <label for="title">Title</label>
+                <input type="email" class="form-control" id="title">
+              </div>
+              <div class="form-group mb-3">
+                <label for="caption">Caption</label>
+                <textarea class="form-control" id="caption" rows="3"></textarea>
+              </div>
+              <div class="form-group mb-3">
+                <label for="alt-text">Alt Text</label>
+                <input type="email" class="form-control" id="alt-text">
+              </div>
+              <div class="form-group mb-3">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" rows="3"></textarea>
+              </div>
+
+            </form>
           </div>
-          <form>
-            <div class="form-group">
-              <label for="title">Title</label>
-              <input type="email" class="form-control" id="title">
-            </div>
-            <div class="form-group">
-              <label for="caption">Caption</label>
-              <textarea class="form-control" id="caption" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="alt-text">Alt Text</label>
-              <input type="email" class="form-control" id="alt-text">
-            </div>
-            <div class="form-group">
-              <label for="description">Description</label>
-              <textarea class="form-control" id="description" rows="3"></textarea>
-            </div>
-
-          </form>
-        </div>
+        {/if}
       </div>
   </div>
-{/if}
+
+</div>
+<style>
+  .hide {
+      display: none;
+  }
+
+</style>

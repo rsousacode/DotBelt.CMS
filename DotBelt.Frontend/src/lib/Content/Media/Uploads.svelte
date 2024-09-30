@@ -20,11 +20,10 @@
   import BoilerplateModal from "$lib/Utilities/Modal/BoilerplateModal.svelte";
   import {ModalType} from "$lib/Utilities/Modal/ModalType";
   import {apolloClientStore} from "$lib/API/GraphQL/apolloClientStore";
-  import { ArrayUtils } from '$lib/Utilities/ArrayUtils';
 
   let uploadsResult: Maybe<UploadsConnection> = $state();
 
-  let uploads: Maybe<Array<ThumbnailResponse>> = $state();
+  let thumbnails: Maybe<Array<ThumbnailResponse>> = $state();
 
   let postsPerPage = $state(50);
 
@@ -93,9 +92,9 @@
 
   function resetData() {
     if (uploadsResult?.nodes && uploadsResult.nodes.length) {
-      uploads = [...uploadsResult.nodes];
+      thumbnails = [...uploadsResult.nodes];
     } else {
-      uploads = [];
+      thumbnails = [];
     }
   }
 
@@ -115,20 +114,17 @@
     });
 
     if (uploadsResult?.nodes && uploadsResult.nodes.length) {
-      if (uploads?.length) {
-        uploads = [...uploads, ...uploadsResult.nodes];
+      if (thumbnails?.length) {
+        thumbnails = [...thumbnails, ...uploadsResult.nodes];
       }
     }
   }
 
   function onClickImageDefaultMode(image: ThumbnailResponse) {
-    if (!uploads) {
+    if (!thumbnails) {
       return;
     }
-
-    const nextElement = ArrayUtils.getNextElement(uploads, image.id);
-    const previousElement = ArrayUtils.getPreviousElement(uploads, image.id);
-    mediaPopup.openMediaPopup(image.uploadId, nextElement?.id, previousElement?.id);
+    mediaPopup.openMediaPopup(image.uploadId, thumbnails);
 
   }
 
@@ -206,8 +202,8 @@
 <DashboardContainer>
   <div class="media-section">
     <div class="media-images-container">
-      {#if uploads && uploads.length}
-        {#each uploads as upload}
+      {#if thumbnails && thumbnails.length}
+        {#each thumbnails as upload}
           <div
             class="image-item {mode === 'selection' ? 'image-selection-mode' : ''}  {imageIsSelected(upload.id) ? 'selected' : ''}"
             onclick={() => onClickImage(upload)}>
