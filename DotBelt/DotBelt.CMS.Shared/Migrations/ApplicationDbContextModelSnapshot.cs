@@ -71,8 +71,14 @@ namespace DotBelt.CMS.Shared.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AltText")
+                        .HasColumnType("text");
+
                     b.Property<int>("AuthorId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Caption")
+                        .HasColumnType("text");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -101,9 +107,6 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.Property<DateTimeOffset?>("ModifiedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTimeOffset>("PublishDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -121,8 +124,6 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
-
-                    b.HasIndex("ParentId");
 
                     b.HasIndex("TenantId");
 
@@ -525,10 +526,6 @@ namespace DotBelt.CMS.Shared.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DotBelt.CMS.Shared.CMS.Media.Upload", "Parent")
-                        .WithMany()
-                        .HasForeignKey("ParentId");
-
                     b.HasOne("DotBelt.CMS.Shared.Tenants.Tenant", "Tenant")
                         .WithMany()
                         .HasForeignKey("TenantId")
@@ -536,8 +533,6 @@ namespace DotBelt.CMS.Shared.Migrations
                         .IsRequired();
 
                     b.Navigation("Author");
-
-                    b.Navigation("Parent");
 
                     b.Navigation("Tenant");
                 });

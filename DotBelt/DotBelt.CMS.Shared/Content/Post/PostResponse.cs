@@ -1,4 +1,5 @@
 using DotBelt.CMS.Shared.CMS;
+using DotBelt.CMS.Shared.CMS.Media;
 using DotBelt.CMS.Shared.Content.Taxonomies;
 using DotBelt.CMS.Shared.Users;
 
@@ -24,6 +25,10 @@ public class PostResponse
     public PostTypeEnum PostType { get; set; }
     
     public int? ParentPostId { get; set; }
+    
+    public UploadResponse? FeaturedImage { get; set; }
+    
+    public int? FeaturedImageId { get; set; }
     
     public IEnumerable<TaxonomyResponse> Taxonomies { get; set; } = null!;
 }

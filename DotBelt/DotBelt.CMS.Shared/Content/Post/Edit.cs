@@ -1,8 +1,8 @@
 using DotBelt.Queries;
 using DotBelt.CMS.Shared;
 using DotBelt.QueriesMutations;
-using DotBelt.QueriesMutations.Posts;
 using DotBelt.CMS.Shared.CMS.Blocks.Parser;
+using DotBelt.CMS.Shared.Content.Post;
 using HotChocolate.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +20,7 @@ public class Edit
     [Authorize]
     public async Task<EditPostResult> EditPostAsync( ApplicationDbContext dbContext,
         [FromServices] BlockParser blockParser,
-        int postId, Edit_PostRequest payload )
+        int postId, PostResponse payload )
     {
         var post = await dbContext
             .Posts

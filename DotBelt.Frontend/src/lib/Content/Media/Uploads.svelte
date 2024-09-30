@@ -1,14 +1,13 @@
 <script lang="ts">
-  import DashboardContainer from "$lib/Dashboard/DashboardContainer.svelte";
   import {onMount} from "svelte";
   import {setDashboardData, updateDashboardFragment} from "$lib/Dashboard/DashboardStore.svelte";
   import MediaPopup from "$lib/Content/Media/MediaPopup.svelte";
   import type {Maybe} from "yup";
   import type {
     DotBeltMutation,
-    ThumbnailResponse,
+    ThumbnailResponse, UploadResponse,
     UploadsConnection
-  } from "$lib/API/GraphQL/generated";
+  } from '$lib/API/GraphQL/generated';
   import type {PaginationQuery} from "$lib/API/GraphQL/PaginationQuery";
   import {getUploads} from "$lib/Content/Media/GetUploads";
   import DropfileZone from "$lib/Content/Media/DropfileZone.svelte";
@@ -20,6 +19,7 @@
   import BoilerplateModal from "$lib/Utilities/Modal/BoilerplateModal.svelte";
   import {ModalType} from "$lib/Utilities/Modal/ModalType";
   import {apolloClientStore} from "$lib/API/GraphQL/apolloClientStore";
+  import type { UploadsContext } from '$lib/Content/Media/UploadsContext';
 
   let uploadsResult: Maybe<UploadsConnection> = $state();
 
@@ -31,7 +31,6 @@
 
   type UploadsMode = "default" | "selection";
 
-  type UploadsContext = 'Page' | 'OneMediaSelection' | 'MultipleMediaSelection';
 
   let mode: UploadsMode = $state("default");
 
@@ -43,16 +42,39 @@
 
   let {context = 'Page'} : {context: UploadsContext} = $props();
 
+  let popupOpen: boolean = $state(false);
+
 
   onMount(async () => {
 
     if (context === 'Page') {
       setDashboardData({title: "Media", subtitle: "Manage your media here"})
       updateDashboardFragment(uploadButton);
+      await fetchAndReset();
     }
 
-    await fetchAndReset();
   });
+
+
+  export async function open(imageSelectedCallback: (upload: UploadResponse) => void,
+                             imageSelectedId: number | undefined = undefined) {
+    await fetchAndReset();
+
+    selectedImages = [];
+
+    if(imageSelectedId) {
+      selectedImages.push(imageSelectedId);
+    }
+
+    function onImageSelected(upload: UploadResponse) {
+      closePopup();
+      imageSelectedCallback(upload);
+    }
+
+    mediaPopup.assignOneImageSelectedCallback(onImageSelected);
+    popupOpen = true;
+
+  }
 
   async function fetchAndReset(fetchPolicy: FetchPolicy = 'cache-first') {
 
@@ -195,17 +217,62 @@
     confirmDeletionModal.openModal();
   }
 
+  function closePopup() {
+    popupOpen = false;
+  }
+
+  function getImageItemCss(upload: ThumbnailResponse) {
+
+    let cssClasses = "";
+
+    if (mode === 'selection') {
+      cssClasses += 'image-selection-mode faded';
+    }
+
+    if(context !== 'Page') {
+      cssClasses += 'image-selection-mode';
+    }
+
+    if (imageIsSelected(upload.uploadId)) {
+      cssClasses += ` selected`;
+    }
+
+    return cssClasses;
+  }
+
 </script>
 
 <MediaPopup bind:this={mediaPopup}/>
 
-<DashboardContainer>
+
+
+{#if context === 'Page' || popupOpen}
+  {#if context !== 'Page'}
+    <div class="overlay"></div>
+  {/if}
+
+  <div class={context === 'Page' ? '' : 'modal-container'}>
+  {#if context !== 'Page'}
+    <div class="modal-header">
+      <div class="chevron-buttons">
+        {@render uploadButton()}
+      </div>
+
+      <span class="text-white modal-header-title"></span>
+
+      <button class="dashboard-icon" onclick={closePopup}>
+        <CloseIcon/>
+      </button>
+
+    </div>
+  {/if}
+
   <div class="media-section">
     <div class="media-images-container">
       {#if thumbnails && thumbnails.length}
         {#each thumbnails as upload}
           <div
-            class="image-item {mode === 'selection' ? 'image-selection-mode' : ''}  {imageIsSelected(upload.id) ? 'selected' : ''}"
+            class="image-item {getImageItemCss(upload)}"
             onclick={() => onClickImage(upload)}>
             {#if mode === 'selection'}
               <div class="check-mark-selection-mode">
@@ -229,8 +296,8 @@
       </button>
     </div>
   </div>
-
-</DashboardContainer>
+</div>
+{/if}
 
 {#snippet uploadButton()}
   {#if mode === 'default'}
@@ -238,9 +305,11 @@
       Upload files
     </button>
 
-    <button style="margin-left: 20px" class="btn btn-secondary" type="button" onclick={onClickSelectionMode}>
-      Select files
-    </button>
+    {#if context === 'Page'}
+      <button style="margin-left: 20px" class="btn btn-secondary" type="button" onclick={onClickSelectionMode}>
+        Select files
+      </button>
+    {/if}
   {/if}
 
   {#if mode === 'selection'}
@@ -272,7 +341,11 @@
 
 <style>
 
-    .image-selection-mode > img {
+    .image-selection-mode-faded > img {
+        filter: contrast(0.5);
+    }
+
+    .image-selection-mode.faded > img {
         filter: contrast(0.5);
     }
 

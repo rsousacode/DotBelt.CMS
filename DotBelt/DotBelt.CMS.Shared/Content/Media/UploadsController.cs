@@ -31,7 +31,6 @@ public class UploadsController
         {
             var upload = await _context
                 .Uploads
-                .Include(x => x.Parent)
                 .Include(x => x.Thumbnails)
                 .FirstOrDefaultAsync(x => x.Id == uploadId, cancellationToken);
           
@@ -44,11 +43,7 @@ public class UploadsController
                 {
                     File.Delete(fullPath);
                 }
-                if(upload.Parent != null) 
-                {
-                    _context.Uploads.Remove(upload.Parent);
-                }
-                
+       
                 _context.Thumbnails.RemoveRange(upload.Thumbnails);
                 _context.Uploads.Remove(upload);
 

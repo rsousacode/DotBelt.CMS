@@ -1,39 +1,53 @@
 <script lang="ts">
-  import {applyAction, deserialize} from '$app/forms';
-  import {goto, invalidateAll} from "$app/navigation";
-  import type {ActionResult} from "@sveltejs/kit";
-  import type {Post} from "$lib/API/GraphQL/generated";
-  import {onMount} from "svelte";
-  import {updateDashboardFragment} from "$lib/Dashboard/DashboardStore.svelte.js";
-  import SaveIcon from "$lib/Utilities/Icons/SaveIcon.svelte";
-  import TransitionalIcon from "$lib/Utilities/Icons/TransitionalIcon.svelte";
-  import SuccessIcon from "$lib/Utilities/Icons/SuccessIcon.svelte";
-  import JsonIcon from "$lib/Utilities/Icons/JsonIcon.svelte";
-  import BlocksIcon from "$lib/Utilities/Icons/BlocksIcon.svelte";
-  import EditorJS from "$lib/Content/EditorJS/EditorJS.svelte";
-  import AceEditor from "$lib/Utilities/AceEditor.svelte";
+  import { applyAction, deserialize } from '$app/forms';
+  import { goto, invalidateAll } from '$app/navigation';
+  import type { ActionResult } from '@sveltejs/kit';
+  import { type PostResponse, PostTypeEnum, type UploadResponse } from '$lib/API/GraphQL/generated';
+  import { onMount } from 'svelte';
+  import { updateDashboardFragment } from '$lib/Dashboard/DashboardStore.svelte.js';
+  import SaveIcon from '$lib/Utilities/Icons/SaveIcon.svelte';
+  import TransitionalIcon from '$lib/Utilities/Icons/TransitionalIcon.svelte';
+  import SuccessIcon from '$lib/Utilities/Icons/SuccessIcon.svelte';
+  import JsonIcon from '$lib/Utilities/Icons/JsonIcon.svelte';
+  import BlocksIcon from '$lib/Utilities/Icons/BlocksIcon.svelte';
+  import EditorJS from '$lib/Content/EditorJS/EditorJS.svelte';
+  import AceEditor from '$lib/Utilities/AceEditor.svelte';
+  import Uploads from '$lib/Content/Media/Uploads.svelte';
 
 
-  let {post = $bindable({content: "{}", relativeUrl: ""})}: { post: Post } = $props();
+  let {
+    post = $bindable(
+      {
+        content: '{}',
+        relativeUrl: '',
+        featuredImage: undefined,
+        id: 0,
+        publishDate: 0,
+        taxonomies: [],
+        postType: PostTypeEnum.Undefined
+      })
+  }: { post: PostResponse } = $props();
 
   type EditorMode = 'editor' | 'code';
 
   let currentMode: EditorMode = $state('editor');
 
+  let uploadsPanel: Uploads;
+
   let successFeedbackIcon: TransitionalIcon;
   onMount(() => {
     updateDashboardFragment(saveButton);
-  })
+  });
 
 
   function sanitizePermalink(permalink: string) {
     // Replace spaces with hyphens
-    permalink = permalink.replace(/\s+/g, "-");
+    permalink = permalink.replace(/\s+/g, '-');
 
     // Remove any characters that are not letters, numbers, or hyphens
-    permalink = permalink.replace(/[^a-zA-Z0-9-/]/g, "");
+    permalink = permalink.replace(/[^a-zA-Z0-9-/]/g, '');
 
-    permalink = permalink.replace(/^-+|-+$/g, "");
+    permalink = permalink.replace(/^-+|-+$/g, '');
     // Convert the permalink to lowercase
     permalink = permalink.toLowerCase();
 
@@ -46,9 +60,9 @@
 
   async function createPost() {
 
-    post.title = post.title ?? "";
-    post.description = post.description ?? "";
-    post.relativeUrl= post.relativeUrl?? "";
+    post.title = post.title ?? '';
+    post.description = post.description ?? '';
+    post.relativeUrl = post.relativeUrl ?? '';
 
     const formData = new FormData();
 
@@ -56,10 +70,10 @@
       formData.append(key, value);
     });
 
-    const response = await fetch("", {
+    const response = await fetch('', {
       method: 'POST',
       body: formData,
-      credentials: 'include',
+      credentials: 'include'
     });
 
     const result: ActionResult = deserialize(await response.text());
@@ -70,7 +84,7 @@
 
       if (result.data) {
         await invalidateAll();
-        await goto("/my-admin/posts/" + result.data.id);
+        await goto('/my-admin/posts/' + result.data.id);
       }
     }
 
@@ -85,6 +99,16 @@
     }
   }
 
+
+  function onFeaturedImageSelected(upload: UploadResponse) {
+    post.featuredImage = upload;
+    post.featuredImageId = upload.id;
+  }
+
+  async function openFeatureImageSelection() {
+    await uploadsPanel.open(onFeaturedImageSelected, post.featuredImage?.id);
+  }
+
   async function handleSubmit() {
     if (!post.id) {
       await createPost();
@@ -97,13 +121,13 @@
     <TransitionalIcon
       bind:this={successFeedbackIcon}
       component1={SaveIcon}
-      component2={SuccessIcon}/>
+      component2={SuccessIcon} />
   </button>
   <button class="dashboard-icon" onclick={onSwitchMode}>
     {#if currentMode === 'editor'}
-      <JsonIcon/>
+      <JsonIcon />
     {:else}
-      <BlocksIcon/>
+      <BlocksIcon />
     {/if}
   </button>
 {/snippet}
@@ -125,14 +149,14 @@
       <hr>
 
       {#if currentMode === 'editor'}
-        <EditorJS bind:content={post.content}/>
+        <EditorJS bind:content={post.content} />
       {:else}
-        <AceEditor bind:code={post.content}/>
+        <AceEditor bind:code={post.content} />
       {/if}
 
     </div>
     <div class="post-editor-sidebar-container">
-      <div class="sidebar-item">
+      <div class="sidebar-item featured-image-container" onclick={openFeatureImageSelection}>
         <div class="sidebar-item-title">
           Featured image
         </div>
@@ -144,8 +168,10 @@
   </div>
 </form>
 
+<Uploads bind:this={uploadsPanel} context="OneMediaSelection" />
+
 <style>
-  .featured-image > img {
-      max-width: 100%;
-  }
+    .featured-image > img {
+        max-width: 100%;
+    }
 </style>

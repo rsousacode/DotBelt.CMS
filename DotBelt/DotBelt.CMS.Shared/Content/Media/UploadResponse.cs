@@ -7,6 +7,10 @@ public class UploadResponse
     public int Id { get; set; }
     public string? Title { get; set; }
     public string? Description { get; set; }
+    
+    public string? AltText { get; set; }
+    
+    public string? Caption { get; set; }
     public required string FileName { get; set; }
     public required string MimeType { get; set; }
     public int Length { get; set; }
@@ -19,8 +23,4 @@ public class UploadResponse
     
     public UserResponse? Author { get; set; }
     
-    public int? ParentId { get; set; }
-    
-    //public UploadResponse? Parent { get; set; }
-
 }

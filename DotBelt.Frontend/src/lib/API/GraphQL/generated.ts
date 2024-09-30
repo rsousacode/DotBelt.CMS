@@ -85,20 +85,13 @@ export type BooleanOperationFilterInput = {
 };
 
 export type CreatePostInput = {
-  payload: Create_PostRequestInput;
+  payload: PostResponseInput;
   type: PostTypeEnum;
 };
 
 export type CreatePostPayload = {
   __typename?: 'CreatePostPayload';
   post?: Maybe<Post>;
-};
-
-export type Create_PostRequestInput = {
-  content: Scalars['String']['input'];
-  description?: InputMaybe<Scalars['String']['input']>;
-  relativeUrl?: InputMaybe<Scalars['String']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DateTimeOperationFilterInput = {
@@ -221,7 +214,7 @@ export type DotBeltQueryUsersArgs = {
 };
 
 export type EditPostInput = {
-  payload: Edit_PostRequestInput;
+  payload: PostResponseInput;
   postId: Scalars['Int']['input'];
 };
 
@@ -233,13 +226,6 @@ export type EditPostPayload = {
 export type EditPostResult = {
   __typename?: 'EditPostResult';
   success: Scalars['Boolean']['output'];
-};
-
-export type Edit_PostRequestInput = {
-  content: Scalars['String']['input'];
-  description?: InputMaybe<Scalars['String']['input']>;
-  relativeUrl?: InputMaybe<Scalars['String']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type IntOperationFilterInput = {
@@ -363,6 +349,8 @@ export type PostResponse = {
   content?: Maybe<Scalars['String']['output']>;
   contentHtml?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  featuredImage?: Maybe<UploadResponse>;
+  featuredImageId?: Maybe<Scalars['Int']['output']>;
   fullUrl?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
@@ -381,6 +369,8 @@ export type PostResponseFilterInput = {
   content?: InputMaybe<StringOperationFilterInput>;
   contentHtml?: InputMaybe<StringOperationFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
+  featuredImage?: InputMaybe<UploadResponseFilterInput>;
+  featuredImageId?: InputMaybe<IntOperationFilterInput>;
   fullUrl?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<IntOperationFilterInput>;
   modifiedDate?: InputMaybe<DateTimeOperationFilterInput>;
@@ -393,12 +383,33 @@ export type PostResponseFilterInput = {
   title?: InputMaybe<StringOperationFilterInput>;
 };
 
+export type PostResponseInput = {
+  author?: InputMaybe<UserResponseInput>;
+  authorId?: InputMaybe<Scalars['Int']['input']>;
+  content?: InputMaybe<Scalars['String']['input']>;
+  contentHtml?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  featuredImage?: InputMaybe<UploadResponseInput>;
+  featuredImageId?: InputMaybe<Scalars['Int']['input']>;
+  fullUrl?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
+  parentPostId?: InputMaybe<Scalars['Int']['input']>;
+  postType: PostTypeEnum;
+  publishDate: Scalars['DateTime']['input'];
+  relativeUrl: Scalars['String']['input'];
+  taxonomies: Array<TaxonomyResponseInput>;
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type PostResponseSortInput = {
   author?: InputMaybe<UserResponseSortInput>;
   authorId?: InputMaybe<SortEnumType>;
   content?: InputMaybe<SortEnumType>;
   contentHtml?: InputMaybe<SortEnumType>;
   description?: InputMaybe<SortEnumType>;
+  featuredImage?: InputMaybe<UploadResponseSortInput>;
+  featuredImageId?: InputMaybe<SortEnumType>;
   fullUrl?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   modifiedDate?: InputMaybe<SortEnumType>;
@@ -566,6 +577,19 @@ export type TaxonomyResponseFilterInput = {
   type?: InputMaybe<TaxonomyTypeEnumOperationFilterInput>;
 };
 
+export type TaxonomyResponseInput = {
+  author?: InputMaybe<UserResponseInput>;
+  authorId?: InputMaybe<Scalars['Int']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
+  parentTaxonomyId?: InputMaybe<Scalars['Int']['input']>;
+  publishDate: Scalars['DateTime']['input'];
+  relativeUrl: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+  type: TaxonomyTypeEnum;
+};
+
 export type TaxonomySortInput = {
   author?: InputMaybe<ApplicationUserSortInput>;
   authorId?: InputMaybe<SortEnumType>;
@@ -691,8 +715,10 @@ export type ThumbnailResponseSortInput = {
 
 export type Upload = {
   __typename?: 'Upload';
+  altText?: Maybe<Scalars['String']['output']>;
   author: ApplicationUser;
   authorId: Scalars['Int']['output'];
+  caption?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   fileName: Scalars['String']['output'];
   fullUrl?: Maybe<Scalars['String']['output']>;
@@ -702,8 +728,6 @@ export type Upload = {
   metaData?: Maybe<Scalars['String']['output']>;
   mimeType: Scalars['String']['output'];
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
-  parent?: Maybe<Upload>;
-  parentId?: Maybe<Scalars['Int']['output']>;
   publishDate: Scalars['DateTime']['output'];
   relativeUrl: Scalars['String']['output'];
   tenant: Tenant;
@@ -713,9 +737,11 @@ export type Upload = {
 };
 
 export type UploadFilterInput = {
+  altText?: InputMaybe<StringOperationFilterInput>;
   and?: InputMaybe<Array<UploadFilterInput>>;
   author?: InputMaybe<ApplicationUserFilterInput>;
   authorId?: InputMaybe<IntOperationFilterInput>;
+  caption?: InputMaybe<StringOperationFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
   fileName?: InputMaybe<StringOperationFilterInput>;
   fullUrl?: InputMaybe<StringOperationFilterInput>;
@@ -726,8 +752,6 @@ export type UploadFilterInput = {
   mimeType?: InputMaybe<StringOperationFilterInput>;
   modifiedDate?: InputMaybe<DateTimeOperationFilterInput>;
   or?: InputMaybe<Array<UploadFilterInput>>;
-  parent?: InputMaybe<UploadFilterInput>;
-  parentId?: InputMaybe<IntOperationFilterInput>;
   publishDate?: InputMaybe<DateTimeOperationFilterInput>;
   relativeUrl?: InputMaybe<StringOperationFilterInput>;
   tenant?: InputMaybe<TenantFilterInput>;
@@ -738,7 +762,9 @@ export type UploadFilterInput = {
 
 export type UploadResponse = {
   __typename?: 'UploadResponse';
+  altText?: Maybe<Scalars['String']['output']>;
   author?: Maybe<UserResponse>;
+  caption?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   fileName: Scalars['String']['output'];
   fullUrl?: Maybe<Scalars['String']['output']>;
@@ -747,15 +773,16 @@ export type UploadResponse = {
   metaData?: Maybe<Scalars['String']['output']>;
   mimeType: Scalars['String']['output'];
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
-  parentId?: Maybe<Scalars['Int']['output']>;
   publishDate: Scalars['DateTime']['output'];
   relativeUrl: Scalars['String']['output'];
   title?: Maybe<Scalars['String']['output']>;
 };
 
 export type UploadResponseFilterInput = {
+  altText?: InputMaybe<StringOperationFilterInput>;
   and?: InputMaybe<Array<UploadResponseFilterInput>>;
   author?: InputMaybe<UserResponseFilterInput>;
+  caption?: InputMaybe<StringOperationFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
   fileName?: InputMaybe<StringOperationFilterInput>;
   fullUrl?: InputMaybe<StringOperationFilterInput>;
@@ -765,14 +792,32 @@ export type UploadResponseFilterInput = {
   mimeType?: InputMaybe<StringOperationFilterInput>;
   modifiedDate?: InputMaybe<DateTimeOperationFilterInput>;
   or?: InputMaybe<Array<UploadResponseFilterInput>>;
-  parentId?: InputMaybe<IntOperationFilterInput>;
   publishDate?: InputMaybe<DateTimeOperationFilterInput>;
   relativeUrl?: InputMaybe<StringOperationFilterInput>;
   title?: InputMaybe<StringOperationFilterInput>;
 };
 
+export type UploadResponseInput = {
+  altText?: InputMaybe<Scalars['String']['input']>;
+  author?: InputMaybe<UserResponseInput>;
+  caption?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  fileName: Scalars['String']['input'];
+  fullUrl?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  length: Scalars['Int']['input'];
+  metaData?: InputMaybe<Scalars['String']['input']>;
+  mimeType: Scalars['String']['input'];
+  modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
+  publishDate: Scalars['DateTime']['input'];
+  relativeUrl: Scalars['String']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UploadResponseSortInput = {
+  altText?: InputMaybe<SortEnumType>;
   author?: InputMaybe<UserResponseSortInput>;
+  caption?: InputMaybe<SortEnumType>;
   description?: InputMaybe<SortEnumType>;
   fileName?: InputMaybe<SortEnumType>;
   fullUrl?: InputMaybe<SortEnumType>;
@@ -781,7 +826,6 @@ export type UploadResponseSortInput = {
   metaData?: InputMaybe<SortEnumType>;
   mimeType?: InputMaybe<SortEnumType>;
   modifiedDate?: InputMaybe<SortEnumType>;
-  parentId?: InputMaybe<SortEnumType>;
   publishDate?: InputMaybe<SortEnumType>;
   relativeUrl?: InputMaybe<SortEnumType>;
   title?: InputMaybe<SortEnumType>;
@@ -830,6 +874,17 @@ export type UserResponseFilterInput = {
   phoneNumber?: InputMaybe<StringOperationFilterInput>;
   twoFactorEnabled?: InputMaybe<BooleanOperationFilterInput>;
   userName?: InputMaybe<StringOperationFilterInput>;
+};
+
+export type UserResponseInput = {
+  accessFailedCount: Scalars['Int']['input'];
+  email?: InputMaybe<Scalars['String']['input']>;
+  emailConfirmed: Scalars['Boolean']['input'];
+  id: Scalars['Int']['input'];
+  lockoutEnabled: Scalars['Boolean']['input'];
+  phoneNumber?: InputMaybe<Scalars['String']['input']>;
+  twoFactorEnabled: Scalars['Boolean']['input'];
+  userName?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UserResponseSortInput = {

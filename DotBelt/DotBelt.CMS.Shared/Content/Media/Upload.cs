@@ -29,6 +29,10 @@ public class Upload : IContent
     public int Id { get; set; }
     public string? Title { get; set; }
     public string? Description { get; set; }
+    
+    public string? AltText { get; set; }
+    
+    public string? Caption { get; set; }
     public required string FileName { get; set; }
     public required string MimeType { get; set; }
     public int Length { get; set; }
@@ -45,8 +49,6 @@ public class Upload : IContent
     public string? MetaData { get; set; } = null!;
 
     public ICollection<Thumbnail> Thumbnails { get; set; } = null!;
-      
-    public Upload? Parent { get; set; }
-    public int? ParentId { get; set; }
+
      
 }

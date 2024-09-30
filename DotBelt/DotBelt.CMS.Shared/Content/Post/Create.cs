@@ -3,6 +3,7 @@ using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.CMS;
 using DotBelt.QueriesMutations;
 using DotBelt.CMS.Shared.CMS.Blocks.Parser;
+using DotBelt.CMS.Shared.Content.Post;
 using DotBelt.CMS.Shared.Identity;
 using HotChocolate.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +19,8 @@ public class Create
         ApplicationDbContext dbContext, 
         [Service] IHttpContextAccessor httpContextAccessor,
         [Service] BlockParser blockParser,
-        PostTypeEnum type, Create_PostRequest payload )
+        PostTypeEnum type, 
+        PostResponse payload )
     {
         var urlName = PostHelpers.SanitizePermalink(payload.RelativeUrl);
 
@@ -47,7 +49,8 @@ public class Create
             Author = null!,
             AuthorId = userId.Value,
             TenantId = tenantId,
-            ContentHtml = blockParser.GetHtmlFromContent(payload.Content),
+            FeaturedImageId = payload.FeaturedImageId,
+            ContentHtml = payload.Content != null ? blockParser.GetHtmlFromContent(payload.Content) : "",
             PublishDate = DateTime.UtcNow,
             Tenant = null!
         };

@@ -1,0 +1,1 @@
+export type UploadsContext =  'Page' | 'OneMediaSelection' | 'MultipleMediaSelection';

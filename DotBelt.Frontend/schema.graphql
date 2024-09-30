@@ -105,6 +105,8 @@ type PostResponse {
   authorId: Int
   postType: PostTypeEnum!
   parentPostId: Int
+  featuredImage: UploadResponse
+  featuredImageId: Int
   taxonomies: [TaxonomyResponse!]!
 }
 
@@ -225,6 +227,8 @@ type Upload {
   id: Int!
   title: String
   description: String
+  altText: String
+  caption: String
   fileName: String!
   mimeType: String!
   length: Int!
@@ -239,14 +243,14 @@ type Upload {
   tenantId: Int!
   metaData: String
   thumbnails: [Thumbnail!]!
-  parent: Upload
-  parentId: Int
 }
 
 type UploadResponse {
   id: Int!
   title: String
   description: String
+  altText: String
+  caption: String
   fileName: String!
   mimeType: String!
   length: Int!
@@ -256,7 +260,6 @@ type UploadResponse {
   modifiedDate: DateTime
   metaData: String
   author: UserResponse
-  parentId: Int
 }
 
 "A connection to a list of items."
@@ -353,14 +356,7 @@ input BooleanOperationFilterInput {
 
 input CreatePostInput {
   type: PostTypeEnum!
-  payload: Create_PostRequestInput!
-}
-
-input Create_PostRequestInput {
-  title: String
-  description: String
-  relativeUrl: String
-  content: String!
+  payload: PostResponseInput!
 }
 
 input DateTimeOperationFilterInput {
@@ -384,14 +380,7 @@ input DeleteUploadsInput {
 
 input EditPostInput {
   postId: Int!
-  payload: Edit_PostRequestInput!
-}
-
-input Edit_PostRequestInput {
-  title: String
-  description: String
-  relativeUrl: String
-  content: String!
+  payload: PostResponseInput!
 }
 
 input IntOperationFilterInput {
@@ -486,7 +475,28 @@ input PostResponseFilterInput {
   authorId: IntOperationFilterInput
   postType: PostTypeEnumOperationFilterInput
   parentPostId: IntOperationFilterInput
+  featuredImage: UploadResponseFilterInput
+  featuredImageId: IntOperationFilterInput
   taxonomies: ListFilterInputTypeOfTaxonomyResponseFilterInput
+}
+
+input PostResponseInput {
+  id: Int!
+  title: String
+  description: String
+  relativeUrl: String!
+  fullUrl: String
+  content: String
+  contentHtml: String
+  publishDate: DateTime!
+  modifiedDate: DateTime
+  author: UserResponseInput
+  authorId: Int
+  postType: PostTypeEnum!
+  parentPostId: Int
+  featuredImage: UploadResponseInput
+  featuredImageId: Int
+  taxonomies: [TaxonomyResponseInput!]!
 }
 
 input PostResponseSortInput {
@@ -503,6 +513,8 @@ input PostResponseSortInput {
   authorId: SortEnumType
   postType: SortEnumType
   parentPostId: SortEnumType
+  featuredImage: UploadResponseSortInput
+  featuredImageId: SortEnumType
 }
 
 input PostTypeEnumOperationFilterInput {
@@ -560,6 +572,19 @@ input TaxonomyResponseFilterInput {
   authorId: IntOperationFilterInput
   type: TaxonomyTypeEnumOperationFilterInput
   parentTaxonomyId: IntOperationFilterInput
+}
+
+input TaxonomyResponseInput {
+  id: Int!
+  title: String
+  relativeUrl: String!
+  publishDate: DateTime!
+  modifiedDate: DateTime
+  description: String
+  author: UserResponseInput
+  authorId: Int
+  type: TaxonomyTypeEnum!
+  parentTaxonomyId: Int
 }
 
 input TaxonomySortInput {
@@ -649,6 +674,8 @@ input UploadFilterInput {
   id: IntOperationFilterInput
   title: StringOperationFilterInput
   description: StringOperationFilterInput
+  altText: StringOperationFilterInput
+  caption: StringOperationFilterInput
   fileName: StringOperationFilterInput
   mimeType: StringOperationFilterInput
   length: IntOperationFilterInput
@@ -663,8 +690,6 @@ input UploadFilterInput {
   tenantId: IntOperationFilterInput
   metaData: StringOperationFilterInput
   thumbnails: ListFilterInputTypeOfThumbnailFilterInput
-  parent: UploadFilterInput
-  parentId: IntOperationFilterInput
 }
 
 input UploadResponseFilterInput {
@@ -673,6 +698,8 @@ input UploadResponseFilterInput {
   id: IntOperationFilterInput
   title: StringOperationFilterInput
   description: StringOperationFilterInput
+  altText: StringOperationFilterInput
+  caption: StringOperationFilterInput
   fileName: StringOperationFilterInput
   mimeType: StringOperationFilterInput
   length: IntOperationFilterInput
@@ -682,13 +709,31 @@ input UploadResponseFilterInput {
   modifiedDate: DateTimeOperationFilterInput
   metaData: StringOperationFilterInput
   author: UserResponseFilterInput
-  parentId: IntOperationFilterInput
+}
+
+input UploadResponseInput {
+  id: Int!
+  title: String
+  description: String
+  altText: String
+  caption: String
+  fileName: String!
+  mimeType: String!
+  length: Int!
+  relativeUrl: String!
+  fullUrl: String
+  publishDate: DateTime!
+  modifiedDate: DateTime
+  metaData: String
+  author: UserResponseInput
 }
 
 input UploadResponseSortInput {
   id: SortEnumType
   title: SortEnumType
   description: SortEnumType
+  altText: SortEnumType
+  caption: SortEnumType
   fileName: SortEnumType
   mimeType: SortEnumType
   length: SortEnumType
@@ -698,7 +743,6 @@ input UploadResponseSortInput {
   modifiedDate: SortEnumType
   metaData: SortEnumType
   author: UserResponseSortInput
-  parentId: SortEnumType
 }
 
 input UserResponseFilterInput {
@@ -712,6 +756,17 @@ input UserResponseFilterInput {
   twoFactorEnabled: BooleanOperationFilterInput
   lockoutEnabled: BooleanOperationFilterInput
   accessFailedCount: IntOperationFilterInput
+}
+
+input UserResponseInput {
+  id: Int!
+  userName: String
+  email: String
+  emailConfirmed: Boolean!
+  phoneNumber: String
+  twoFactorEnabled: Boolean!
+  lockoutEnabled: Boolean!
+  accessFailedCount: Int!
 }
 
 input UserResponseSortInput {

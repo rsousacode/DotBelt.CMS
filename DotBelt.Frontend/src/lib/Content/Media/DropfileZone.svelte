@@ -136,6 +136,7 @@
         display: flex;
         flex-direction: column;
         z-index: 2;
+        left: 0;
     }
 
     .upload-overlay.drag-enter {
