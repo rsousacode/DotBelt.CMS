@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotBelt.CMS.Shared.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241001171804_Initial")]
+    [Migration("20241002155841_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -147,9 +147,6 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("jsonb");
 
-                    b.Property<string>("ContentHtml")
-                        .HasColumnType("text");
-
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
@@ -178,6 +175,9 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.Property<string>("RelativeUrl")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");

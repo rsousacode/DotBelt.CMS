@@ -299,7 +299,6 @@ export type Post = {
   authorId: Scalars['Int']['output'];
   childrenPosts: Array<Post>;
   content?: Maybe<Scalars['String']['output']>;
-  contentHtml?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   featuredImage?: Maybe<Upload>;
   featuredImageId?: Maybe<Scalars['Int']['output']>;
@@ -312,6 +311,7 @@ export type Post = {
   postType: PostTypeEnum;
   publishDate: Scalars['DateTime']['output'];
   relativeUrl: Scalars['String']['output'];
+  status: PostStatus;
   taxonomies?: Maybe<Array<Taxonomy>>;
   tenant?: Maybe<Tenant>;
   tenantId: Scalars['Int']['output'];
@@ -324,7 +324,6 @@ export type PostFilterInput = {
   authorId?: InputMaybe<IntOperationFilterInput>;
   childrenPosts?: InputMaybe<ListFilterInputTypeOfPostFilterInput>;
   content?: InputMaybe<StringOperationFilterInput>;
-  contentHtml?: InputMaybe<StringOperationFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
   featuredImage?: InputMaybe<UploadFilterInput>;
   featuredImageId?: InputMaybe<IntOperationFilterInput>;
@@ -338,6 +337,7 @@ export type PostFilterInput = {
   postType?: InputMaybe<PostTypeEnumOperationFilterInput>;
   publishDate?: InputMaybe<DateTimeOperationFilterInput>;
   relativeUrl?: InputMaybe<StringOperationFilterInput>;
+  status?: InputMaybe<PostStatusOperationFilterInput>;
   taxonomies?: InputMaybe<ListFilterInputTypeOfTaxonomyFilterInput>;
   tenant?: InputMaybe<TenantFilterInput>;
   tenantId?: InputMaybe<IntOperationFilterInput>;
@@ -349,7 +349,6 @@ export type PostResponse = {
   author?: Maybe<UserResponse>;
   authorId?: Maybe<Scalars['Int']['output']>;
   content?: Maybe<Scalars['String']['output']>;
-  contentHtml?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   featuredImage?: Maybe<UploadResponse>;
   featuredImageId?: Maybe<Scalars['Int']['output']>;
@@ -360,6 +359,7 @@ export type PostResponse = {
   postType?: Maybe<PostTypeEnum>;
   publishDate?: Maybe<Scalars['DateTime']['output']>;
   relativeUrl: Scalars['String']['output'];
+  status: PostStatus;
   taxonomies?: Maybe<Array<TaxonomyResponse>>;
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -369,7 +369,6 @@ export type PostResponseFilterInput = {
   author?: InputMaybe<UserResponseFilterInput>;
   authorId?: InputMaybe<IntOperationFilterInput>;
   content?: InputMaybe<StringOperationFilterInput>;
-  contentHtml?: InputMaybe<StringOperationFilterInput>;
   description?: InputMaybe<StringOperationFilterInput>;
   featuredImage?: InputMaybe<UploadResponseFilterInput>;
   featuredImageId?: InputMaybe<IntOperationFilterInput>;
@@ -381,6 +380,7 @@ export type PostResponseFilterInput = {
   postType?: InputMaybe<NullableOfPostTypeEnumOperationFilterInput>;
   publishDate?: InputMaybe<DateTimeOperationFilterInput>;
   relativeUrl?: InputMaybe<StringOperationFilterInput>;
+  status?: InputMaybe<PostStatusOperationFilterInput>;
   taxonomies?: InputMaybe<ListFilterInputTypeOfTaxonomyResponseFilterInput>;
   title?: InputMaybe<StringOperationFilterInput>;
 };
@@ -389,7 +389,6 @@ export type PostResponseInput = {
   author?: InputMaybe<UserResponseInput>;
   authorId?: InputMaybe<Scalars['Int']['input']>;
   content?: InputMaybe<Scalars['String']['input']>;
-  contentHtml?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   featuredImage?: InputMaybe<UploadResponseInput>;
   featuredImageId?: InputMaybe<Scalars['Int']['input']>;
@@ -400,6 +399,7 @@ export type PostResponseInput = {
   postType?: InputMaybe<PostTypeEnum>;
   publishDate?: InputMaybe<Scalars['DateTime']['input']>;
   relativeUrl: Scalars['String']['input'];
+  status: PostStatus;
   taxonomies?: InputMaybe<Array<TaxonomyResponseInput>>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
@@ -408,7 +408,6 @@ export type PostResponseSortInput = {
   author?: InputMaybe<UserResponseSortInput>;
   authorId?: InputMaybe<SortEnumType>;
   content?: InputMaybe<SortEnumType>;
-  contentHtml?: InputMaybe<SortEnumType>;
   description?: InputMaybe<SortEnumType>;
   featuredImage?: InputMaybe<UploadResponseSortInput>;
   featuredImageId?: InputMaybe<SortEnumType>;
@@ -419,7 +418,20 @@ export type PostResponseSortInput = {
   postType?: InputMaybe<SortEnumType>;
   publishDate?: InputMaybe<SortEnumType>;
   relativeUrl?: InputMaybe<SortEnumType>;
+  status?: InputMaybe<SortEnumType>;
   title?: InputMaybe<SortEnumType>;
+};
+
+export enum PostStatus {
+  Draft = 'DRAFT',
+  Published = 'PUBLISHED'
+}
+
+export type PostStatusOperationFilterInput = {
+  eq?: InputMaybe<PostStatus>;
+  in?: InputMaybe<Array<PostStatus>>;
+  neq?: InputMaybe<PostStatus>;
+  nin?: InputMaybe<Array<PostStatus>>;
 };
 
 export enum PostTypeEnum {

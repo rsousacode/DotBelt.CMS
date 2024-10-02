@@ -6,4 +6,4 @@
 
 </script>
 
-<p>{block.text}</p>
+<p> {@html block.text} </p>

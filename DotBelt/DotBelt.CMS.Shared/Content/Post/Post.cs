@@ -1,4 +1,5 @@
 using DotBelt.CMS.Shared.CMS.Media;
+using DotBelt.CMS.Shared.Content.Post;
 using DotBelt.CMS.Shared.Tenants;
 using DotBelt.CMS.Shared.Users;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,10 @@ public class PostTypeConfiguration : IEntityTypeConfiguration<Post>
             .Property(x => x.Content)
             .HasColumnType("jsonb");
         
+        builder
+            .Property(x => x.PostType)
+            .HasConversion<string>();
+       
         builder
             .Property(x => x.PostType)
             .HasConversion<string>();
@@ -36,7 +41,6 @@ public class Post : IContent
     public string? FullUrl { get; set; }
     
     public string? Content { get; set; }
-    public string? ContentHtml { get; set; }
     
     public DateTimeOffset PublishDate { get; set; }
     public DateTimeOffset? ModifiedDate { get; set; }
@@ -49,7 +53,7 @@ public class Post : IContent
     public int? ParentPostId { get; set; }
     public ICollection<Post> ChildrenPosts { get; set; } = null!;
     
-    
+    public PostStatus Status { get; set; }
     public ICollection<Taxonomy>? Taxonomies { get; set; }
     
     public Tenant? Tenant { get; set; }

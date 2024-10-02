@@ -15,7 +15,6 @@ public class PostResponse
     public string? FullUrl { get; set; }
     
     public string? Content { get; set; }
-    public string? ContentHtml { get; set; }
     
     public DateTimeOffset? PublishDate { get; set; }
     public DateTimeOffset? ModifiedDate { get; set; }
@@ -29,6 +28,7 @@ public class PostResponse
     public UploadResponse? FeaturedImage { get; set; }
     
     public int? FeaturedImageId { get; set; }
-    
+    public PostStatus Status { get; set; }
+
     public IEnumerable<TaxonomyResponse>? Taxonomies { get; set; } = null!;
 }

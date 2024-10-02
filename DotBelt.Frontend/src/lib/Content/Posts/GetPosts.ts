@@ -34,6 +34,7 @@ export async function getPosts(
           id
           title
           publishDate
+          status
           relativeUrl
           author {
             userName

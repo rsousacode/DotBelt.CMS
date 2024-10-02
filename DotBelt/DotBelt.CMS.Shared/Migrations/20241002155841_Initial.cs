@@ -276,12 +276,12 @@ namespace DotBelt.CMS.Shared.Migrations
                     InTrash = table.Column<bool>(type: "boolean", nullable: true),
                     FullUrl = table.Column<string>(type: "text", nullable: true),
                     Content = table.Column<string>(type: "jsonb", nullable: true),
-                    ContentHtml = table.Column<string>(type: "text", nullable: true),
                     PublishDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     AuthorId = table.Column<int>(type: "integer", nullable: false),
                     PostType = table.Column<string>(type: "text", nullable: false),
                     ParentPostId = table.Column<int>(type: "integer", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     FeaturedImageId = table.Column<int>(type: "integer", nullable: true)
                 },

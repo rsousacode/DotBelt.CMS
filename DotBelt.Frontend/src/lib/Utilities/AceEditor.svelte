@@ -2,6 +2,7 @@
     import {onMount} from "svelte";
 
     let aceEditorElement : Element;
+    import("ace-code/src/theme/twilight.js")
 
     let {code = $bindable()} = $props();
 
@@ -12,7 +13,7 @@
         // use setOptions method to set several options at once
         editor.setOptions({
             autoScrollEditorIntoView: true,
-            copyWithEmptySelection: true,
+          copyWithEmptySelection: true,
         });
 
         let JsonMode = (await import('ace-code/src/mode/json')).Mode;

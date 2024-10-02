@@ -144,9 +144,6 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("jsonb");
 
-                    b.Property<string>("ContentHtml")
-                        .HasColumnType("text");
-
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
@@ -175,6 +172,9 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.Property<string>("RelativeUrl")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");

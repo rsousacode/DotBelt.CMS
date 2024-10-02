@@ -36,7 +36,7 @@ type DotBeltMutation {
 }
 
 type DotBeltQuery {
-  posts("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: PostResponseFilterInput order: [PostResponseSortInput!]): PostsConnection @authorize
+  posts("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: PostResponseFilterInput order: [PostResponseSortInput!]): PostsConnection
   postById(id: Int!): [PostResponse!]! @authorize
   postByUrl(url: String!): [PostResponse!]!
   taxonomies("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: TaxonomyFilterInput order: [TaxonomySortInput!]): TaxonomiesConnection
@@ -71,7 +71,6 @@ type Post {
   inTrash: Boolean
   fullUrl: String
   content: String
-  contentHtml: String
   publishDate: DateTime!
   modifiedDate: DateTime
   author: ApplicationUser
@@ -80,6 +79,7 @@ type Post {
   parentPost: Post
   parentPostId: Int
   childrenPosts: [Post!]!
+  status: PostStatus!
   taxonomies: [Taxonomy!]
   tenant: Tenant
   tenantId: Int!
@@ -94,7 +94,6 @@ type PostResponse {
   relativeUrl: String!
   fullUrl: String
   content: String
-  contentHtml: String
   publishDate: DateTime
   modifiedDate: DateTime
   author: UserResponse
@@ -103,6 +102,7 @@ type PostResponse {
   parentPostId: Int
   featuredImage: UploadResponse
   featuredImageId: Int
+  status: PostStatus!
   taxonomies: [TaxonomyResponse!]
 }
 
@@ -446,7 +446,6 @@ input PostFilterInput {
   inTrash: BooleanOperationFilterInput
   fullUrl: StringOperationFilterInput
   content: StringOperationFilterInput
-  contentHtml: StringOperationFilterInput
   publishDate: DateTimeOperationFilterInput
   modifiedDate: DateTimeOperationFilterInput
   author: ApplicationUserFilterInput
@@ -455,6 +454,7 @@ input PostFilterInput {
   parentPost: PostFilterInput
   parentPostId: IntOperationFilterInput
   childrenPosts: ListFilterInputTypeOfPostFilterInput
+  status: PostStatusOperationFilterInput
   taxonomies: ListFilterInputTypeOfTaxonomyFilterInput
   tenant: TenantFilterInput
   tenantId: IntOperationFilterInput
@@ -471,7 +471,6 @@ input PostResponseFilterInput {
   relativeUrl: StringOperationFilterInput
   fullUrl: StringOperationFilterInput
   content: StringOperationFilterInput
-  contentHtml: StringOperationFilterInput
   publishDate: DateTimeOperationFilterInput
   modifiedDate: DateTimeOperationFilterInput
   author: UserResponseFilterInput
@@ -480,6 +479,7 @@ input PostResponseFilterInput {
   parentPostId: IntOperationFilterInput
   featuredImage: UploadResponseFilterInput
   featuredImageId: IntOperationFilterInput
+  status: PostStatusOperationFilterInput
   taxonomies: ListFilterInputTypeOfTaxonomyResponseFilterInput
 }
 
@@ -490,7 +490,6 @@ input PostResponseInput {
   relativeUrl: String!
   fullUrl: String
   content: String
-  contentHtml: String
   publishDate: DateTime
   modifiedDate: DateTime
   author: UserResponseInput
@@ -499,6 +498,7 @@ input PostResponseInput {
   parentPostId: Int
   featuredImage: UploadResponseInput
   featuredImageId: Int
+  status: PostStatus!
   taxonomies: [TaxonomyResponseInput!]
 }
 
@@ -509,7 +509,6 @@ input PostResponseSortInput {
   relativeUrl: SortEnumType
   fullUrl: SortEnumType
   content: SortEnumType
-  contentHtml: SortEnumType
   publishDate: SortEnumType
   modifiedDate: SortEnumType
   author: UserResponseSortInput
@@ -518,6 +517,14 @@ input PostResponseSortInput {
   parentPostId: SortEnumType
   featuredImage: UploadResponseSortInput
   featuredImageId: SortEnumType
+  status: SortEnumType
+}
+
+input PostStatusOperationFilterInput {
+  eq: PostStatus
+  neq: PostStatus
+  in: [PostStatus!]
+  nin: [PostStatus!]
 }
 
 input PostTypeEnumOperationFilterInput {
@@ -787,6 +794,11 @@ enum ApplyPolicy {
   BEFORE_RESOLVER
   AFTER_RESOLVER
   VALIDATION
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
 }
 
 enum PostTypeEnum {
