@@ -18,7 +18,6 @@ type RepeaterData = {
   hasImage: boolean
   numberOfPosts: number
   variables: Record<string, any>
-  query: string
 };
 
 
@@ -32,8 +31,12 @@ export default class Repeater {
     {
       hasImage: true,
       numberOfPosts: 3,
-      query: `
-      query GetPosts($type: PostTypeEnum!, $first: Int) {
+      variables: {first: 5, type: PostTypeEnum.Post}
+    }
+  );
+
+  query: string = `
+   query GetPosts($type: PostTypeEnum!, $first: Int) {
         posts(first: $first, order: { publishDate: DESC }, where: { postType: { eq: $type } }) {
           nodes {
             id
@@ -45,11 +48,7 @@ export default class Repeater {
           }
         }
       }
-      `,
-      variables: {first: 5, type: PostTypeEnum.Post}
-    }
-  );
-
+  `;
 
   renderingComponentProps : RenderingComponentProps = $state({posts: [], hasImage: this.data.hasImage});
 
@@ -60,17 +59,25 @@ export default class Repeater {
 
   constructor({ data, api }: ConstructorArgs) {
     this.targetElement = document.createElement('div');
-    this.data = data;
+    if(data.variables === undefined) {
+      this.data =  {
+        hasImage: true,
+        numberOfPosts: 3,
+        variables: {first: 5, type: PostTypeEnum.Post}
+      };
+    } else {
+      this.data = data;
+    }
   }
 
-  async getPosts(): Promise<Maybe<PostsConnection | undefined>> {
+   getPosts : () => Promise<Maybe<PostsConnection | undefined>> =  async () => {
 
     const client = apolloClientStore.getClient();
 
     const {
       data: { posts }
     } = await client.query<DotBeltQuery>({
-      query: gql(this.data.query),
+      query: gql(this.query),
       variables: this.data.variables,
     });
 
@@ -94,7 +101,6 @@ export default class Repeater {
         numberOfPosts: this.data.variables?.first as number,
         onNumberOfPostsChanged: (newNumber) => {
           this.data.variables.first = newNumber;
-          console.log(this.data.variables.first)
           this.refetchPosts();
         }
       }
@@ -118,7 +124,7 @@ export default class Repeater {
     };
   }
 
-  refetchPosts() {
+  refetchPosts = () => {
     this.getPosts().then((data) => {
       if (data && data.nodes) {
         this.setPosts(data.nodes);
@@ -144,11 +150,11 @@ export default class Repeater {
     return this.targetElement;
   }
 
+  // noinspection JSUnusedGlobalSymbols
   save() {
     return {
       hasImage: this.data.hasImage,
-      postType: PostTypeEnum.Post,
-      query: this.data.query,
+      query: this.query,
       variables: this.data.variables,
     };
   }
