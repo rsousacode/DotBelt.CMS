@@ -34,3 +34,7 @@
 .ce-block--selected .ce-block__content {
   background: var(--bs-tertiary-bg);
 }
+
+.ce-inline-tool {
+  color: var(--bs-body-color);
+}
