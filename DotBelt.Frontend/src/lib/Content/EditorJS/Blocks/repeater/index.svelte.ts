@@ -1,24 +1,59 @@
 import RepeaterSvelte from './RepeaterSvelte.svelte';
-import { mount } from 'svelte';
+import {mount, unmount} from 'svelte';
 import type { API, BlockTune } from '@editorjs/editorjs';
 import {
   type DotBeltQuery,
   type Maybe,
-  type Post,
+  type PostResponse,
   type PostsConnection,
   PostTypeEnum,
 } from '$lib/API/GraphQL/generated';
 import { gql } from '@apollo/client/core';
 
-type RepeaterData = { hasImage: boolean; posts: Maybe<Post[]> | undefined };
+import {apolloClientStore} from "$lib/API/GraphQL/apolloClientStore";
+import RepeaterSettingsSvelte from "$lib/Content/EditorJS/Blocks/repeater/RepeaterSettingsSvelte.svelte";
+import type {RepeaterSettingsProps} from "$lib/Content/EditorJS/Blocks/repeater/RepeaterSettingsProps";
+
+type RepeaterData = {
+  hasImage: boolean
+  numberOfPosts: number
+  variables: Record<string, any>
+  query: string
+};
+
 
 type ConstructorArgs = { data: RepeaterData; api: API };
+type RenderingComponentProps = {posts: PostResponse[], hasImage: boolean}
 
 export default class Repeater {
   svelteComponent: { $set?: any; $on?: any } | undefined;
-  data: RepeaterData = $state({ hasImage: false, posts: [] });
 
-  posts: Maybe<Post[]> | undefined;
+  data: RepeaterData = $state(
+    {
+      hasImage: true,
+      numberOfPosts: 3,
+      query: `
+      query GetPosts($type: PostTypeEnum!, $first: Int) {
+        posts(first: $first, order: { publishDate: DESC }, where: { postType: { eq: $type } }) {
+          nodes {
+            id
+            title
+            description,
+            featuredImage {
+              relativeUrl
+            }
+          }
+        }
+      }
+      `,
+      variables: {first: 5, type: PostTypeEnum.Post}
+    }
+  );
+
+
+  renderingComponentProps : RenderingComponentProps = $state({posts: [], hasImage: this.data.hasImage});
+
+  posts: Maybe<PostResponse[]> | undefined = $state();
   api: API | undefined;
 
   targetElement: Element;
@@ -28,49 +63,54 @@ export default class Repeater {
     this.data = data;
   }
 
-  async getPosts(type: PostTypeEnum): Promise<Maybe<PostsConnection | undefined>> {
-    const query = gql`
-      query GetPosts($type: PostTypeEnum!, $first: Int) {
-        posts(first: $first, order: { publishDate: DESC }, where: { postType: { eq: $type } }) {
-          nodes {
-            id
-            title
-            description
-          }
-        }
-      }
-    `;
+  async getPosts(): Promise<Maybe<PostsConnection | undefined>> {
 
-    // @ts-ignore
-    const client = globalThis.GetApolloSvelteClient();
-    // @ts-ignore
+    const client = apolloClientStore.getClient();
+
     const {
-      data: { posts },
-      errors,
+      data: { posts }
     } = await client.query<DotBeltQuery>({
-      query: query,
-      variables: { type: type },
+      query: gql(this.data.query),
+      variables: this.data.variables,
     });
 
     return posts;
   }
 
-  renderSettings(): BlockTune[] {
-    return [
-      {
-        icon: '',
-        label: 'With image',
-        toggle: true,
-        isActive: this.data?.hasImage,
-        onActivate: () => {
-          this.data.hasImage = !this.data.hasImage;
-        },
-        closeOnActivate: false,
-        render: () => document.createElement('div'),
-      },
-    ];
+
+  // noinspection JSUnusedGlobalSymbols
+  renderSettings(): HTMLElement {
+
+    const wrapper = document.createElement('div');
+
+    type RepeaterSettingsData = {
+      props: RepeaterSettingsProps,
+      target: HTMLElement
+    }
+
+    const repeaterData : RepeaterSettingsData = {
+      target: wrapper,
+      props: {
+        numberOfPosts: this.data.variables?.first as number,
+        onNumberOfPostsChanged: (newNumber) => {
+          this.data.variables.first = newNumber;
+          console.log(this.data.variables.first)
+          this.refetchPosts();
+        }
+      }
+    };
+
+    // @ts-ignore
+    mount(RepeaterSettingsSvelte, repeaterData);
+
+    return wrapper;
   }
 
+  setPosts(posts: PostResponse[]) {
+    this.renderingComponentProps.posts = posts;
+  }
+
+  // noinspection JSUnusedGlobalSymbols
   static get toolbox() {
     return {
       title: 'Repeater',
@@ -78,23 +118,38 @@ export default class Repeater {
     };
   }
 
+  refetchPosts() {
+    this.getPosts().then((data) => {
+      if (data && data.nodes) {
+        this.setPosts(data.nodes);
+      }
+    });
+  }
+
+  // noinspection JSUnusedGlobalSymbols
   render() {
-    this.getPosts(PostTypeEnum.Post).then((data) => {
-      if (data) {
-        this.data.posts = data.nodes;
+    if(this.svelteComponent) {
+      unmount(this.svelteComponent);
+    }
+
+    this.getPosts().then((data) => {
+      if (data && data.nodes) {
+        this.setPosts(data.nodes);
       }
       this.svelteComponent = mount(RepeaterSvelte, {
         target: this.targetElement,
-        props: this.data,
+        props: this.renderingComponentProps,
       });
     });
-
     return this.targetElement;
   }
 
   save() {
     return {
       hasImage: this.data.hasImage,
+      postType: PostTypeEnum.Post,
+      query: this.data.query,
+      variables: this.data.variables,
     };
   }
 }

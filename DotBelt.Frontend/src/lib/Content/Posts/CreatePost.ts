@@ -1,6 +1,5 @@
 import {
-  type Edit_PostRequestInput,
-  type DotBeltMutation,
+  type DotBeltMutation, type PostResponseInput,
   PostTypeEnum,
 } from '$lib/API/GraphQL/generated';
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core/index.js';
@@ -8,17 +7,23 @@ import { gql } from '@apollo/client/core/index.js';
 
 export async function createPost(
   client: ApolloClient<NormalizedCacheObject>,
-  input: Edit_PostRequestInput,
+  input: PostResponseInput,
   type: PostTypeEnum,
 ) {
   const mutation = gql`
-    mutation createPost($input: Create_PostRequestInput!, $type: PostTypeEnum!) {
+    mutation createPost($input: PostResponseInput!, $type: PostTypeEnum!) {
       createPost(input: { payload: $input, type: $type }) {
-        post {
+        postResponse {
           id
           relativeUrl
+          authorId
+          publishDate
           content
           description
+          featuredImage {
+            id
+            relativeUrl
+          }
         }
       }
     }
@@ -30,8 +35,8 @@ export async function createPost(
   });
 
   if (data) {
-    return data.createPost?.post;
+    return data.createPost?.postResponse;
   } else {
-    throw 'Error processing request';
+    throw errors?.toString();
   }
 }

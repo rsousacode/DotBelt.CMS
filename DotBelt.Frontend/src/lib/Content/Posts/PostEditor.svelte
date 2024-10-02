@@ -1,10 +1,13 @@
 <script lang="ts">
-  import { applyAction, deserialize } from '$app/forms';
-  import { goto, invalidateAll } from '$app/navigation';
-  import type { ActionResult } from '@sveltejs/kit';
-  import { type PostResponse, PostTypeEnum, type UploadResponse } from '$lib/API/GraphQL/generated';
-  import { onMount } from 'svelte';
-  import { updateDashboardFragment } from '$lib/Dashboard/DashboardStore.svelte.js';
+  import {goto, invalidateAll} from '$app/navigation';
+  import {
+    type PostResponse,
+    type PostResponseInput,
+    PostTypeEnum,
+    type UploadResponse
+  } from '$lib/API/GraphQL/generated';
+  import {onMount} from 'svelte';
+  import {updateDashboardFragment} from '$lib/Dashboard/DashboardStore.svelte.js';
   import SaveIcon from '$lib/Utilities/Icons/SaveIcon.svelte';
   import TransitionalIcon from '$lib/Utilities/Icons/TransitionalIcon.svelte';
   import SuccessIcon from '$lib/Utilities/Icons/SuccessIcon.svelte';
@@ -13,19 +16,22 @@
   import EditorJS from '$lib/Content/EditorJS/EditorJS.svelte';
   import AceEditor from '$lib/Utilities/AceEditor.svelte';
   import Uploads from '$lib/Content/Media/Uploads.svelte';
+  import {apolloClientStore} from "$lib/API/GraphQL/apolloClientStore";
+  import {createPost} from "$lib/Content/Posts/CreatePost";
+  import {page} from "$app/stores";
+  import {editPost} from "$lib/Content/Posts/EditPost";
 
 
   let {
     post = $bindable(
       {
-        content: '{}',
-        relativeUrl: '',
-        featuredImage: undefined,
-        id: 0,
-        publishDate: 0,
-        taxonomies: [],
-        postType: PostTypeEnum.Undefined
-      })
+        title: "",
+        relativeUrl: "",
+        description: "",
+        content: "{}",
+        featuredImage: undefined
+      }
+    )
   }: { post: PostResponse } = $props();
 
   type EditorMode = 'editor' | 'code';
@@ -35,6 +41,9 @@
   let uploadsPanel: Uploads;
 
   let successFeedbackIcon: TransitionalIcon;
+
+  let featuredImageElement: HTMLImageElement;
+
   onMount(() => {
     updateDashboardFragment(saveButton);
   });
@@ -58,37 +67,44 @@
     post.relativeUrl = sanitizePermalink(post.relativeUrl);
   }
 
-  async function createPost() {
+  async function createNewPost() {
 
-    post.title = post.title ?? '';
-    post.description = post.description ?? '';
-    post.relativeUrl = post.relativeUrl ?? '';
+    const client = apolloClientStore.getClient();
 
-    const formData = new FormData();
+    const postType = $page.url.searchParams.get("type")?.toUpperCase() as PostTypeEnum;
 
-    Object.entries(post).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
+    const postResponse = await createPost(client, post as PostResponseInput, postType);
 
-    const response = await fetch('', {
-      method: 'POST',
-      body: formData,
-      credentials: 'include'
-    });
-
-    const result: ActionResult = deserialize(await response.text());
-
-    if (result.type === 'success') {
+    if (postResponse) {
+      post.relativeUrl = postResponse.relativeUrl;
+      post.fullUrl = postResponse.fullUrl;
+      post.publishDate = postResponse.publishDate;
+      post.modifiedDate = postResponse.modifiedDate;
 
       successFeedbackIcon.triggerComponent2();
-
-      if (result.data) {
-        await invalidateAll();
-        await goto('/my-admin/posts/' + result.data.id);
-      }
+      await goto('/my-admin/posts/' + postResponse.id);
     }
+  }
 
-    await applyAction(result);
+  async function editExistingPost() {
+
+    const client = apolloClientStore.getClient();
+
+
+    if (post.id) {
+      const postResponse = await editPost(client, post.id, post as PostResponseInput);
+      console.log('post response [edit]', postResponse);
+
+      if (postResponse) {
+        post.relativeUrl = postResponse.relativeUrl;
+        post.fullUrl = postResponse.fullUrl;
+        post.publishDate = postResponse.publishDate;
+        post.modifiedDate = postResponse.modifiedDate;
+        successFeedbackIcon.triggerComponent2();
+      }
+    } else {
+      console.error("Post has no id");
+    }
   }
 
   function onSwitchMode() {
@@ -101,8 +117,9 @@
 
 
   function onFeaturedImageSelected(upload: UploadResponse) {
-    post.featuredImage = upload;
+    post.featuredImage = {...upload};
     post.featuredImageId = upload.id;
+    featuredImageElement.src = `/${upload.relativeUrl}`;
   }
 
   async function openFeatureImageSelection() {
@@ -111,7 +128,9 @@
 
   async function handleSubmit() {
     if (!post.id) {
-      await createPost();
+      await createNewPost();
+    } else {
+      await editExistingPost();
     }
   }
 </script>
@@ -121,13 +140,13 @@
     <TransitionalIcon
       bind:this={successFeedbackIcon}
       component1={SaveIcon}
-      component2={SuccessIcon} />
+      component2={SuccessIcon}/>
   </button>
   <button class="dashboard-icon" onclick={onSwitchMode}>
     {#if currentMode === 'editor'}
-      <JsonIcon />
+      <JsonIcon/>
     {:else}
-      <BlocksIcon />
+      <BlocksIcon/>
     {/if}
   </button>
 {/snippet}
@@ -149,9 +168,9 @@
       <hr>
 
       {#if currentMode === 'editor'}
-        <EditorJS bind:content={post.content} />
+        <EditorJS bind:content={post.content}/>
       {:else}
-        <AceEditor bind:code={post.content} />
+        <AceEditor bind:code={post.content}/>
       {/if}
 
     </div>
@@ -161,17 +180,17 @@
           Featured image
         </div>
         <div class="featured-image">
-          <img src="/images/placeholder-image.png" alt="">
+          <img bind:this={featuredImageElement} src={post?.featuredImage?.relativeUrl ? `/${post.featuredImage.relativeUrl}` : "/images/placeholder-image.png"} alt="">
         </div>
       </div>
     </div>
   </div>
 </form>
 
-<Uploads bind:this={uploadsPanel} context="OneMediaSelection" />
+<Uploads bind:this={uploadsPanel} context="OneMediaSelection"/>
 
 <style>
-    .featured-image > img {
-        max-width: 100%;
-    }
+  .featured-image > img {
+    max-width: 100%;
+  }
 </style>

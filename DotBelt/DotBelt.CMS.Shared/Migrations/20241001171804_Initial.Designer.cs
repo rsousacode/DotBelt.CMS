@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotBelt.CMS.Shared.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240930225052_Initial")]
+    [Migration("20241001171804_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

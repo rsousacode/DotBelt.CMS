@@ -43,8 +43,12 @@ public class UploadsController
                 {
                     File.Delete(fullPath);
                 }
-       
-                _context.Thumbnails.RemoveRange(upload.Thumbnails);
+
+                if (upload.Thumbnails != null)
+                {
+                    _context.Thumbnails.RemoveRange();
+                }
+
                 _context.Uploads.Remove(upload);
 
                 await _context.SaveChangesAsync(cancellationToken);

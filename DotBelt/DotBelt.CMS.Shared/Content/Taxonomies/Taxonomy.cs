@@ -32,11 +32,11 @@ public class Taxonomy : IContent
     public DateTimeOffset PublishDate { get; set; }
     public DateTimeOffset? ModifiedDate { get; set; }
     
-    public required Tenant Tenant { get; set; }
+    public Tenant? Tenant { get; set; }
     public int TenantId { get; set; }
 
     public required string? Description { get; set; }
-    public required ApplicationUser Author { get; set; }
+    public ApplicationUser? Author { get; set; }
     public required int AuthorId { get; set; }
 
     public TaxonomyTypeEnum Type { get; set; }

@@ -22,7 +22,7 @@ type ApplicationUser {
 }
 
 type CreatePostPayload {
-  post: Post
+  postResponse: PostResponse
 }
 
 type DeleteUploadsPayload {
@@ -48,11 +48,7 @@ type DotBeltQuery {
 }
 
 type EditPostPayload {
-  editPostResult: EditPostResult
-}
-
-type EditPostResult {
-  success: Boolean!
+  postResponse: PostResponse
 }
 
 "Information about pagination in a connection."
@@ -78,36 +74,36 @@ type Post {
   contentHtml: String
   publishDate: DateTime!
   modifiedDate: DateTime
-  author: ApplicationUser!
+  author: ApplicationUser
   authorId: Int!
   postType: PostTypeEnum!
   parentPost: Post
   parentPostId: Int
   childrenPosts: [Post!]!
-  taxonomies: [Taxonomy!]!
-  tenant: Tenant!
+  taxonomies: [Taxonomy!]
+  tenant: Tenant
   tenantId: Int!
   featuredImage: Upload
   featuredImageId: Int
 }
 
 type PostResponse {
-  id: Int!
+  id: Int
   title: String
   description: String
   relativeUrl: String!
   fullUrl: String
   content: String
   contentHtml: String
-  publishDate: DateTime!
+  publishDate: DateTime
   modifiedDate: DateTime
   author: UserResponse
   authorId: Int
-  postType: PostTypeEnum!
+  postType: PostTypeEnum
   parentPostId: Int
   featuredImage: UploadResponse
   featuredImageId: Int
-  taxonomies: [TaxonomyResponse!]!
+  taxonomies: [TaxonomyResponse!]
 }
 
 "A connection to a list of items."
@@ -167,10 +163,10 @@ type Taxonomy {
   inTrash: Boolean
   publishDate: DateTime!
   modifiedDate: DateTime
-  tenant: Tenant!
+  tenant: Tenant
   tenantId: Int!
   description: String
-  author: ApplicationUser!
+  author: ApplicationUser
   authorId: Int!
   type: TaxonomyTypeEnum!
   parentTaxonomyId: Int
@@ -212,15 +208,15 @@ type Thumbnail {
 }
 
 type ThumbnailResponse {
-  id: Int!
-  name: String!
-  upload: UploadResponse!
-  uploadId: Int!
-  publishDate: DateTime!
-  mimeType: String!
-  fileName: String!
-  relativeUrl: String!
-  length: Int!
+  id: Int
+  name: String
+  upload: UploadResponse
+  uploadId: Int
+  publishDate: DateTime
+  mimeType: String
+  fileName: String
+  relativeUrl: String
+  length: Int
 }
 
 type Upload {
@@ -232,31 +228,31 @@ type Upload {
   fileName: String!
   mimeType: String!
   length: Int!
-  author: ApplicationUser!
+  author: ApplicationUser
   authorId: Int!
   relativeUrl: String!
   fullUrl: String
   inTrash: Boolean
   publishDate: DateTime!
   modifiedDate: DateTime
-  tenant: Tenant!
+  tenant: Tenant
   tenantId: Int!
   metaData: String
-  thumbnails: [Thumbnail!]!
+  thumbnails: [Thumbnail!]
 }
 
 type UploadResponse {
-  id: Int!
+  id: Int
   title: String
   description: String
   altText: String
   caption: String
-  fileName: String!
-  mimeType: String!
-  length: Int!
-  relativeUrl: String!
+  fileName: String
+  mimeType: String
+  length: Int
+  relativeUrl: String
   fullUrl: String
-  publishDate: DateTime!
+  publishDate: DateTime
   modifiedDate: DateTime
   metaData: String
   author: UserResponse
@@ -281,14 +277,14 @@ type UploadsEdge {
 }
 
 type UserResponse {
-  id: Int!
+  id: Int
   userName: String
   email: String
-  emailConfirmed: Boolean!
+  emailConfirmed: Boolean
   phoneNumber: String
-  twoFactorEnabled: Boolean!
-  lockoutEnabled: Boolean!
-  accessFailedCount: Int!
+  twoFactorEnabled: Boolean
+  lockoutEnabled: Boolean
+  accessFailedCount: Int
 }
 
 "A connection to a list of items."
@@ -433,6 +429,13 @@ input ListStringOperationFilterInput {
   any: Boolean
 }
 
+input NullableOfPostTypeEnumOperationFilterInput {
+  eq: PostTypeEnum
+  neq: PostTypeEnum
+  in: [PostTypeEnum]
+  nin: [PostTypeEnum]
+}
+
 input PostFilterInput {
   and: [PostFilterInput!]
   or: [PostFilterInput!]
@@ -473,7 +476,7 @@ input PostResponseFilterInput {
   modifiedDate: DateTimeOperationFilterInput
   author: UserResponseFilterInput
   authorId: IntOperationFilterInput
-  postType: PostTypeEnumOperationFilterInput
+  postType: NullableOfPostTypeEnumOperationFilterInput
   parentPostId: IntOperationFilterInput
   featuredImage: UploadResponseFilterInput
   featuredImageId: IntOperationFilterInput
@@ -481,22 +484,22 @@ input PostResponseFilterInput {
 }
 
 input PostResponseInput {
-  id: Int!
+  id: Int
   title: String
   description: String
   relativeUrl: String!
   fullUrl: String
   content: String
   contentHtml: String
-  publishDate: DateTime!
+  publishDate: DateTime
   modifiedDate: DateTime
   author: UserResponseInput
   authorId: Int
-  postType: PostTypeEnum!
+  postType: PostTypeEnum
   parentPostId: Int
   featuredImage: UploadResponseInput
   featuredImageId: Int
-  taxonomies: [TaxonomyResponseInput!]!
+  taxonomies: [TaxonomyResponseInput!]
 }
 
 input PostResponseSortInput {
@@ -712,17 +715,17 @@ input UploadResponseFilterInput {
 }
 
 input UploadResponseInput {
-  id: Int!
+  id: Int
   title: String
   description: String
   altText: String
   caption: String
-  fileName: String!
-  mimeType: String!
-  length: Int!
-  relativeUrl: String!
+  fileName: String
+  mimeType: String
+  length: Int
+  relativeUrl: String
   fullUrl: String
-  publishDate: DateTime!
+  publishDate: DateTime
   modifiedDate: DateTime
   metaData: String
   author: UserResponseInput
@@ -759,14 +762,14 @@ input UserResponseFilterInput {
 }
 
 input UserResponseInput {
-  id: Int!
+  id: Int
   userName: String
   email: String
-  emailConfirmed: Boolean!
+  emailConfirmed: Boolean
   phoneNumber: String
-  twoFactorEnabled: Boolean!
-  lockoutEnabled: Boolean!
-  accessFailedCount: Int!
+  twoFactorEnabled: Boolean
+  lockoutEnabled: Boolean
+  accessFailedCount: Int
 }
 
 input UserResponseSortInput {

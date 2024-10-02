@@ -224,9 +224,11 @@
           {/if}
         </div>
 
-        <div class="actions-buttons">
-          <button class="btn btn-primary" onclick={onImageSelected}>Select</button>
-        </div>
+        {#if context === 'OneMediaSelection'}
+          <div class="actions-buttons">
+            <button class="btn btn-primary" onclick={onImageSelected}>Select</button>
+          </div>
+        {/if}
       </div>
   </div>
 

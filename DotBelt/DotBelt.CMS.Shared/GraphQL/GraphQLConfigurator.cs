@@ -1,10 +1,8 @@
-using System;
-using System.Collections;
-using System.Linq;
-using System.Collections.Generic;
-using System.Reflection;
+using System.Text.Json;
 using BoilerPlateSSR.QueriesMutations;
 using DotBelt.CMS.Shared;
+using DotBelt.CMS.Shared.GraphQL;
+using HotChocolate.Execution;
 using HotChocolate.Execution.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -62,6 +60,8 @@ namespace DotBelt.QueriesMutations
                 .AddGraphQlTypeExtensions()
                 .AddApolloTracing()
                 .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled);
+
+            services.AddScoped<GraphQlExecutor>();
 
             return services;
         }

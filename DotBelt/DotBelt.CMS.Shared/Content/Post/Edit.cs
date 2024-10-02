@@ -1,10 +1,9 @@
 using DotBelt.Queries;
 using DotBelt.CMS.Shared;
+using DotBelt.CMS.Shared.CMS;
 using DotBelt.QueriesMutations;
-using DotBelt.CMS.Shared.CMS.Blocks.Parser;
 using DotBelt.CMS.Shared.Content.Post;
 using HotChocolate.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DotBelt.Mutations.Posts;
@@ -18,16 +17,16 @@ public class EditPostResult
 public class Edit
 {
     [Authorize]
-    public async Task<EditPostResult> EditPostAsync( ApplicationDbContext dbContext,
-        [FromServices] BlockParser blockParser,
-        int postId, PostResponse payload )
+    public async Task<PostResponse?> EditPostAsync( ApplicationDbContext dbContext,
+        int postId, 
+        PostResponse payload )
     {
         var post = await dbContext
             .Posts
             .Where(x => x.Id == postId)
             .FirstOrDefaultAsync();
 
-        if (post == null) return new EditPostResult() { Success = false };;
+        if (post == null) return null;
         
         var urlName = PostHelpers.SanitizePermalink(payload.RelativeUrl);
 
@@ -36,14 +35,13 @@ public class Edit
         post.Content = payload.Content;
         post.Description = payload.Description;
         post.RelativeUrl = urlName;
+        post.FeaturedImageId = payload.FeaturedImageId;
         
         post.FullUrl = urlName;
 
-        if (payload.Content != null)
-        {
-            post.ContentHtml = blockParser.GetHtmlFromContent(payload.Content);
-        }
+        await dbContext.SaveChangesAsync();
+
+        return post.ToPostResponse();
                 
-        return new EditPostResult() { Success = await dbContext.SaveChangesAsync() >= 0 };
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.ManualMigrations;
 using DotBelt.CMS.Shared.Users;
@@ -37,7 +38,6 @@ try
     var configuration = builder.Configuration;
 
     var services = builder.Services;
-    
 
     services.AddAuthentication();
    

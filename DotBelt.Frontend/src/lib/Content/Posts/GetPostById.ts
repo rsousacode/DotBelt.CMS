@@ -9,17 +9,21 @@ export async function getPostById(
   const query = gql`
     query postById($id: Int!) {
       postById(id: $id) {
+        id
         content
         title
         description
         relativeUrl
+        featuredImageId
+        featuredImage {
+            id
+            relativeUrl
+        }  
       }
-    }
-  `;
+    }`;
 
   const {
-    data: { postById },
-    errors,
+    data: { postById }
   } = await client.query<DotBeltQuery>({
     query: query,
     variables: { id: id },

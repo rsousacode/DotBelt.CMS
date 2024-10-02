@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import type { PostResponse } from '$lib/API/GraphQL/generated';
+import type {PostResponse } from '$lib/API/GraphQL/generated';
 
 import { getPostByUrl } from '$lib/Content/Posts/GetPostByUrl';
 import { error } from '@sveltejs/kit';
@@ -17,7 +17,10 @@ export const load: PageServerLoad<Promise<{ post: PostResponse }>> = async ({ pa
     });
   }
 
+  const content = post.content ? JSON.parse(post.content) : null;
+
   return {
     post,
+    content: content
   };
 };

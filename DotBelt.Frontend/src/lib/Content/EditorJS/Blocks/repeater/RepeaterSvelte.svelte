@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type {Maybe, Post} from "$lib/API/GraphQL/generated";
+  import type {Maybe, PostResponse} from "$lib/API/GraphQL/generated";
 
-  let {hasImage = false, postCount = 10, posts}: Props = $props();
+  let {hasImage = false, posts = $bindable()}: Props = $props();
 
-  type Props = { hasImage: boolean, postCount: number, posts: Maybe<Post[]> };
+  type Props = { hasImage: boolean, posts: Maybe<PostResponse[]> };
 
 </script>
 
@@ -14,7 +14,7 @@
       <div class="post-item">
         {#if hasImage}
           <div class="post-image">
-            <img alt="place-holder image" src="/images/placeholder-image.png"/>
+            <img alt={post.featuredImage?.altText} src={post.featuredImage ? `/${post.featuredImage.relativeUrl}` : "/images/placeholder-image.png" }/>
           </div>
         {/if}
 

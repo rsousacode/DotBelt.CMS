@@ -1,9 +1,9 @@
 <script lang="ts">
   import {page} from "$app/stores";
   import {SITE_NAME} from "$lib/constants";
+  import PublicBlocksRenderer from "$lib/Content/EditorJS/Blocks/PublicBlocksRenderer.svelte";
 
-  let { data: { post } } = $page;
-
+  let { data: { post, content } } = $page;
 
 </script>
 
@@ -17,7 +17,7 @@
   </div>
 
   <div class="post-content">
-    {@html post.contentHtml}
+    <PublicBlocksRenderer blocksData={content} />
   </div>
 
 </div>

@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
 using DotBelt.CMS.Shared.CMS.Media;
 using DotBelt.CMS.Shared.Tenants;
 using DotBelt.CMS.Shared.Users;
@@ -42,7 +41,7 @@ public class Post : IContent
     public DateTimeOffset PublishDate { get; set; }
     public DateTimeOffset? ModifiedDate { get; set; }
     
-    public required ApplicationUser Author { get; set; }
+    public ApplicationUser? Author { get; set; }
     public required int AuthorId { get; set; }
     public PostTypeEnum PostType { get; set; }
     
@@ -51,9 +50,9 @@ public class Post : IContent
     public ICollection<Post> ChildrenPosts { get; set; } = null!;
     
     
-    public ICollection<Taxonomy> Taxonomies { get; set; } = null!;
+    public ICollection<Taxonomy>? Taxonomies { get; set; }
     
-    public required Tenant Tenant { get; set; }
+    public Tenant? Tenant { get; set; }
     
     public int TenantId { get; set; }
     

@@ -91,7 +91,7 @@ export type CreatePostInput = {
 
 export type CreatePostPayload = {
   __typename?: 'CreatePostPayload';
-  post?: Maybe<Post>;
+  postResponse?: Maybe<PostResponse>;
 };
 
 export type DateTimeOperationFilterInput = {
@@ -220,12 +220,7 @@ export type EditPostInput = {
 
 export type EditPostPayload = {
   __typename?: 'EditPostPayload';
-  editPostResult?: Maybe<EditPostResult>;
-};
-
-export type EditPostResult = {
-  __typename?: 'EditPostResult';
-  success: Scalars['Boolean']['output'];
+  postResponse?: Maybe<PostResponse>;
 };
 
 export type IntOperationFilterInput = {
@@ -278,6 +273,13 @@ export type ListStringOperationFilterInput = {
   some?: InputMaybe<StringOperationFilterInput>;
 };
 
+export type NullableOfPostTypeEnumOperationFilterInput = {
+  eq?: InputMaybe<PostTypeEnum>;
+  in?: InputMaybe<Array<InputMaybe<PostTypeEnum>>>;
+  neq?: InputMaybe<PostTypeEnum>;
+  nin?: InputMaybe<Array<InputMaybe<PostTypeEnum>>>;
+};
+
 /** Information about pagination in a connection. */
 export type PageInfo = {
   __typename?: 'PageInfo';
@@ -293,7 +295,7 @@ export type PageInfo = {
 
 export type Post = {
   __typename?: 'Post';
-  author: ApplicationUser;
+  author?: Maybe<ApplicationUser>;
   authorId: Scalars['Int']['output'];
   childrenPosts: Array<Post>;
   content?: Maybe<Scalars['String']['output']>;
@@ -310,8 +312,8 @@ export type Post = {
   postType: PostTypeEnum;
   publishDate: Scalars['DateTime']['output'];
   relativeUrl: Scalars['String']['output'];
-  taxonomies: Array<Taxonomy>;
-  tenant: Tenant;
+  taxonomies?: Maybe<Array<Taxonomy>>;
+  tenant?: Maybe<Tenant>;
   tenantId: Scalars['Int']['output'];
   title?: Maybe<Scalars['String']['output']>;
 };
@@ -352,13 +354,13 @@ export type PostResponse = {
   featuredImage?: Maybe<UploadResponse>;
   featuredImageId?: Maybe<Scalars['Int']['output']>;
   fullUrl?: Maybe<Scalars['String']['output']>;
-  id: Scalars['Int']['output'];
+  id?: Maybe<Scalars['Int']['output']>;
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   parentPostId?: Maybe<Scalars['Int']['output']>;
-  postType: PostTypeEnum;
-  publishDate: Scalars['DateTime']['output'];
+  postType?: Maybe<PostTypeEnum>;
+  publishDate?: Maybe<Scalars['DateTime']['output']>;
   relativeUrl: Scalars['String']['output'];
-  taxonomies: Array<TaxonomyResponse>;
+  taxonomies?: Maybe<Array<TaxonomyResponse>>;
   title?: Maybe<Scalars['String']['output']>;
 };
 
@@ -376,7 +378,7 @@ export type PostResponseFilterInput = {
   modifiedDate?: InputMaybe<DateTimeOperationFilterInput>;
   or?: InputMaybe<Array<PostResponseFilterInput>>;
   parentPostId?: InputMaybe<IntOperationFilterInput>;
-  postType?: InputMaybe<PostTypeEnumOperationFilterInput>;
+  postType?: InputMaybe<NullableOfPostTypeEnumOperationFilterInput>;
   publishDate?: InputMaybe<DateTimeOperationFilterInput>;
   relativeUrl?: InputMaybe<StringOperationFilterInput>;
   taxonomies?: InputMaybe<ListFilterInputTypeOfTaxonomyResponseFilterInput>;
@@ -392,13 +394,13 @@ export type PostResponseInput = {
   featuredImage?: InputMaybe<UploadResponseInput>;
   featuredImageId?: InputMaybe<Scalars['Int']['input']>;
   fullUrl?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['Int']['input'];
+  id?: InputMaybe<Scalars['Int']['input']>;
   modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
   parentPostId?: InputMaybe<Scalars['Int']['input']>;
-  postType: PostTypeEnum;
-  publishDate: Scalars['DateTime']['input'];
+  postType?: InputMaybe<PostTypeEnum>;
+  publishDate?: InputMaybe<Scalars['DateTime']['input']>;
   relativeUrl: Scalars['String']['input'];
-  taxonomies: Array<TaxonomyResponseInput>;
+  taxonomies?: InputMaybe<Array<TaxonomyResponseInput>>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -511,7 +513,7 @@ export type TaxonomiesEdge = {
 
 export type Taxonomy = {
   __typename?: 'Taxonomy';
-  author: ApplicationUser;
+  author?: Maybe<ApplicationUser>;
   authorId: Scalars['Int']['output'];
   description?: Maybe<Scalars['String']['output']>;
   fullUrl?: Maybe<Scalars['String']['output']>;
@@ -522,7 +524,7 @@ export type Taxonomy = {
   posts: Array<Post>;
   publishDate: Scalars['DateTime']['output'];
   relativeUrl: Scalars['String']['output'];
-  tenant: Tenant;
+  tenant?: Maybe<Tenant>;
   tenantId: Scalars['Int']['output'];
   title?: Maybe<Scalars['String']['output']>;
   type: TaxonomyTypeEnum;
@@ -676,15 +678,15 @@ export type ThumbnailFilterInput = {
 
 export type ThumbnailResponse = {
   __typename?: 'ThumbnailResponse';
-  fileName: Scalars['String']['output'];
-  id: Scalars['Int']['output'];
-  length: Scalars['Int']['output'];
-  mimeType: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-  publishDate: Scalars['DateTime']['output'];
-  relativeUrl: Scalars['String']['output'];
-  upload: UploadResponse;
-  uploadId: Scalars['Int']['output'];
+  fileName?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  length?: Maybe<Scalars['Int']['output']>;
+  mimeType?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  publishDate?: Maybe<Scalars['DateTime']['output']>;
+  relativeUrl?: Maybe<Scalars['String']['output']>;
+  upload?: Maybe<UploadResponse>;
+  uploadId?: Maybe<Scalars['Int']['output']>;
 };
 
 export type ThumbnailResponseFilterInput = {
@@ -716,7 +718,7 @@ export type ThumbnailResponseSortInput = {
 export type Upload = {
   __typename?: 'Upload';
   altText?: Maybe<Scalars['String']['output']>;
-  author: ApplicationUser;
+  author?: Maybe<ApplicationUser>;
   authorId: Scalars['Int']['output'];
   caption?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
@@ -730,9 +732,9 @@ export type Upload = {
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
   publishDate: Scalars['DateTime']['output'];
   relativeUrl: Scalars['String']['output'];
-  tenant: Tenant;
+  tenant?: Maybe<Tenant>;
   tenantId: Scalars['Int']['output'];
-  thumbnails: Array<Thumbnail>;
+  thumbnails?: Maybe<Array<Thumbnail>>;
   title?: Maybe<Scalars['String']['output']>;
 };
 
@@ -766,15 +768,15 @@ export type UploadResponse = {
   author?: Maybe<UserResponse>;
   caption?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
-  fileName: Scalars['String']['output'];
+  fileName?: Maybe<Scalars['String']['output']>;
   fullUrl?: Maybe<Scalars['String']['output']>;
-  id: Scalars['Int']['output'];
-  length: Scalars['Int']['output'];
+  id?: Maybe<Scalars['Int']['output']>;
+  length?: Maybe<Scalars['Int']['output']>;
   metaData?: Maybe<Scalars['String']['output']>;
-  mimeType: Scalars['String']['output'];
+  mimeType?: Maybe<Scalars['String']['output']>;
   modifiedDate?: Maybe<Scalars['DateTime']['output']>;
-  publishDate: Scalars['DateTime']['output'];
-  relativeUrl: Scalars['String']['output'];
+  publishDate?: Maybe<Scalars['DateTime']['output']>;
+  relativeUrl?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
 };
 
@@ -802,15 +804,15 @@ export type UploadResponseInput = {
   author?: InputMaybe<UserResponseInput>;
   caption?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
-  fileName: Scalars['String']['input'];
+  fileName?: InputMaybe<Scalars['String']['input']>;
   fullUrl?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['Int']['input'];
-  length: Scalars['Int']['input'];
+  id?: InputMaybe<Scalars['Int']['input']>;
+  length?: InputMaybe<Scalars['Int']['input']>;
   metaData?: InputMaybe<Scalars['String']['input']>;
-  mimeType: Scalars['String']['input'];
+  mimeType?: InputMaybe<Scalars['String']['input']>;
   modifiedDate?: InputMaybe<Scalars['DateTime']['input']>;
-  publishDate: Scalars['DateTime']['input'];
-  relativeUrl: Scalars['String']['input'];
+  publishDate?: InputMaybe<Scalars['DateTime']['input']>;
+  relativeUrl?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -853,13 +855,13 @@ export type UploadsEdge = {
 
 export type UserResponse = {
   __typename?: 'UserResponse';
-  accessFailedCount: Scalars['Int']['output'];
+  accessFailedCount?: Maybe<Scalars['Int']['output']>;
   email?: Maybe<Scalars['String']['output']>;
-  emailConfirmed: Scalars['Boolean']['output'];
-  id: Scalars['Int']['output'];
-  lockoutEnabled: Scalars['Boolean']['output'];
+  emailConfirmed?: Maybe<Scalars['Boolean']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  lockoutEnabled?: Maybe<Scalars['Boolean']['output']>;
   phoneNumber?: Maybe<Scalars['String']['output']>;
-  twoFactorEnabled: Scalars['Boolean']['output'];
+  twoFactorEnabled?: Maybe<Scalars['Boolean']['output']>;
   userName?: Maybe<Scalars['String']['output']>;
 };
 
@@ -877,13 +879,13 @@ export type UserResponseFilterInput = {
 };
 
 export type UserResponseInput = {
-  accessFailedCount: Scalars['Int']['input'];
+  accessFailedCount?: InputMaybe<Scalars['Int']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
-  emailConfirmed: Scalars['Boolean']['input'];
-  id: Scalars['Int']['input'];
-  lockoutEnabled: Scalars['Boolean']['input'];
+  emailConfirmed?: InputMaybe<Scalars['Boolean']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  lockoutEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   phoneNumber?: InputMaybe<Scalars['String']['input']>;
-  twoFactorEnabled: Scalars['Boolean']['input'];
+  twoFactorEnabled?: InputMaybe<Scalars['Boolean']['input']>;
   userName?: InputMaybe<Scalars['String']['input']>;
 };
 

@@ -2,7 +2,6 @@ using DotBelt.Queries;
 using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.CMS;
 using DotBelt.QueriesMutations;
-using DotBelt.CMS.Shared.CMS.Blocks.Parser;
 using DotBelt.CMS.Shared.Content.Post;
 using DotBelt.CMS.Shared.Identity;
 using HotChocolate.Authorization;
@@ -15,10 +14,9 @@ namespace DotBelt.Mutations.Posts.Create;
 public class Create
 {
     [Authorize]
-    public async Task<Post?> CreatePostAsync( 
+    public async Task<PostResponse?> CreatePostAsync( 
         ApplicationDbContext dbContext, 
         [Service] IHttpContextAccessor httpContextAccessor,
-        [Service] BlockParser blockParser,
         PostTypeEnum type, 
         PostResponse payload )
     {
@@ -50,7 +48,6 @@ public class Create
             AuthorId = userId.Value,
             TenantId = tenantId,
             FeaturedImageId = payload.FeaturedImageId,
-            ContentHtml = payload.Content != null ? blockParser.GetHtmlFromContent(payload.Content) : "",
             PublishDate = DateTime.UtcNow,
             Tenant = null!
         };
@@ -60,6 +57,6 @@ public class Create
         
         await dbContext.SaveChangesAsync();
 
-        return post;
+        return post.ToPostResponse();
     }
 }

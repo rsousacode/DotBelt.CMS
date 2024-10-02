@@ -1,18 +1,29 @@
-import type { Edit_PostRequestInput, DotBeltMutation } from '$lib/API/GraphQL/generated';
+import type {DotBeltMutation, PostResponseInput} from '$lib/API/GraphQL/generated';
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core/index.js';
 import { gql } from '@apollo/client/core/index.js';
 
 export async function editPost(
   client: ApolloClient<NormalizedCacheObject>,
   id: number,
-  input: Edit_PostRequestInput,
+  input: PostResponseInput,
 ) {
   try {
     const mutation = gql`
-      mutation editPost($input: Edit_PostRequestInput!, $postId: Int!) {
+      mutation editPost($input: PostResponseInput!, $postId: Int!) {
         editPost(input: { payload: $input, postId: $postId }) {
-          editPostResult {
-            success
+          postResponse {
+            id
+            relativeUrl
+            content
+            title
+            description
+            authorId
+            publishDate
+            modifiedDate
+            featuredImage {
+              id
+              relativeUrl
+            }
           }
         }
       }
@@ -24,7 +35,7 @@ export async function editPost(
     });
 
     if (data) {
-      return data.createPost?.post;
+      return data.editPost?.postResponse;
     }
   } catch (e) {
     console.error(e);

@@ -9,7 +9,7 @@
 
   export function triggerComponent2(time = 1000) {
     transitionTo("second")
-    setTimeout(() => {
+    return setTimeout(() => {
       transitionTo("first")
     }, time);
   }

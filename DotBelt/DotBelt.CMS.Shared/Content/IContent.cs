@@ -8,7 +8,7 @@ public interface IContent
     public int Id { get; set; }
     public string? Title { get; set; }
     public string? Description { get; set; }
-    public ApplicationUser Author { get; set; }
+    public ApplicationUser? Author { get; set; }
     public int AuthorId { get; set; }
     
     public string RelativeUrl { get; set; }
@@ -22,7 +22,7 @@ public interface IContent
     public DateTimeOffset PublishDate { get; set; }
     public DateTimeOffset? ModifiedDate { get; set; }
     
-    public Tenant Tenant { get; set; }
+    public Tenant? Tenant { get; set; }
     
     public int TenantId { get; set; }
 }

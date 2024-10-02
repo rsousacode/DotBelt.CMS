@@ -1,6 +1,7 @@
 using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.CMS;
 using DotBelt.CMS.Shared.Content.Post;
+using DotBelt.CMS.Shared.GraphQL;
 using DotBelt.QueriesMutations;
 using HotChocolate;
 using HotChocolate.Authorization;
@@ -13,7 +14,8 @@ namespace DotBelt.Queries;
 
 public class PostsQueries
 {
-    [Authorize]
+    // TODO: Insecure: Allow own origin (server) or [Authorize] authorized user 
+    //[Authorize]
     [UsePaging(IncludeTotalCount = true)]
     [UseProjection]
     [UseFiltering]
@@ -40,6 +42,7 @@ public class PostsQueries
     [UseProjection]
     public IQueryable<PostResponse> GetPostByUrl(string url, ApplicationDbContext context)
     {
+
         return context
             .Posts
             .Where(x => x.RelativeUrl == url)

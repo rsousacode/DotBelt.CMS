@@ -30,7 +30,7 @@ onDestroy(() => {
 
 
     editor = new EditorJS({
-      logLevel: LogLevels.ERROR,
+      logLevel: 'ERROR',
 
       onChange: async () => {
           content = JSON.stringify(await getData(), undefined, 2);

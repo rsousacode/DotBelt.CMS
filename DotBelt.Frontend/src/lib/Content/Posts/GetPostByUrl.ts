@@ -9,7 +9,7 @@ export async function getPostByUrl(
   const query = gql`
     query postByUrl($url: String!) {
       postByUrl(url: $url) {
-        contentHtml
+        content
         title
         relativeUrl
       }

@@ -57,7 +57,7 @@
 
 
   export async function open(imageSelectedCallback: (upload: UploadResponse) => void,
-                             imageSelectedId: number | undefined = undefined) {
+                             imageSelectedId: Maybe<number> | undefined = undefined) {
     await fetchAndReset();
 
     selectedImages = [];
@@ -242,7 +242,7 @@
 
 </script>
 
-<MediaPopup bind:this={mediaPopup}/>
+<MediaPopup context={context} bind:this={mediaPopup}/>
 
 
 
