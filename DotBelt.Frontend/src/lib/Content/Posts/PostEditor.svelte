@@ -3,7 +3,7 @@
   import {
     type PostResponse,
     type PostResponseInput, PostStatus,
-    PostTypeEnum,
+    PostTypeEnum, type TenantResponse,
     type UploadResponse
   } from '$lib/API/GraphQL/generated';
   import { onMount } from 'svelte';
@@ -22,9 +22,12 @@
   import { editPost } from '$lib/Content/Posts/EditPost';
   import PostEditorSidebarItem from '$lib/Content/Posts/PostEditorSidebarItem.svelte';
   import PreviewIcon from '$lib/Utilities/Icons/PreviewIcon.svelte';
+  import HTML5DateTimeInput from '$lib/Utilities/HTML5DateTimeInput.svelte';
 
+  type Props = { post?: PostResponse, tenant: TenantResponse }
 
   let {
+    tenant,
     post = $bindable(
       {
         title: '',
@@ -33,9 +36,10 @@
         description: '',
         content: '{}',
         featuredImage: undefined
-      }
+      },
+
     )
-  }: { post: PostResponse } = $props();
+  }: Props = $props();
 
   type EditorMode = 'editor' | 'code';
 
@@ -166,7 +170,7 @@
     <div class="editor-container">
       <div class="editor-container-header">
         <div class="permalink-editor-container">
-          <span style="color: #919191;">https://my-website.com/</span>
+          <span style="color: #919191;">{tenant.fullUrl}/</span>
           <input class="classy-input permalink-input" onchange={handlePermalinkChanged} type="text"
                  placeholder="write-your-url" bind:value={post.relativeUrl}>
         </div>
@@ -186,12 +190,26 @@
 
     </div>
     <div class="post-editor-sidebar-container">
+      <PostEditorSidebarItem title="Options">
+        <div class="form-control mt-2">
+          <label  class="form-label mt-3" for="">Publishing status</label>
+          <select bind:value={post.status} class="form-select" aria-label="publish status">
+            <option value={PostStatus.Draft}>Draft</option>
+            <option value={PostStatus.Published}>Published</option>
+          </select>
+          <div class="mt-4 mb-3">
+            <label class="form-label" for="publish-date">Publishing Date</label>
+            <HTML5DateTimeInput bind:dateTime={post.publishDate}></HTML5DateTimeInput>
+          </div>
+        </div>
+      </PostEditorSidebarItem>
       <PostEditorSidebarItem cssClasses="featured-image-container" title="Featured image">
-        <button type="button" class="featured-image clear-button" onclick={openFeatureImageSelection}>
-          <img bind:this={featuredImageElement}
-               src={post?.featuredImage?.relativeUrl ? `/${post.featuredImage.relativeUrl}` : "/images/placeholder-image.png"}
-               alt="">
-        </button>
+          <button type="button" class="featured-image clear-button" onclick={openFeatureImageSelection}>
+            <img bind:this={featuredImageElement}
+                 src={post?.featuredImage?.relativeUrl ? `/${post.featuredImage.relativeUrl}` : "/images/placeholder-image.png"}
+                 alt="">
+          </button>
+
       </PostEditorSidebarItem>
 
       <PostEditorSidebarItem title="Description">

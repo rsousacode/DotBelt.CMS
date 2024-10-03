@@ -6,8 +6,7 @@
   import {updateDashboardData} from "$lib/Dashboard/DashboardStore.svelte";
   import PostEditor from "$lib/Content/Posts/PostEditor.svelte";
 
-  let { data: { post } } = $page;
-
+  let { data: { post, tenant } } = $page;
 
   onMount(() => {
       updateDashboardData({title: "Edit post", subtitle: ""})
@@ -19,5 +18,5 @@
 </svelte:head>
 
 <DashboardContainer>
-  <PostEditor post={post}/>
+  <PostEditor tenant={tenant} post={post}/>
 </DashboardContainer>

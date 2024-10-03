@@ -42,13 +42,14 @@ public class Create
             Content = payload.Content,
             PostType = type,
             RelativeUrl = urlName,
+            Status = payload.Status,
             FullUrl = urlName,
             Description = payload.Description,
             Author = null!,
             AuthorId = userId.Value,
             TenantId = tenantId,
             FeaturedImageId = payload.FeaturedImageId,
-            PublishDate = DateTime.UtcNow,
+            PublishDate = payload.PublishDate?.ToUniversalTime() ?? DateTimeOffset.UtcNow,
             Tenant = null!
         };
 

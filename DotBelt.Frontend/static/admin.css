@@ -258,14 +258,12 @@ body {
 
 .sidebar-item {
     padding: 5px;
-    background: var(--bs-secondary-bg);
     border-radius: 5px;
     text-align: left;
     margin-top: 10px;
 }
 
 .sidebar-item-title {
-    background: var(--bs-body-bg);
     padding: 6px;
     border-radius: 5px;
 }
@@ -296,6 +294,8 @@ body {
     margin: 0;
     width: 100%;
     text-align: left;
+    background: transparent;
+    padding: 0;
 }
 
 .hide {

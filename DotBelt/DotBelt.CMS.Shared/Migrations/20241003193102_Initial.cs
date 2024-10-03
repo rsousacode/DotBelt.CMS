@@ -281,7 +281,7 @@ namespace DotBelt.CMS.Shared.Migrations
                     AuthorId = table.Column<int>(type: "integer", nullable: false),
                     PostType = table.Column<string>(type: "text", nullable: false),
                     ParentPostId = table.Column<int>(type: "integer", nullable: true),
-                    Status = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<string>(type: "text", nullable: false),
                     TenantId = table.Column<int>(type: "integer", nullable: false),
                     FeaturedImageId = table.Column<int>(type: "integer", nullable: true)
                 },

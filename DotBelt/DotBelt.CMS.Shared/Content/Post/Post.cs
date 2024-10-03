@@ -20,7 +20,7 @@ public class PostTypeConfiguration : IEntityTypeConfiguration<Post>
             .HasConversion<string>();
        
         builder
-            .Property(x => x.PostType)
+            .Property(x => x.Status)
             .HasConversion<string>();
 
         builder

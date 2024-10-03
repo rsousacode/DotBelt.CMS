@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DotBelt.CMS.Shared.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241002155841_Initial")]
+    [Migration("20241003193102_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -176,8 +176,9 @@ namespace DotBelt.CMS.Shared.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("TenantId")
                         .HasColumnType("integer");

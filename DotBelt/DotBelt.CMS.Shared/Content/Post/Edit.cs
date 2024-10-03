@@ -36,6 +36,8 @@ public class Edit
         post.Description = payload.Description;
         post.RelativeUrl = urlName;
         post.FeaturedImageId = payload.FeaturedImageId;
+        post.Status = payload.Status;
+        post.PublishDate = payload.PublishDate?.ToUniversalTime() ?? DateTime.UtcNow;
         
         post.FullUrl = urlName;
 

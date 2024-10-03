@@ -148,6 +148,7 @@ export type DotBeltQuery = {
   session: SessionData;
   taxonomies?: Maybe<TaxonomiesConnection>;
   taxonomyById: Array<Taxonomy>;
+  tenantById: Array<TenantResponse>;
   uploadById: Array<UploadResponse>;
   uploads?: Maybe<UploadsConnection>;
   users?: Maybe<UsersConnection>;
@@ -185,6 +186,11 @@ export type DotBeltQueryTaxonomiesArgs = {
 
 
 export type DotBeltQueryTaxonomyByIdArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type DotBeltQueryTenantByIdArgs = {
   id: Scalars['Int']['input'];
 };
 
@@ -653,6 +659,14 @@ export type TenantFilterInput = {
   or?: InputMaybe<Array<TenantFilterInput>>;
   posts?: InputMaybe<ListFilterInputTypeOfPostFilterInput>;
   taxonomies?: InputMaybe<ListFilterInputTypeOfTaxonomyFilterInput>;
+};
+
+export type TenantResponse = {
+  __typename?: 'TenantResponse';
+  allowedFileTypes: Array<Scalars['String']['output']>;
+  fullUrl: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type TenantSortInput = {
