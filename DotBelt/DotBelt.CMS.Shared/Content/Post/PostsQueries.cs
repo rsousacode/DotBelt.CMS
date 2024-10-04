@@ -56,6 +56,17 @@ public class PostsQueries
             .Where(x => x.RelativeUrl == url)
             .ProjectToPostResponse();
     }
+  
+    [UseProjection]
+    public IQueryable<PostResponse> GetHomepage(ApplicationDbContext context)
+    {
+
+        return context
+            .Tenants
+            .Select(x => x.Homepage!)
+            .AsQueryable()
+            .ProjectToPostResponse();
+    }
 
 
 }

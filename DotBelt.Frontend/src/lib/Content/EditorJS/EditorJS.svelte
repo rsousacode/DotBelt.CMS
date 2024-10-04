@@ -22,11 +22,17 @@
   onMount(async () => {
     const DragDrop = (await import("editorjs-drag-drop")).default;
     const editorJsModule = (await import('@editorjs/editorjs'));
+
     const EditorJS = editorJsModule.default;
     const List = (await import('@editorjs/list')).default;
     const Header = (await import('@editorjs/header')).default;
+    const Paragraph = (await import('@editorjs/paragraph')).default;
+
     const Underline = (await import('@editorjs/underline')).default;
     const Table = (await import('@editorjs/table')).default;
+
+    // import AlignmentTune from 'editor-js-alignment-tune';
+    const AlignmentTune = (await import('editor-js-alignment-tune')).default;
 
 
     editor = new EditorJS({
@@ -39,7 +45,6 @@
       /**
        * Id of Element that should contain the Editor
        */
-      placeholder: 'Let`s write an awesome story!',
 
       holder: 'editor-js',
 
@@ -54,6 +59,12 @@
        * Pass Tool's class or Settings object for each Tool you want to use
        */
       tools: {
+        paragraph: {
+          class: Paragraph,
+          tunes: ['alignmentTune'],
+          placeholder: 'Let`s write an awesome story!',
+
+        },
         repeater: Repeater,
         table: Table,
         underline: Underline,
@@ -67,8 +78,13 @@
         header: {
           inlineToolbar: true,
           class: Header,
-          shortcut: 'CMD+SHIFT+H'
-        }
+          shortcut: 'CMD+SHIFT+H',
+          tunes: ['alignmentTune']
+        },
+        alignmentTune: {
+          class: AlignmentTune,
+          inlineToolbar: true,
+        },
 
 
       }
