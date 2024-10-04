@@ -13,74 +13,110 @@
   import { setDashboardData, updateDashboardFragment } from '$lib/Dashboard/DashboardStore.svelte';
   import { apolloClientStore } from '$lib/API/GraphQL/apolloClientStore';
   import dayjs from 'dayjs';
+  import TrashIcon from '$lib/Utilities/Icons/TrashIcon.svelte';
+  import BoilerplateModal from '$lib/Utilities/Modal/BoilerplateModal.svelte';
+  import { ModalType } from '$lib/Utilities/Modal/ModalType';
+  import { gql } from '@apollo/client/core';
+  import type { FetchPolicy } from '@apollo/client/core/index.js';
 
   let postsResult: Maybe<PostsConnection> | undefined = $state(undefined);
-    let postsPerPage = $state(5);
+  let postsPerPage = $state(5);
 
-    let postType : string = $state("post");
+  let postType: string = $state('post');
 
-    function initialization() {
-      const type = $page.url.searchParams.get("type");
+  function initialization() {
+    const type = $page.url.searchParams.get('type');
 
-      if(type) {
-        postType = type;
-      } else {
-        console.error("Unable to retrieve post type")
+    if (type) {
+      postType = type;
+    } else {
+      console.error('Unable to retrieve post type');
+    }
+
+    setDashboardData({ title: postType === 'post' ? 'Posts' : 'Pages', subtitle: '' });
+    updateDashboardFragment(newPostButton);
+  }
+
+  onMount(() => {
+    initialization();
+  });
+
+  async function fetchPosts(postType: string, variables: PaginationQuery, fetchPolicy: FetchPolicy) {
+    const apolloClient = apolloClientStore.getClient();
+    if (!apolloClient) {
+      console.error('API Client not available');
+      return;
+    }
+    postsResult = await getPosts(apolloClient, postType.toUpperCase() as PostTypeEnum, variables, fetchPolicy);
+  }
+
+  async function fetchFirstPage(fetchPolicy: FetchPolicy = 'cache-first') {
+    await fetchPosts(postType, {
+      first: postsPerPage,
+      last: undefined,
+      before: undefined,
+      after: undefined
+    }, fetchPolicy);
+  }
+
+  afterNavigate(async () => {
+    initialization();
+    if (postType) {
+      await fetchFirstPage();
+    }
+  });
+
+  async function onNextPageClicked() {
+    if (!postsResult) return;
+    if (postType) {
+      await fetchPosts(postType, {
+        first: postsPerPage,
+        last: undefined,
+        before: undefined,
+        after: postsResult.pageInfo.endCursor
+      }, 'cache-first');
+    }
+  }
+
+
+  async function onPreviousPageClicked() {
+    if (!postsResult) return;
+    if (postType) {
+      await fetchPosts(postType, {
+        first: undefined,
+        last: postsPerPage,
+        before: postsResult.pageInfo.startCursor,
+        after: undefined
+      }, 'cache-first');
+    }
+  }
+
+  let postToDeleteId : Maybe<number> = $state();
+
+  let confirmDeletionModal : BoilerplateModal;
+
+  function onClickDeletePost(toDeleteId: Maybe<number> | undefined) {
+    if(!toDeleteId) return;
+    postToDeleteId = toDeleteId;
+    confirmDeletionModal.openModal();
+  }
+
+  async function deletePost() {
+    const client = apolloClientStore.getClient();
+
+    const mutation = gql
+      `mutation deletePost($id: Int!) {
+        deletePost(input: {id: $id }) {
+          deletedPostResult {
+            success
+          }
       }
+    }`;
 
-      setDashboardData({title: postType === "post" ? "Posts" : "Pages", subtitle: ""})
-      updateDashboardFragment(newPostButton);
-    }
+    await client.mutate({mutation: mutation, variables: {id: postToDeleteId}});
+    await fetchFirstPage('network-only');
 
-    onMount(() => {
-      initialization();
-    })
-
-    async function fetchPosts(postType: string, variables: PaginationQuery) {
-        const apolloClient = apolloClientStore.getClient();
-        if (!apolloClient) {
-            console.error("API Client not available");
-            return;
-        }
-        postsResult = await getPosts(apolloClient, postType.toUpperCase() as PostTypeEnum, variables);
-    }
-
-    afterNavigate(async () => {
-      initialization();
-        if (postType) {
-            await fetchPosts(postType, {
-                first: postsPerPage,
-                last: undefined,
-                before: undefined,
-                after: undefined,
-            });
-        }
-    });
-
-    async function onNextPageClicked() {
-        if (!postsResult) return;
-        if (postType) {
-            await fetchPosts(postType, {
-                first: postsPerPage,
-                last: undefined,
-                before: undefined,
-                after: postsResult.pageInfo.endCursor,
-            });
-        }
-    }
-
-
-    async function onPreviousPageClicked() {
-        if (!postsResult) return;
-        if (postType) {
-            await fetchPosts(postType, {
-                first: undefined,
-                last: postsPerPage,
-                before: postsResult.pageInfo.startCursor,
-                after: undefined,
-            });
-        }
-    }
+  }
 </script>
 
 <svelte:head>
@@ -88,12 +124,17 @@
 </svelte:head>
 
 {#snippet newPostButton()}
-  <a href={`/my-admin/posts/new?type=${$page.url.searchParams.get("type")}`} class="btn btn-primary" type="button" >
+  <a href={`/my-admin/posts/new?type=${$page.url.searchParams.get("type")}`} class="btn btn-primary" type="button">
     Add new
   </a>
 
 {/snippet}
+<BoilerplateModal modalType={ModalType.Action}
+               bind:this={confirmDeletionModal}
+               onModalConfirm={deletePost}>
 
+  <p>Are you sure ?</p>
+</BoilerplateModal>
 <DashboardContainer>
   {#if postsResult}
     <div class="table-responsive mt-4">
@@ -109,7 +150,7 @@
         </thead>
         <tbody>
 
-        {#if postsResult?.nodes?.length &&  postsResult.nodes.length > 0}
+        {#if postsResult?.nodes?.length && postsResult.nodes.length > 0}
           {#each postsResult.nodes as post}
             <tr>
               <td>{post.title === "" ? "No title" : post.title}</td>
@@ -118,11 +159,12 @@
               <td>{post.author?.userName}</td>
               <td class="table-actions">
                 <a href={`/my-admin/posts/${post.id}`} target="_blank" class="cms-action-icon">
-                  <EditIcon/>
+                  <EditIcon />
                 </a>
                 <a class="cms-action-icon" target="_blank" href={`/${post.relativeUrl}`}>
-                  <ViewPublishedIcon/>
+                  <ViewPublishedIcon />
                 </a>
+                <button class="cms-action-icon clear-button" onclick={() => onClickDeletePost(post.id)}><TrashIcon/></button>
               </td>
             </tr>
           {/each}
@@ -144,12 +186,13 @@
 </DashboardContainer>
 
 <style>
-    .table-actions {
-        display: flex;
-    }
-    .cms-action-icon {
-        font-size: 20px;
-        padding: 3px;
-        color: inherit;
-    }
+  .table-actions {
+    display: flex;
+  }
+
+  .cms-action-icon {
+    font-size: 20px;
+    padding: 3px;
+    color: inherit;
+  }
 </style>

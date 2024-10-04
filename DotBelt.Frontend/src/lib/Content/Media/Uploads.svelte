@@ -143,7 +143,7 @@
   }
 
   function onClickImageDefaultMode(image: ThumbnailResponse) {
-    if (!thumbnails) {
+    if (!thumbnails || !image.uploadId) {
       return;
     }
     mediaPopup.openMediaPopup(image.uploadId, thumbnails);
@@ -151,6 +151,8 @@
   }
 
   function onClickImageSelectionMode(image: ThumbnailResponse) {
+    if(!image || !image.uploadId) return;
+
     if (selectedImages) {
       if (selectedImages.includes(image.uploadId)) {
         selectedImages = selectedImages.filter(x => x !== image.uploadId);
@@ -172,8 +174,8 @@
   }
 
 
-  function imageIsSelected(imageId: number) {
-    return selectedImages?.length && selectedImages.includes(imageId);
+  function imageIsSelected(imageId: Maybe<number> | undefined) {
+    return selectedImages?.length && imageId && selectedImages.includes(imageId);
   }
 
   async function deleteFiles() {

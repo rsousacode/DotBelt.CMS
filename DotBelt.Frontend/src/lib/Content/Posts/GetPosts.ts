@@ -4,7 +4,7 @@ import {
   type PostsConnection,
   PostTypeEnum,
 } from '$lib/API/GraphQL/generated';
-import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core/index.js';
+import type { ApolloClient, FetchPolicy, NormalizedCacheObject } from '@apollo/client/core/index.js';
 import { gql } from '@apollo/client/core/index.js';
 import type { PaginationQuery } from '$lib/API/GraphQL/PaginationQuery';
 
@@ -12,6 +12,7 @@ export async function getPosts(
   client: ApolloClient<NormalizedCacheObject>,
   type: PostTypeEnum,
   pagination: PaginationQuery,
+  fetchPolicy: FetchPolicy
 ): Promise<Maybe<PostsConnection | undefined>> {
   const query = gql`
     query GetPosts($type: PostTypeEnum!, $first: Int, $last: Int, $before: String, $after: String) {
@@ -48,6 +49,7 @@ export async function getPosts(
     data: { posts }
   } = await client.query<DotBeltQuery>({
     query: query,
+    fetchPolicy: fetchPolicy,
     variables: {
       type: type,
       last: pagination.last,

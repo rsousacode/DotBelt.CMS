@@ -6,15 +6,16 @@
   import {ModalType} from "$lib/Utilities/Modal/ModalType";
 
   type Props = {
-    showPopup: boolean,
-    onModalConfirm: (...params: any) => any,
+    onModalConfirm: () => void,
     children: Snippet,
     modalType: ModalType,
   }
+
+  let showPopup = $state(false);
+
   let {
     onModalConfirm,
     children,
-    showPopup = false,
     modalType
   }: Props = $props();
 

@@ -25,18 +25,28 @@ type CreatePostPayload {
   postResponse: PostResponse
 }
 
+type DeletePostPayload {
+  deletedPostResult: DeletedPostResult
+}
+
 type DeleteUploadsPayload {
   removeUploadsResult: RemoveUploadsResult
+}
+
+type DeletedPostResult {
+  success: Boolean!
 }
 
 type DotBeltMutation {
   editPost(input: EditPostInput!): EditPostPayload! @authorize
   createPost(input: CreatePostInput!): CreatePostPayload! @authorize
+  deletePost(input: DeletePostInput!): DeletePostPayload! @authorize
   deleteUploads(input: DeleteUploadsInput!): DeleteUploadsPayload! @authorize
 }
 
 type DotBeltQuery {
   posts("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: PostResponseFilterInput order: [PostResponseSortInput!]): PostsConnection
+  publishedPosts: [PostResponse!]!
   postById(id: Int!): [PostResponse!]! @authorize
   postByUrl(url: String!): [PostResponse!]!
   taxonomies("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: TaxonomyFilterInput order: [TaxonomySortInput!]): TaxonomiesConnection
@@ -191,6 +201,8 @@ type Tenant {
   id: Int!
   name: String!
   fullUrl: String!
+  homepageId: Int
+  homepage: Post
   allowedFileTypes: [String!]!
   posts: [Post!]!
   taxonomies: [Taxonomy!]!
@@ -378,6 +390,10 @@ input DateTimeOperationFilterInput {
   nlte: DateTime
 }
 
+input DeletePostInput {
+  id: Int!
+}
+
 input DeleteUploadsInput {
   uploadIds: [Int!]!
 }
@@ -528,6 +544,28 @@ input PostResponseSortInput {
   status: SortEnumType
 }
 
+input PostSortInput {
+  id: SortEnumType
+  title: SortEnumType
+  description: SortEnumType
+  relativeUrl: SortEnumType
+  inTrash: SortEnumType
+  fullUrl: SortEnumType
+  content: SortEnumType
+  publishDate: SortEnumType
+  modifiedDate: SortEnumType
+  author: ApplicationUserSortInput
+  authorId: SortEnumType
+  postType: SortEnumType
+  parentPost: PostSortInput
+  parentPostId: SortEnumType
+  status: SortEnumType
+  tenant: TenantSortInput
+  tenantId: SortEnumType
+  featuredImage: UploadSortInput
+  featuredImageId: SortEnumType
+}
+
 input PostStatusOperationFilterInput {
   eq: PostStatus
   neq: PostStatus
@@ -635,6 +673,8 @@ input TenantFilterInput {
   id: IntOperationFilterInput
   name: StringOperationFilterInput
   fullUrl: StringOperationFilterInput
+  homepageId: IntOperationFilterInput
+  homepage: PostFilterInput
   allowedFileTypes: ListStringOperationFilterInput
   posts: ListFilterInputTypeOfPostFilterInput
   taxonomies: ListFilterInputTypeOfTaxonomyFilterInput
@@ -644,6 +684,8 @@ input TenantSortInput {
   id: SortEnumType
   name: SortEnumType
   fullUrl: SortEnumType
+  homepageId: SortEnumType
+  homepage: PostSortInput
 }
 
 input ThumbnailFilterInput {
@@ -761,6 +803,27 @@ input UploadResponseSortInput {
   modifiedDate: SortEnumType
   metaData: SortEnumType
   author: UserResponseSortInput
+}
+
+input UploadSortInput {
+  id: SortEnumType
+  title: SortEnumType
+  description: SortEnumType
+  altText: SortEnumType
+  caption: SortEnumType
+  fileName: SortEnumType
+  mimeType: SortEnumType
+  length: SortEnumType
+  author: ApplicationUserSortInput
+  authorId: SortEnumType
+  relativeUrl: SortEnumType
+  fullUrl: SortEnumType
+  inTrash: SortEnumType
+  publishDate: SortEnumType
+  modifiedDate: SortEnumType
+  tenant: TenantSortInput
+  tenantId: SortEnumType
+  metaData: SortEnumType
 }
 
 input UserResponseFilterInput {

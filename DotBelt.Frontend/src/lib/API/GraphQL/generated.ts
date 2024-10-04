@@ -109,6 +109,15 @@ export type DateTimeOperationFilterInput = {
   nlte?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
+export type DeletePostInput = {
+  id: Scalars['Int']['input'];
+};
+
+export type DeletePostPayload = {
+  __typename?: 'DeletePostPayload';
+  deletedPostResult?: Maybe<DeletedPostResult>;
+};
+
 export type DeleteUploadsInput = {
   uploadIds: Array<Scalars['Int']['input']>;
 };
@@ -118,9 +127,15 @@ export type DeleteUploadsPayload = {
   removeUploadsResult?: Maybe<RemoveUploadsResult>;
 };
 
+export type DeletedPostResult = {
+  __typename?: 'DeletedPostResult';
+  success: Scalars['Boolean']['output'];
+};
+
 export type DotBeltMutation = {
   __typename?: 'DotBeltMutation';
   createPost: CreatePostPayload;
+  deletePost: DeletePostPayload;
   deleteUploads: DeleteUploadsPayload;
   editPost: EditPostPayload;
 };
@@ -128,6 +143,11 @@ export type DotBeltMutation = {
 
 export type DotBeltMutationCreatePostArgs = {
   input: CreatePostInput;
+};
+
+
+export type DotBeltMutationDeletePostArgs = {
+  input: DeletePostInput;
 };
 
 
@@ -145,6 +165,7 @@ export type DotBeltQuery = {
   postById: Array<PostResponse>;
   postByUrl: Array<PostResponse>;
   posts?: Maybe<PostsConnection>;
+  publishedPosts: Array<PostResponse>;
   session: SessionData;
   taxonomies?: Maybe<TaxonomiesConnection>;
   taxonomyById: Array<Taxonomy>;
@@ -428,6 +449,28 @@ export type PostResponseSortInput = {
   title?: InputMaybe<SortEnumType>;
 };
 
+export type PostSortInput = {
+  author?: InputMaybe<ApplicationUserSortInput>;
+  authorId?: InputMaybe<SortEnumType>;
+  content?: InputMaybe<SortEnumType>;
+  description?: InputMaybe<SortEnumType>;
+  featuredImage?: InputMaybe<UploadSortInput>;
+  featuredImageId?: InputMaybe<SortEnumType>;
+  fullUrl?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  inTrash?: InputMaybe<SortEnumType>;
+  modifiedDate?: InputMaybe<SortEnumType>;
+  parentPost?: InputMaybe<PostSortInput>;
+  parentPostId?: InputMaybe<SortEnumType>;
+  postType?: InputMaybe<SortEnumType>;
+  publishDate?: InputMaybe<SortEnumType>;
+  relativeUrl?: InputMaybe<SortEnumType>;
+  status?: InputMaybe<SortEnumType>;
+  tenant?: InputMaybe<TenantSortInput>;
+  tenantId?: InputMaybe<SortEnumType>;
+  title?: InputMaybe<SortEnumType>;
+};
+
 export enum PostStatus {
   Draft = 'DRAFT',
   Published = 'PUBLISHED',
@@ -645,6 +688,8 @@ export type Tenant = {
   __typename?: 'Tenant';
   allowedFileTypes: Array<Scalars['String']['output']>;
   fullUrl: Scalars['String']['output'];
+  homepage?: Maybe<Post>;
+  homepageId?: Maybe<Scalars['Int']['output']>;
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   posts: Array<Post>;
@@ -655,6 +700,8 @@ export type TenantFilterInput = {
   allowedFileTypes?: InputMaybe<ListStringOperationFilterInput>;
   and?: InputMaybe<Array<TenantFilterInput>>;
   fullUrl?: InputMaybe<StringOperationFilterInput>;
+  homepage?: InputMaybe<PostFilterInput>;
+  homepageId?: InputMaybe<IntOperationFilterInput>;
   id?: InputMaybe<IntOperationFilterInput>;
   name?: InputMaybe<StringOperationFilterInput>;
   or?: InputMaybe<Array<TenantFilterInput>>;
@@ -672,6 +719,8 @@ export type TenantResponse = {
 
 export type TenantSortInput = {
   fullUrl?: InputMaybe<SortEnumType>;
+  homepage?: InputMaybe<PostSortInput>;
+  homepageId?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   name?: InputMaybe<SortEnumType>;
 };
@@ -857,6 +906,27 @@ export type UploadResponseSortInput = {
   modifiedDate?: InputMaybe<SortEnumType>;
   publishDate?: InputMaybe<SortEnumType>;
   relativeUrl?: InputMaybe<SortEnumType>;
+  title?: InputMaybe<SortEnumType>;
+};
+
+export type UploadSortInput = {
+  altText?: InputMaybe<SortEnumType>;
+  author?: InputMaybe<ApplicationUserSortInput>;
+  authorId?: InputMaybe<SortEnumType>;
+  caption?: InputMaybe<SortEnumType>;
+  description?: InputMaybe<SortEnumType>;
+  fileName?: InputMaybe<SortEnumType>;
+  fullUrl?: InputMaybe<SortEnumType>;
+  id?: InputMaybe<SortEnumType>;
+  inTrash?: InputMaybe<SortEnumType>;
+  length?: InputMaybe<SortEnumType>;
+  metaData?: InputMaybe<SortEnumType>;
+  mimeType?: InputMaybe<SortEnumType>;
+  modifiedDate?: InputMaybe<SortEnumType>;
+  publishDate?: InputMaybe<SortEnumType>;
+  relativeUrl?: InputMaybe<SortEnumType>;
+  tenant?: InputMaybe<TenantSortInput>;
+  tenantId?: InputMaybe<SortEnumType>;
   title?: InputMaybe<SortEnumType>;
 };
 

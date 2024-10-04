@@ -20,7 +20,7 @@
 
   type UploadSelectedCallback = (upload: UploadResponse) => void;
 
-  type Props = {context: UploadsContext, onOneImageSelected: UploadSelectedCallback | undefined}
+  type Props = {context: UploadsContext, onOneImageSelected?: UploadSelectedCallback | undefined}
 
   let {context } : Props = $props();
 

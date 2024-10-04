@@ -5,7 +5,7 @@ import {
 import type { ApolloClient, NormalizedCacheObject } from '@apollo/client/core/index.js';
 import { gql } from '@apollo/client/core/index.js';
 
-export async function createPost(
+export async function createPostSvelte(
   client: ApolloClient<NormalizedCacheObject>,
   input: PostResponseInput,
   type: PostTypeEnum,
@@ -29,6 +29,7 @@ export async function createPost(
     }
   `;
 
+  console.log('create post', input.relativeUrl);
   const { data, errors } = await client.mutate<DotBeltMutation>({
     mutation: mutation,
     variables: { input: input, type: type },

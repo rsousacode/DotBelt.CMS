@@ -1,6 +1,8 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import {
+    type Maybe,
+    type PostResponse,
     type PostResponseInput,
     PostStatus,
     PostTypeEnum,
@@ -18,22 +20,33 @@
   import AceEditor from '$lib/Utilities/AceEditor.svelte';
   import Uploads from '$lib/Content/Media/Uploads.svelte';
   import { apolloClientStore } from '$lib/API/GraphQL/apolloClientStore';
-  import { createPost } from '$lib/Content/Posts/CreatePost';
+  import { createPostSvelte } from '$lib/Content/Posts/CreatePost.svelte';
   import { page } from '$app/stores';
-  import { editPost } from '$lib/Content/Posts/EditPost';
+  import { editPost } from '$lib/Content/Posts/EditPost.svelte';
   import PostEditorSidebarItem from '$lib/Content/Posts/PostEditorSidebarItem.svelte';
   import PreviewIcon from '$lib/Utilities/Icons/PreviewIcon.svelte';
   import HTML5DateTimeInput from '$lib/Utilities/HTML5DateTimeInput.svelte';
-  import { PostSvelte } from '$lib/Content/Posts/Post.svelte';
 
-  type Props = { post?: PostSvelte, tenant: TenantResponse }
+  type Props = { post?: Maybe<PostResponse>, tenant: TenantResponse }
 
   let {
     tenant,
-    post = new PostSvelte()
+    post
   }: Props = $props();
 
-  let postData = $state(new PostSvelte());
+  let postData : PostResponseInput = $state({
+    id: 0,
+    title: "",
+    status:  PostStatus.Draft,
+    relativeUrl:  "",
+    description:  "",
+    content:   "{}",
+    featuredImage: {relativeUrl: ""},
+    fullUrl: undefined,
+    publishDate: new Date(), // Reactive yay
+    modifiedDate:new Date(),
+    featuredImageId: undefined
+  });
 
   type EditorMode = 'editor' | 'code';
 
@@ -51,12 +64,13 @@
 
   let postDateIsInFuture = $derived(postDate > currentDate);
 
-
   onMount(() => {
     updateDashboardFragment(saveButton);
-    postData = post as PostSvelte;
-    postData.featuredImage = post.featuredImage
-    postData.featuredImageId = postData.featuredImageId
+
+    if(post) {
+      postData = post;
+    }
+
   });
 
 
@@ -84,10 +98,14 @@
 
     const postType = $page.url.searchParams.get('type')?.toUpperCase() as PostTypeEnum;
 
-    const postResponse = await createPost(client, postData as PostResponseInput, postType);
+    console.log('postdata', postData);
+    console.log('sna', $state.snapshot(postData));
+
+
+    const postResponse = await createPostSvelte(client, postData as PostResponseInput, postType);
 
     if (postResponse) {
-      postData = postResponse as PostSvelte;
+      postData = postResponse ;
       successFeedbackIcon.triggerComponent2();
       await goto('/my-admin/posts/' + postResponse.id);
     }
@@ -100,7 +118,7 @@
     if (postData.id) {
       const postResponse = await editPost(client, postData.id, postData as PostResponseInput);
       if (postResponse) {
-        postData = postResponse as PostSvelte;
+        postData = postResponse ;
         console.log(postResponse)
         successFeedbackIcon.triggerComponent2();
       }
@@ -167,7 +185,7 @@
       <BlocksIcon />
     {/if}
   </button>
-  <a href={`/${post.relativeUrl}`} target="_blank" style="font-size: 29px" class="dashboard-icon clear-button">
+  <a href={`/${postData.relativeUrl}`} target="_blank" style="font-size: 29px" class="dashboard-icon clear-button">
     <PreviewIcon />
   </a>
 {/snippet}
