@@ -1,28 +1,28 @@
 <script lang="ts">
 
-  import {onDestroy, onMount, setContext} from "svelte";
-  import Repeater from "$lib/Content/EditorJS/Blocks/repeater/index.svelte.js";
+  import { onDestroy, onMount, setContext } from 'svelte';
+  import Repeater from '$lib/Content/EditorJS/Blocks/repeater/index.svelte.js';
 
   let { content = $bindable() } = $props();
 
-let editor : unknown | undefined = undefined;
+  let editor: unknown | undefined = undefined;
 
-setContext('EditorJS', getData);
+  setContext('EditorJS', getData);
 
-export async function getData() {
-  return await editor.save();
-}
-
-onDestroy(() => {
-  if(editor) {
-      editor.destroy();
+  export async function getData() {
+    return await editor.save();
   }
-})
+
+  onDestroy(() => {
+    if (editor) {
+      editor.destroy();
+    }
+  });
 
   onMount(async () => {
+    const DragDrop = (await import("editorjs-drag-drop")).default;
     const editorJsModule = (await import('@editorjs/editorjs'));
-    const LogLevels = editorJsModule.LogLevels;
-    const EditorJS = editorJsModule.default ;
+    const EditorJS = editorJsModule.default;
     const List = (await import('@editorjs/list')).default;
     const Header = (await import('@editorjs/header')).default;
     const Underline = (await import('@editorjs/underline')).default;
@@ -33,7 +33,7 @@ onDestroy(() => {
       logLevel: 'ERROR',
 
       onChange: async () => {
-          content = JSON.stringify(await getData(), undefined, 2);
+        content = JSON.stringify(await getData(), undefined, 2);
       },
 
       /**
@@ -45,30 +45,35 @@ onDestroy(() => {
 
       data: JSON.parse(content),
 
+      onReady: () => {
+        new DragDrop(editor, "2px solid #fff")
+      },
+
       /**
        * Available Tools list.
        * Pass Tool's class or Settings object for each Tool you want to use
        */
       tools: {
-          repeater: Repeater,
-          table: Table,
-          underline: Underline,
-          list: {
-              class: List,
-              inlineToolbar: true,
-              config: {
-                  defaultStyle: 'unordered'
-              }
-          },
-          header: {
-              class: Header,
-              shortcut: 'CMD+SHIFT+H',
-          },
+        repeater: Repeater,
+        table: Table,
+        underline: Underline,
+        list: {
+          class: List,
+          inlineToolbar: true,
+          config: {
+            defaultStyle: 'unordered'
+          }
+        },
+        header: {
+          inlineToolbar: true,
+          class: Header,
+          shortcut: 'CMD+SHIFT+H'
+        }
 
 
-      },
-    })
-  })
+      }
+    });
+  });
 
 </script>
 

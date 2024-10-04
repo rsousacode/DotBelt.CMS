@@ -16,7 +16,8 @@
   function onDragEnter(e: DragEvent) {
     e.preventDefault();
     if (e.dataTransfer === null) return;
-
+    const files = Array.from(e.dataTransfer.files);
+    if(!files.length) return;
     uploadOverlayOpen = true;
     filesInArea = true;
     //dropZone.classList.add(hoverClassName);
@@ -63,6 +64,7 @@
     if (e.dataTransfer === null) return;
 
     const files = Array.from(e.dataTransfer.files);
+    if(!files.length) return;
 
     handleUploads(files);
   }

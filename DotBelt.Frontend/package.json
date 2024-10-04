@@ -38,6 +38,7 @@
     "ace-code": "^1.36.2",
     "bootstrap": "5.3.3",
     "convert-size": "^1.2.1",
+    "editorjs-drag-drop": "^1.1.16",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-svelte": "^2.36.0",

@@ -38,3 +38,22 @@
 .ce-inline-tool {
   color: var(--bs-body-color);
 }
+
+.ce-inline-tool-input {
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+@media (hover: hover) {
+  .ce-inline-tool:hover {
+    background-color: var(--bs-focus-ring-color);
+  }
+}
+
+.tc-add-column:hover, .tc-add-row:hover {
+  background-color: var(--bs-focus-ring-color) !important;
+}
+
+.tc-popover, .tc-cell--selected  {
+  --color-background: var(--bs-body-bg) !important;
+}
