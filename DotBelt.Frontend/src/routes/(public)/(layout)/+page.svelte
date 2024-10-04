@@ -1,13 +1,23 @@
 <script lang="ts">
+  import {page} from "$app/stores";
+  import {SITE_NAME} from "$lib/constants";
+  import PublicBlocksRenderer from "$lib/Content/EditorJS/Blocks/PublicBlocksRenderer.svelte";
 
-  import { SITE_NAME } from '$lib/constants';
+  let { data: { post, content } } = $page;
 
 </script>
 
-
 <svelte:head>
-  <title>{SITE_NAME} </title>
+  <title>{post.title} - {SITE_NAME} </title>
 </svelte:head>
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
 
+<div class="post-content-container container-fluid">
+  <div class="post-title-section">
+    <h1>{post.title}</h1>
+  </div>
+
+  <div class="post-content">
+    <PublicBlocksRenderer blocksData={content} />
+  </div>
+
+</div>

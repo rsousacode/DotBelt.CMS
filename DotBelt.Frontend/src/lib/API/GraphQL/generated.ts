@@ -162,6 +162,7 @@ export type DotBeltMutationEditPostArgs = {
 
 export type DotBeltQuery = {
   __typename?: 'DotBeltQuery';
+  homepage: Array<PostResponse>;
   postById: Array<PostResponse>;
   postByUrl: Array<PostResponse>;
   posts?: Maybe<PostsConnection>;

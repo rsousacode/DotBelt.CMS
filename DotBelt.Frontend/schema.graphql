@@ -49,6 +49,7 @@ type DotBeltQuery {
   publishedPosts: [PostResponse!]!
   postById(id: Int!): [PostResponse!]! @authorize
   postByUrl(url: String!): [PostResponse!]!
+  homepage: [PostResponse!]!
   taxonomies("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: TaxonomyFilterInput order: [TaxonomySortInput!]): TaxonomiesConnection
   taxonomyById(id: Int!): [Taxonomy!]!
   users("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: UserResponseFilterInput order: [UserResponseSortInput!]): UsersConnection

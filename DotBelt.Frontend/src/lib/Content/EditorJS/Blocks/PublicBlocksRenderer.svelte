@@ -5,6 +5,7 @@
   import {onMount} from "svelte";
   import ListPublicBlock from '$lib/Content/EditorJS/Blocks/list/ListPublicBlock.svelte';
   import RepeaterPublicBlock from '$lib/Content/EditorJS/Blocks/repeater/RepeaterPublicBlock.svelte';
+  import TablePublicBlock from "$lib/Content/EditorJS/Blocks/table/TablePublicBlock.svelte";
 
   let {blocksData}: Props = $props();
   type Props = { blocksData: BlocksData };
@@ -21,8 +22,9 @@
     <HeadingPublicBlock block={block.data}/>
   {:else if block.type === 'list'}
     <ListPublicBlock block={block.data}/>
+  {:else if block.type === 'table'}
+    <TablePublicBlock block={block.data}/>
   {:else if block.type === 'repeater'}
     <RepeaterPublicBlock block={block.data}/>
   {/if}
-
 {/each}
