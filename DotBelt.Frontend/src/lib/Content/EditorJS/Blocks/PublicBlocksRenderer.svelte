@@ -3,6 +3,7 @@
   import ParagraphPublicBlock from "$lib/Content/EditorJS/Blocks/paragraph/ParagraphPublicBlock.svelte";
   import HeadingPublicBlock from "$lib/Content/EditorJS/Blocks/heading/HeadingPublicBlock.svelte";
   import {onMount} from "svelte";
+  import ListPublicBlock from '$lib/Content/EditorJS/Blocks/list/ListPublicBlock.svelte';
 
   let {blocksData}: Props = $props();
   type Props = { blocksData: BlocksData };
@@ -17,5 +18,8 @@
     <ParagraphPublicBlock block={block.data}/>
   {:else if block.type === 'header'}
     <HeadingPublicBlock block={block.data}/>
+  {:else if block.type === 'list'}
+    <ListPublicBlock block={block.data}/>
+    
   {/if}
 {/each}

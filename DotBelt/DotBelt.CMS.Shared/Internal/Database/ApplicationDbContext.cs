@@ -21,6 +21,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.ApplyConfiguration(new PostTypeConfiguration());
         modelBuilder.ApplyConfiguration(new TaxonomyConfiguration());
         modelBuilder.ApplyConfiguration(new UploadConfiguration());
+        modelBuilder.ApplyConfiguration(new TenantConfiguration());
         
         modelBuilder.HasPostgresExtension("uuid-ossp");        
         

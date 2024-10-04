@@ -70,21 +70,6 @@ namespace DotBelt.CMS.Shared.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tenants",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    FullUrl = table.Column<string>(type: "text", nullable: false),
-                    AllowedFileTypes = table.Column<string[]>(type: "text[]", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tenants", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -191,6 +176,64 @@ namespace DotBelt.CMS.Shared.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Posts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    RelativeUrl = table.Column<string>(type: "text", nullable: false),
+                    InTrash = table.Column<bool>(type: "boolean", nullable: true),
+                    FullUrl = table.Column<string>(type: "text", nullable: true),
+                    Content = table.Column<string>(type: "jsonb", nullable: true),
+                    PublishDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    AuthorId = table.Column<int>(type: "integer", nullable: false),
+                    PostType = table.Column<string>(type: "text", nullable: false),
+                    ParentPostId = table.Column<int>(type: "integer", nullable: true),
+                    Status = table.Column<string>(type: "text", nullable: false),
+                    TenantId = table.Column<int>(type: "integer", nullable: false),
+                    FeaturedImageId = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Posts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Posts_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Posts_Posts_ParentPostId",
+                        column: x => x.ParentPostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tenants",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    FullUrl = table.Column<string>(type: "text", nullable: false),
+                    HomepageId = table.Column<int>(type: "integer", nullable: true),
+                    AllowedFileTypes = table.Column<string[]>(type: "text[]", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tenants", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tenants_Posts_HomepageId",
+                        column: x => x.HomepageId,
+                        principalTable: "Posts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Taxonomies",
                 columns: table => new
                 {
@@ -265,51 +308,27 @@ namespace DotBelt.CMS.Shared.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Posts",
+                name: "PostTaxonomy",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    RelativeUrl = table.Column<string>(type: "text", nullable: false),
-                    InTrash = table.Column<bool>(type: "boolean", nullable: true),
-                    FullUrl = table.Column<string>(type: "text", nullable: true),
-                    Content = table.Column<string>(type: "jsonb", nullable: true),
-                    PublishDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    ModifiedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    AuthorId = table.Column<int>(type: "integer", nullable: false),
-                    PostType = table.Column<string>(type: "text", nullable: false),
-                    ParentPostId = table.Column<int>(type: "integer", nullable: true),
-                    Status = table.Column<string>(type: "text", nullable: false),
-                    TenantId = table.Column<int>(type: "integer", nullable: false),
-                    FeaturedImageId = table.Column<int>(type: "integer", nullable: true)
+                    PostsId = table.Column<int>(type: "integer", nullable: false),
+                    TaxonomiesId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Posts", x => x.Id);
+                    table.PrimaryKey("PK_PostTaxonomy", x => new { x.PostsId, x.TaxonomiesId });
                     table.ForeignKey(
-                        name: "FK_Posts_AspNetUsers_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Posts_Posts_ParentPostId",
-                        column: x => x.ParentPostId,
+                        name: "FK_PostTaxonomy_Posts_PostsId",
+                        column: x => x.PostsId,
                         principalTable: "Posts",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Posts_Tenants_TenantId",
-                        column: x => x.TenantId,
-                        principalTable: "Tenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Posts_Uploads_FeaturedImageId",
-                        column: x => x.FeaturedImageId,
-                        principalTable: "Uploads",
-                        principalColumn: "Id");
+                        name: "FK_PostTaxonomy_Taxonomies_TaxonomiesId",
+                        column: x => x.TaxonomiesId,
+                        principalTable: "Taxonomies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -333,30 +352,6 @@ namespace DotBelt.CMS.Shared.Migrations
                         name: "FK_Thumbnails_Uploads_UploadId",
                         column: x => x.UploadId,
                         principalTable: "Uploads",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PostTaxonomy",
-                columns: table => new
-                {
-                    PostsId = table.Column<int>(type: "integer", nullable: false),
-                    TaxonomiesId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PostTaxonomy", x => new { x.PostsId, x.TaxonomiesId });
-                    table.ForeignKey(
-                        name: "FK_PostTaxonomy_Posts_PostsId",
-                        column: x => x.PostsId,
-                        principalTable: "Posts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PostTaxonomy_Taxonomies_TaxonomiesId",
-                        column: x => x.TaxonomiesId,
-                        principalTable: "Taxonomies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -440,6 +435,12 @@ namespace DotBelt.CMS.Shared.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tenants_HomepageId",
+                table: "Tenants",
+                column: "HomepageId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Thumbnails_UploadId",
                 table: "Thumbnails",
                 column: "UploadId");
@@ -453,11 +454,42 @@ namespace DotBelt.CMS.Shared.Migrations
                 name: "IX_Uploads_TenantId",
                 table: "Uploads",
                 column: "TenantId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Posts_Tenants_TenantId",
+                table: "Posts",
+                column: "TenantId",
+                principalTable: "Tenants",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Posts_Uploads_FeaturedImageId",
+                table: "Posts",
+                column: "FeaturedImageId",
+                principalTable: "Uploads",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Posts_AspNetUsers_AuthorId",
+                table: "Posts");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Uploads_AspNetUsers_AuthorId",
+                table: "Uploads");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Posts_Tenants_TenantId",
+                table: "Posts");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Uploads_Tenants_TenantId",
+                table: "Uploads");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -486,19 +518,19 @@ namespace DotBelt.CMS.Shared.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Posts");
-
-            migrationBuilder.DropTable(
                 name: "Taxonomies");
-
-            migrationBuilder.DropTable(
-                name: "Uploads");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Tenants");
+
+            migrationBuilder.DropTable(
+                name: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "Uploads");
         }
     }
 }

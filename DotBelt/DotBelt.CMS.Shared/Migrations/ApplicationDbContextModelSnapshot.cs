@@ -285,11 +285,17 @@ namespace DotBelt.CMS.Shared.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("HomepageId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HomepageId")
+                        .IsUnique();
 
                     b.ToTable("Tenants");
                 });
@@ -586,6 +592,15 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.Navigation("Author");
 
                     b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("DotBelt.CMS.Shared.Tenants.Tenant", b =>
+                {
+                    b.HasOne("DotBelt.CMS.Shared.CMS.Post", "Homepage")
+                        .WithOne()
+                        .HasForeignKey("DotBelt.CMS.Shared.Tenants.Tenant", "HomepageId");
+
+                    b.Navigation("Homepage");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

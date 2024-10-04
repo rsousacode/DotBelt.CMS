@@ -4,6 +4,7 @@ using DotBelt.CMS.Shared;
 using DotBelt.CMS.Shared.ManualMigrations;
 using DotBelt.CMS.Shared.Users;
 using BoilerPlateSSR.Swagger;
+using DotBelt.CMS.Shared.CMS.Jobs;
 using DotBelt.CMS.Shared.CMS.Media;
 using DotBelt.CMS.Shared.Identity;
 using DotBelt.CMS.Shared.Internal;
@@ -20,10 +21,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
+using Quartz;
+using Quartz.Impl;
 using Serilog;
+using Serilog.Events;
 
 Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
     .WriteTo.Console()
+    .MinimumLevel.Override("Quartz", LogEventLevel.Warning)
     .CreateLogger();
 
 try
@@ -90,7 +96,23 @@ try
     services.AddTransient<IEmailSender<ApplicationUser>, IdentityEmailSender>();
     
     services.Configure<EmailOptions>(configuration.GetSection("EmailOptions"));
+
+    services.AddQuartz(q =>
+    {
+        q.InterruptJobsOnShutdownWithWait = false;
+        q.MaxBatchSize = 5;
+        q.CheckConfiguration = false;
+    });
     
+    services.AddQuartzHostedService(options =>
+    {
+        options.WaitForJobsToComplete = true;
+    });
+    
+    services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+
+    services.AddScoped<PublishPostJob>();
+
     var app = builder.Build();
 
     if (app.Environment.IsDevelopment())

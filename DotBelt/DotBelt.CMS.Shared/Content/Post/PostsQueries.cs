@@ -28,6 +28,14 @@ public class PostsQueries
             .ProjectToPostResponse();
     }
     
+     public IQueryable<PostResponse> GetPublishedPosts(ApplicationDbContext context)
+    {
+        return context
+            .Posts
+            .Where(x => x.Status == PostStatus.Published)
+            .ProjectToPostResponse();
+    }
+    
     
     [UseProjection]
     [Authorize]

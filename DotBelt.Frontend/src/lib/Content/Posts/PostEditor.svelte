@@ -1,9 +1,10 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import {
-    type PostResponse,
-    type PostResponseInput, PostStatus,
-    PostTypeEnum, type TenantResponse,
+    type PostResponseInput,
+    PostStatus,
+    PostTypeEnum,
+    type TenantResponse,
     type UploadResponse
   } from '$lib/API/GraphQL/generated';
   import { onMount } from 'svelte';
@@ -23,23 +24,16 @@
   import PostEditorSidebarItem from '$lib/Content/Posts/PostEditorSidebarItem.svelte';
   import PreviewIcon from '$lib/Utilities/Icons/PreviewIcon.svelte';
   import HTML5DateTimeInput from '$lib/Utilities/HTML5DateTimeInput.svelte';
+  import { PostSvelte } from '$lib/Content/Posts/Post.svelte';
 
-  type Props = { post?: PostResponse, tenant: TenantResponse }
+  type Props = { post?: PostSvelte, tenant: TenantResponse }
 
   let {
     tenant,
-    post = $bindable(
-      {
-        title: '',
-        status: PostStatus.Draft,
-        relativeUrl: '',
-        description: '',
-        content: '{}',
-        featuredImage: undefined
-      },
-
-    )
+    post = new PostSvelte()
   }: Props = $props();
+
+  let postData = $state(new PostSvelte());
 
   type EditorMode = 'editor' | 'code';
 
@@ -51,8 +45,18 @@
 
   let featuredImageElement: HTMLImageElement;
 
+  let currentDate = $derived(new Date());
+
+  let postDate = $derived(new Date(postData.publishDate));
+
+  let postDateIsInFuture = $derived(postDate > currentDate);
+
+
   onMount(() => {
     updateDashboardFragment(saveButton);
+    postData = post as PostSvelte;
+    postData.featuredImage = post.featuredImage
+    postData.featuredImageId = postData.featuredImageId
   });
 
 
@@ -71,7 +75,7 @@
   }
 
   function handlePermalinkChanged() {
-    post.relativeUrl = sanitizePermalink(post.relativeUrl);
+    postData.relativeUrl = sanitizePermalink(postData.relativeUrl);
   }
 
   async function createNewPost() {
@@ -80,14 +84,10 @@
 
     const postType = $page.url.searchParams.get('type')?.toUpperCase() as PostTypeEnum;
 
-    const postResponse = await createPost(client, post as PostResponseInput, postType);
+    const postResponse = await createPost(client, postData as PostResponseInput, postType);
 
     if (postResponse) {
-      post.relativeUrl = postResponse.relativeUrl;
-      post.fullUrl = postResponse.fullUrl;
-      post.publishDate = postResponse.publishDate;
-      post.modifiedDate = postResponse.modifiedDate;
-
+      postData = postResponse as PostSvelte;
       successFeedbackIcon.triggerComponent2();
       await goto('/my-admin/posts/' + postResponse.id);
     }
@@ -97,27 +97,20 @@
 
     const client = apolloClientStore.getClient();
 
-
-    if (post.id) {
-      const postResponse = await editPost(client, post.id, post as PostResponseInput);
-      console.log('post response [edit]', postResponse);
-
+    if (postData.id) {
+      const postResponse = await editPost(client, postData.id, postData as PostResponseInput);
       if (postResponse) {
-        post.relativeUrl = postResponse.relativeUrl;
-        post.fullUrl = postResponse.fullUrl;
-        post.publishDate = postResponse.publishDate;
-        post.modifiedDate = postResponse.modifiedDate;
+        postData = postResponse as PostSvelte;
+        console.log(postResponse)
         successFeedbackIcon.triggerComponent2();
       }
-    } else {
-      console.error('Post has no id');
     }
   }
 
   function onSwitchMode() {
-    if(post.content) {
-      const parsedToObject = JSON.parse(post.content);
-      post.content = JSON.stringify(parsedToObject ,null,2);
+    if (postData.content) {
+      const parsedToObject = JSON.parse(postData.content);
+      postData.content = JSON.stringify(parsedToObject, null, 2);
     }
 
     if (currentMode === 'code') {
@@ -129,22 +122,35 @@
 
 
   function onFeaturedImageSelected(upload: UploadResponse) {
-    post.featuredImage = { ...upload };
-    post.featuredImageId = upload.id;
+    postData.featuredImage = { ...upload };
+    postData.featuredImageId = upload.id;
     featuredImageElement.src = `/${upload.relativeUrl}`;
   }
 
   async function openFeatureImageSelection() {
-    await uploadsPanel.open(onFeaturedImageSelected, post.featuredImage?.id);
+    await uploadsPanel.open(onFeaturedImageSelected, postData.featuredImage?.id);
   }
 
   async function handleSubmit() {
-    if (!post.id) {
+    if (!postData.id) {
       await createNewPost();
     } else {
       await editExistingPost();
     }
   }
+
+  function onPublishDateChange() {
+    if (postDateIsInFuture) {
+      if(postData.status === PostStatus.Published) {
+        postData.status = PostStatus.Scheduled;
+      }
+    } else {
+      if (postData.status === PostStatus.Scheduled) {
+        postData.status = PostStatus.Published;
+      }
+    }
+  }
+
 </script>
 
 {#snippet saveButton()}
@@ -161,9 +167,9 @@
       <BlocksIcon />
     {/if}
   </button>
-  <button style="font-size: 29px" class="dashboard-icon">
+  <a href={`/${post.relativeUrl}`} target="_blank" style="font-size: 29px" class="dashboard-icon clear-button">
     <PreviewIcon />
-  </button>
+  </a>
 {/snippet}
 <form method="POST" action="" onsubmit={handleSubmit}>
   <div class="post-editor-container">
@@ -172,49 +178,55 @@
         <div class="permalink-editor-container">
           <span style="color: #919191;">{tenant.fullUrl}/</span>
           <input class="classy-input permalink-input" onchange={handlePermalinkChanged} type="text"
-                 placeholder="write-your-url" bind:value={post.relativeUrl}>
+                 placeholder="write-your-url" bind:value={postData.relativeUrl}>
         </div>
         <div>
           <input class="classy-input" type="text" placeholder="Write your title here"
-                 bind:value={post.title}>
+                 bind:value={postData.title}>
 
         </div>
       </div>
       <hr>
 
       {#if currentMode === 'editor'}
-        <EditorJS bind:content={post.content} />
+        <EditorJS bind:content={postData.content} />
       {:else}
-        <AceEditor bind:code={post.content} />
+        <AceEditor bind:code={postData.content} />
       {/if}
 
     </div>
     <div class="post-editor-sidebar-container">
       <PostEditorSidebarItem title="Options">
         <div class="form-control mt-2">
-          <label  class="form-label mt-3" for="">Publishing status</label>
-          <select bind:value={post.status} class="form-select" aria-label="publish status">
+          <label class="form-label mt-3" for="">Publishing status</label>
+          <select bind:value={postData.status} class="form-select" aria-label="publish status">
             <option value={PostStatus.Draft}>Draft</option>
-            <option value={PostStatus.Published}>Published</option>
+
+            {#if !postDateIsInFuture}
+              <option value={PostStatus.Published}>Published</option>
+            {:else}
+              <option value={PostStatus.Scheduled}>Scheduled</option>
+            {/if}
           </select>
           <div class="mt-4 mb-3">
             <label class="form-label" for="publish-date">Publishing Date</label>
-            <HTML5DateTimeInput bind:dateTime={post.publishDate}></HTML5DateTimeInput>
+            <HTML5DateTimeInput onchange={onPublishDateChange}
+                                bind:dateTime={postData.publishDate}></HTML5DateTimeInput>
           </div>
         </div>
       </PostEditorSidebarItem>
       <PostEditorSidebarItem cssClasses="featured-image-container" title="Featured image">
-          <button type="button" class="featured-image clear-button" onclick={openFeatureImageSelection}>
-            <img bind:this={featuredImageElement}
-                 src={post?.featuredImage?.relativeUrl ? `/${post.featuredImage.relativeUrl}` : "/images/placeholder-image.png"}
-                 alt="">
-          </button>
+        <button type="button" class="featured-image clear-button" onclick={openFeatureImageSelection}>
+          <img bind:this={featuredImageElement}
+               src={postData?.featuredImage?.relativeUrl ? `/${postData.featuredImage.relativeUrl}` : "/images/placeholder-image.png"}
+               alt="">
+        </button>
 
       </PostEditorSidebarItem>
 
       <PostEditorSidebarItem title="Description">
         <textarea
-          bind:value={post.description}
+          bind:value={postData.description}
           rows="3" class="form-control mt-2"
           id="exampleInputEmail1"
           placeholder="Short description about the post"

@@ -16,10 +16,12 @@ export async function editPost(
             relativeUrl
             content
             title
+            status
             description
             authorId
             publishDate
             modifiedDate
+            featuredImageId
             featuredImage {
               id
               relativeUrl

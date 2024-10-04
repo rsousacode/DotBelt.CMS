@@ -108,10 +108,10 @@ body {
 
 .panel-content-container {
     margin-left: 20px;
-    padding-left: 20px;
+    padding-left: 35px;
     flex-direction: column;
     max-height: 100% !important;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .panel-category {
@@ -296,6 +296,7 @@ body {
     text-align: left;
     background: transparent;
     padding: 0;
+    color: inherit;
 }
 
 .hide {

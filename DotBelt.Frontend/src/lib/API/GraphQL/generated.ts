@@ -430,7 +430,8 @@ export type PostResponseSortInput = {
 
 export enum PostStatus {
   Draft = 'DRAFT',
-  Published = 'PUBLISHED'
+  Published = 'PUBLISHED',
+  Scheduled = 'SCHEDULED'
 }
 
 export type PostStatusOperationFilterInput = {

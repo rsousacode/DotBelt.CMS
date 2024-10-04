@@ -1,24 +1,39 @@
 <script lang="ts">
-    import DashboardContainer from "$lib/Dashboard/DashboardContainer.svelte";
-    import {SITE_NAME} from "$lib/constants";
-    import {getPosts} from "$lib/Content/Posts/GetPosts";
-    import {type PostsConnection, PostTypeEnum} from "$lib/API/GraphQL/generated";
-    import type {Maybe} from "yup";
-    import EditIcon from "$lib/Utilities/Icons/EditIcon.svelte";
-    import ViewPublishedIcon from "$lib/Utilities/Icons/ViewPublishedIcon.svelte";
-    import {page} from "$app/stores";
-    import {afterNavigate} from "$app/navigation";
-    import type {PaginationQuery} from "$lib/API/GraphQL/PaginationQuery";
-    import {onMount} from "svelte";
-    import {setDashboardData, updateDashboardFragment} from "$lib/Dashboard/DashboardStore.svelte";
-    import {apolloClientStore} from "$lib/API/GraphQL/apolloClientStore";
+  import DashboardContainer from '$lib/Dashboard/DashboardContainer.svelte';
+  import { SITE_NAME } from '$lib/constants';
+  import { getPosts } from '$lib/Content/Posts/GetPosts';
+  import { type PostsConnection, PostTypeEnum } from '$lib/API/GraphQL/generated';
+  import type { Maybe } from 'yup';
+  import EditIcon from '$lib/Utilities/Icons/EditIcon.svelte';
+  import ViewPublishedIcon from '$lib/Utilities/Icons/ViewPublishedIcon.svelte';
+  import { page } from '$app/stores';
+  import { afterNavigate } from '$app/navigation';
+  import type { PaginationQuery } from '$lib/API/GraphQL/PaginationQuery';
+  import { onMount } from 'svelte';
+  import { setDashboardData, updateDashboardFragment } from '$lib/Dashboard/DashboardStore.svelte';
+  import { apolloClientStore } from '$lib/API/GraphQL/apolloClientStore';
+  import dayjs from 'dayjs';
 
-    let postsResult: Maybe<PostsConnection> | undefined = $state(undefined);
+  let postsResult: Maybe<PostsConnection> | undefined = $state(undefined);
     let postsPerPage = $state(5);
 
+    let postType : string = $state("post");
+
+    function initialization() {
+      const type = $page.url.searchParams.get("type");
+
+      if(type) {
+        postType = type;
+      } else {
+        console.error("Unable to retrieve post type")
+      }
+
+      setDashboardData({title: postType === "post" ? "Posts" : "Pages", subtitle: ""})
+      updateDashboardFragment(newPostButton);
+    }
+
     onMount(() => {
-        setDashboardData({title: "Posts", subtitle: ""})
-        updateDashboardFragment(newPostButton);
+      initialization();
     })
 
     async function fetchPosts(postType: string, variables: PaginationQuery) {
@@ -31,7 +46,7 @@
     }
 
     afterNavigate(async () => {
-        const postType = $page.url.searchParams.get("type");
+      initialization();
         if (postType) {
             await fetchPosts(postType, {
                 first: postsPerPage,
@@ -44,7 +59,6 @@
 
     async function onNextPageClicked() {
         if (!postsResult) return;
-        const postType = $page.url.searchParams.get("type");
         if (postType) {
             await fetchPosts(postType, {
                 first: postsPerPage,
@@ -55,9 +69,9 @@
         }
     }
 
+
     async function onPreviousPageClicked() {
         if (!postsResult) return;
-        const postType = $page.url.searchParams.get("type");
         if (postType) {
             await fetchPosts(postType, {
                 first: undefined,
@@ -82,12 +96,13 @@
 
 <DashboardContainer>
   {#if postsResult}
-    <div class="table-responsive">
+    <div class="table-responsive mt-4">
       <table class="table">
         <thead>
         <tr>
           <th scope="col">Title</th>
           <th scope="col">Published Date</th>
+          <th scope="col">Status</th>
           <th scope="col">Author</th>
           <th scope="col"></th>
         </tr>
@@ -98,7 +113,8 @@
           {#each postsResult.nodes as post}
             <tr>
               <td>{post.title === "" ? "No title" : post.title}</td>
-              <td>{post.publishDate}</td>
+              <td>{dayjs(post.publishDate).toString()}</td>
+              <td>{post.status}</td>
               <td>{post.author?.userName}</td>
               <td class="table-actions">
                 <a href={`/my-admin/posts/${post.id}`} target="_blank" class="cms-action-icon">

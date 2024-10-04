@@ -807,6 +807,7 @@ enum ApplyPolicy {
 enum PostStatus {
   DRAFT
   PUBLISHED
+  SCHEDULED
 }
 
 enum PostTypeEnum {
