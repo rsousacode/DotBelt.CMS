@@ -64,6 +64,7 @@ public class PostsQueries
         return context
             .Tenants
             .Select(x => x.Homepage!)
+            .Where(x => x.Status == PostStatus.Published && x.PostType == PostTypeEnum.Page)
             .AsQueryable()
             .ProjectToPostResponse();
     }
