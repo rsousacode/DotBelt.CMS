@@ -84,6 +84,15 @@ export type BooleanOperationFilterInput = {
   neq?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export type ClonePostInput = {
+  postId: Scalars['Int']['input'];
+};
+
+export type ClonePostPayload = {
+  __typename?: 'ClonePostPayload';
+  postResponse?: Maybe<PostResponse>;
+};
+
 export type CreatePostInput = {
   payload: PostResponseInput;
   type: PostTypeEnum;
@@ -134,11 +143,17 @@ export type DeletedPostResult = {
 
 export type DotBeltMutation = {
   __typename?: 'DotBeltMutation';
+  clonePost: ClonePostPayload;
   createPost: CreatePostPayload;
   deletePost: DeletePostPayload;
   deleteUploads: DeleteUploadsPayload;
   editPost: EditPostPayload;
   editTenant: EditTenantPayload;
+};
+
+
+export type DotBeltMutationClonePostArgs = {
+  input: ClonePostInput;
 };
 
 

@@ -17,10 +17,11 @@ public class Create
     public async Task<PostResponse?> CreatePostAsync( 
         ApplicationDbContext dbContext, 
         [Service] IHttpContextAccessor httpContextAccessor,
+        [Service] PermalinkChecker permalinkChecker,
         PostTypeEnum type, 
-        PostResponse payload )
+        PostResponse payload,
+        CancellationToken ct = default)
     {
-        var urlName = PostHelpers.SanitizePermalink(payload.RelativeUrl);
 
         var userId = httpContextAccessor.GetUserId();
         
@@ -35,15 +36,18 @@ public class Create
             .Select(x => x.Id)
             .FirstOrDefault();
         
+        var finalRelativeUrl = await permalinkChecker.CheckPermalink(payload.RelativeUrl, null, ct);
+        var fullUrl = await permalinkChecker.GetFullUrl(finalRelativeUrl, ct);
+        
         
         var post = new Post()
         {
             Title = payload.Title,
             Content = payload.Content,
             PostType = type,
-            RelativeUrl = urlName,
+            RelativeUrl = finalRelativeUrl,
             Status = payload.Status,
-            FullUrl = urlName,
+            FullUrl = fullUrl,
             Description = payload.Description,
             Author = null!,
             AuthorId = userId.Value,
@@ -56,7 +60,7 @@ public class Create
 
         dbContext.Posts.Add( post );
         
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(ct);
 
         return post.ToPostResponse();
     }

@@ -9,10 +9,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DotBelt.Mutations.Posts;
 
-public class EditPostResult 
-{
-    public bool Success { get; set; }
-}
 
 [ExtendObjectType(typeof(DotBeltMutation))]
 public class Edit
@@ -20,28 +16,31 @@ public class Edit
     [Authorize]
     public async Task<PostResponse?> EditPostAsync( ApplicationDbContext dbContext,
         [Service] PostSchedulerService postSchedulerService,
+        [Service] PermalinkChecker permalinkChecker,
         int postId, 
-        PostResponse payload )
+        PostResponse payload,
+        CancellationToken cancellationToken = default)
     {
         var post = await dbContext
             .Posts
             .Include(p => p.FeaturedImage)
             .Where(x => x.Id == postId)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
         if (post == null) return null;
         
-        var urlName = PostHelpers.SanitizePermalink(payload.RelativeUrl);
+        var finalRelativeUrl = await permalinkChecker.CheckPermalink(payload.RelativeUrl, postId, cancellationToken);
+        var fullUrl = await permalinkChecker.GetFullUrl(finalRelativeUrl, cancellationToken);
 
         post.ModifiedDate = DateTime.UtcNow;
         post.Title = payload.Title; 
         post.Content = payload.Content;
         post.Description = payload.Description;
-        post.RelativeUrl = urlName;
+        post.RelativeUrl = finalRelativeUrl;
         post.FeaturedImageId = payload.FeaturedImageId;
         post.Status = payload.Status;
         post.PublishDate = payload.PublishDate?.ToUniversalTime() ?? DateTime.UtcNow;
-        post.FullUrl = urlName;
+        post.FullUrl = fullUrl;
 
         if (payload.Status is PostStatus.Published or PostStatus.Scheduled
             && DateTimeOffset.UtcNow < payload.PublishDate)
@@ -59,13 +58,13 @@ public class Edit
             await postSchedulerService.RemoveSchedulePublishPostJob(post.Id);
         }
 
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         return await dbContext
             .Posts
             .Where(p => p.Id == postId)
             .ProjectToPostResponse()
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
                 
     }
 }

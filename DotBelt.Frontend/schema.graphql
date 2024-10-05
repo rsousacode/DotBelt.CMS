@@ -21,6 +21,10 @@ type ApplicationUser {
   accessFailedCount: Int!
 }
 
+type ClonePostPayload {
+  postResponse: PostResponse
+}
+
 type CreatePostPayload {
   postResponse: PostResponse
 }
@@ -41,6 +45,7 @@ type DotBeltMutation {
   editPost(input: EditPostInput!): EditPostPayload! @authorize
   createPost(input: CreatePostInput!): CreatePostPayload! @authorize
   editTenant(input: EditTenantInput!): EditTenantPayload!
+  clonePost(input: ClonePostInput!): ClonePostPayload!
   deletePost(input: DeletePostInput!): DeletePostPayload! @authorize
   deleteUploads(input: DeleteUploadsInput!): DeleteUploadsPayload! @authorize
 }
@@ -375,6 +380,10 @@ input ApplicationUserSortInput {
 input BooleanOperationFilterInput {
   eq: Boolean
   neq: Boolean
+}
+
+input ClonePostInput {
+  postId: Int!
 }
 
 input CreatePostInput {

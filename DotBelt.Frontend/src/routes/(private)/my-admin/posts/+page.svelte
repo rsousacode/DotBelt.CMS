@@ -18,6 +18,7 @@
   import { ModalType } from '$lib/Utilities/Modal/ModalType';
   import { gql } from '@apollo/client/core';
   import type { FetchPolicy } from '@apollo/client/core/index.js';
+  import CloneIcon from '$lib/Utilities/Icons/CloneIcon.svelte';
 
   let postsResult: Maybe<PostsConnection> | undefined = $state(undefined);
   let postsPerPage = $state(5);
@@ -93,12 +94,22 @@
 
   let postToDeleteId : Maybe<number> = $state();
 
+  let postToCloneId : Maybe<number> = $state();
+
   let confirmDeletionModal : BoilerplateModal;
+
+  let cloneConfirmationModal : BoilerplateModal;
 
   function onClickDeletePost(toDeleteId: Maybe<number> | undefined) {
     if(!toDeleteId) return;
     postToDeleteId = toDeleteId;
     confirmDeletionModal.openModal();
+  }
+
+  function onClickClonePost(toCloneId: Maybe<number> | undefined) {
+    if(!toCloneId) return;
+    postToCloneId = toCloneId;
+    cloneConfirmationModal.openModal();
   }
 
   async function deletePost() {
@@ -117,6 +128,25 @@
     await fetchFirstPage('network-only');
 
   }
+
+
+  async function clonePost() {
+    const client = apolloClientStore.getClient();
+
+    const mutation = gql
+      `mutation deletePost($id: Int!) {
+        clonePost(input: {postId: $id }) {
+          postResponse {
+            id
+          }
+      }
+    }`;
+
+    await client.mutate({mutation: mutation, variables: {id: postToCloneId}});
+    await fetchFirstPage('network-only');
+  }
+
+
 </script>
 
 <svelte:head>
@@ -135,6 +165,16 @@
 
   <p>Are you sure ?</p>
 </BoilerplateModal>
+
+<BoilerplateModal modalType={ModalType.Action}
+               bind:this={cloneConfirmationModal}
+               onModalConfirm={clonePost}>
+
+  <p>Do you want to clone this post?</p>
+  <p>It'll be as draft status</p>
+</BoilerplateModal>
+
+
 <DashboardContainer>
   {#if postsResult}
     <div class="table-responsive mt-4">
@@ -165,6 +205,8 @@
                   <ViewPublishedIcon />
                 </a>
                 <button class="cms-action-icon clear-button" onclick={() => onClickDeletePost(post.id)}><TrashIcon/></button>
+                <button class="cms-action-icon clear-button" onclick={() => onClickClonePost(post.id)}><CloneIcon/></button>
+
               </td>
             </tr>
           {/each}
