@@ -43,7 +43,7 @@
     content:   "{}",
     featuredImage: {relativeUrl: ""},
     fullUrl: undefined,
-    publishDate: new Date(), // Reactive yay
+    publishDate: new Date(),
     modifiedDate:new Date(),
     featuredImageId: undefined
   });
@@ -98,10 +98,6 @@
 
     const postType = $page.url.searchParams.get('type')?.toUpperCase() as PostTypeEnum;
 
-    console.log('postdata', postData);
-    console.log('sna', $state.snapshot(postData));
-
-
     const postResponse = await createPostSvelte(client, postData as PostResponseInput, postType);
 
     if (postResponse) {
@@ -119,7 +115,6 @@
       const postResponse = await editPost(client, postData.id, postData as PostResponseInput);
       if (postResponse) {
         postData = postResponse ;
-        console.log(postResponse)
         successFeedbackIcon.triggerComponent2();
       }
     }
@@ -149,7 +144,11 @@
     await uploadsPanel.open(onFeaturedImageSelected, postData.featuredImage?.id);
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(publish: boolean = false) {
+    if(publish) {
+      postData.status = PostStatus.Published;
+    }
+
     if (!postData.id) {
       await createNewPost();
     } else {
@@ -172,7 +171,10 @@
 </script>
 
 {#snippet saveButton()}
-  <button class="dashboard-icon" type="button" onclick={handleSubmit}>
+  {#if postData.status === PostStatus.Draft}
+    <button type="button" onclick={() => handleSubmit(true)} class="btn btn-primary mx-2"> {postDateIsInFuture ? "Schedule" : "Publish"}</button>
+  {/if}
+  <button class="dashboard-icon" type="button" onclick={() => handleSubmit()}>
     <TransitionalIcon
       bind:this={successFeedbackIcon}
       component1={SaveIcon}
@@ -189,7 +191,7 @@
     <PreviewIcon />
   </a>
 {/snippet}
-<form method="POST" action="" onsubmit={handleSubmit}>
+<form method="POST" action="" onsubmit={() => handleSubmit()}>
   <div class="post-editor-container">
     <div class="editor-container">
       <div class="editor-container-header">

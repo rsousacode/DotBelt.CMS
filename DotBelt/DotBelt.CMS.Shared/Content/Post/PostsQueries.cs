@@ -28,11 +28,11 @@ public class PostsQueries
             .ProjectToPostResponse();
     }
     
-     public IQueryable<PostResponse> GetPublishedPosts(ApplicationDbContext context)
+     public IQueryable<PostResponse> GetPublishedPages(ApplicationDbContext context)
     {
         return context
             .Posts
-            .Where(x => x.Status == PostStatus.Published)
+            .Where(x => x.Status == PostStatus.Published && x.PostType == PostTypeEnum.Page)
             .ProjectToPostResponse();
     }
     

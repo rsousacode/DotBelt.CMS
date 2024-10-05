@@ -138,6 +138,7 @@ export type DotBeltMutation = {
   deletePost: DeletePostPayload;
   deleteUploads: DeleteUploadsPayload;
   editPost: EditPostPayload;
+  editTenant: EditTenantPayload;
 };
 
 
@@ -160,13 +161,18 @@ export type DotBeltMutationEditPostArgs = {
   input: EditPostInput;
 };
 
+
+export type DotBeltMutationEditTenantArgs = {
+  input: EditTenantInput;
+};
+
 export type DotBeltQuery = {
   __typename?: 'DotBeltQuery';
   homepage: Array<PostResponse>;
   postById: Array<PostResponse>;
   postByUrl: Array<PostResponse>;
   posts?: Maybe<PostsConnection>;
-  publishedPosts: Array<PostResponse>;
+  publishedPages: Array<PostResponse>;
   session: SessionData;
   taxonomies?: Maybe<TaxonomiesConnection>;
   taxonomyById: Array<Taxonomy>;
@@ -249,6 +255,15 @@ export type EditPostInput = {
 export type EditPostPayload = {
   __typename?: 'EditPostPayload';
   postResponse?: Maybe<PostResponse>;
+};
+
+export type EditTenantInput = {
+  tenant: TenantResponseInput;
+};
+
+export type EditTenantPayload = {
+  __typename?: 'EditTenantPayload';
+  tenantResponse?: Maybe<TenantResponse>;
 };
 
 export type IntOperationFilterInput = {
@@ -714,8 +729,17 @@ export type TenantResponse = {
   __typename?: 'TenantResponse';
   allowedFileTypes: Array<Scalars['String']['output']>;
   fullUrl: Scalars['String']['output'];
-  id: Scalars['Int']['output'];
+  homepageId?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
   name: Scalars['String']['output'];
+};
+
+export type TenantResponseInput = {
+  allowedFileTypes: Array<Scalars['String']['input']>;
+  fullUrl: Scalars['String']['input'];
+  homepageId?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  name: Scalars['String']['input'];
 };
 
 export type TenantSortInput = {

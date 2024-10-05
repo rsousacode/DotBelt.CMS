@@ -13,20 +13,29 @@ export const load: PageServerLoad<Promise<ServerResponse>> = async ({ fetch }) =
 
   const query = gql`
     query getTenant {
+      publishedPages {
+        id
+        title
+      }
+      
       tenantById(id: 1) {
+        id
+        allowedFileTypes
         fullUrl
         name
+        homepageId
       }
     }`;
 
   const {
-    data: { tenantById }
+    data: { tenantById, publishedPages }
   } = await client.query<DotBeltQuery>({
     query: query
   });
 
 
   return {
+    posts: publishedPages,
     tenant: tenantById[0]
   };
 };
