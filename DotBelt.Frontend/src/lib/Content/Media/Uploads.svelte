@@ -262,7 +262,7 @@
 
       <span class="text-white modal-header-title"></span>
 
-      <button class="dashboard-icon" onclick={closePopup}>
+      <button type="button" class="dashboard-icon" onclick={closePopup}>
         <CloseIcon/>
       </button>
 
@@ -293,7 +293,7 @@
       {/if}
     </div>
     <div class="load-more-section">
-      <button disabled={!uploadsResult?.pageInfo.hasNextPage} class="btn btn-secondary" onclick={onLoadMoreClicked}>
+      <button type="button" disabled={!uploadsResult?.pageInfo.hasNextPage} class="btn btn-secondary" onclick={onLoadMoreClicked}>
         Load more
       </button>
     </div>

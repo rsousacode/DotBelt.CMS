@@ -6,8 +6,7 @@
     type PostResponseInput,
     PostStatus,
     PostTypeEnum,
-    type TenantResponse,
-    type UploadResponse
+    type TenantResponse
   } from '$lib/API/GraphQL/generated';
   import { onMount } from 'svelte';
   import { updateDashboardFragment } from '$lib/Dashboard/DashboardStore.svelte.js';
@@ -18,14 +17,12 @@
   import BlocksIcon from '$lib/Utilities/Icons/BlocksIcon.svelte';
   import EditorJS from '$lib/Content/EditorJS/EditorJS.svelte';
   import AceEditor from '$lib/Utilities/AceEditor.svelte';
-  import Uploads from '$lib/Content/Media/Uploads.svelte';
   import { apolloClientStore } from '$lib/API/GraphQL/apolloClientStore';
   import { createPostSvelte } from '$lib/Content/Posts/CreatePost.svelte';
   import { page } from '$app/stores';
   import { editPost } from '$lib/Content/Posts/EditPost.svelte';
-  import PostEditorSidebarItem from '$lib/Content/Posts/PostEditorSidebarItem.svelte';
   import PreviewIcon from '$lib/Utilities/Icons/PreviewIcon.svelte';
-  import HTML5DateTimeInput from '$lib/Utilities/HTML5DateTimeInput.svelte';
+  import PostEditorSidebar from '$lib/Content/Posts/PostEditorSidebar.svelte';
 
   type Props = { post?: Maybe<PostResponse>, tenant: TenantResponse }
 
@@ -52,17 +49,10 @@
 
   let currentMode: EditorMode = $state('editor');
 
-  let uploadsPanel: Uploads;
-
   let successFeedbackIcon: TransitionalIcon;
 
-  let featuredImageElement: HTMLImageElement;
+  let postDateIsInFuture = $derived(new Date(postData.publishDate) > new Date());
 
-  let currentDate = $derived(new Date());
-
-  let postDate = $derived(new Date(postData.publishDate));
-
-  let postDateIsInFuture = $derived(postDate > currentDate);
 
   onMount(() => {
     updateDashboardFragment(saveButton);
@@ -70,7 +60,6 @@
     if(post) {
       postData = post;
     }
-
   });
 
 
@@ -102,7 +91,8 @@
 
     if (postResponse) {
       postData = postResponse ;
-      successFeedbackIcon.triggerComponent2();
+      await successFeedbackIcon.triggerComponent2();
+      console.log('done????')
       await goto('/my-admin/posts/' + postResponse.id);
     }
   }
@@ -115,7 +105,7 @@
       const postResponse = await editPost(client, postData.id, postData as PostResponseInput);
       if (postResponse) {
         postData = postResponse ;
-        successFeedbackIcon.triggerComponent2();
+        await successFeedbackIcon.triggerComponent2();
       }
     }
   }
@@ -134,37 +124,14 @@
   }
 
 
-  function onFeaturedImageSelected(upload: UploadResponse) {
-    postData.featuredImage = { ...upload };
-    postData.featuredImageId = upload.id;
-    featuredImageElement.src = `/${upload.relativeUrl}`;
-  }
-
-  async function openFeatureImageSelection() {
-    await uploadsPanel.open(onFeaturedImageSelected, postData.featuredImage?.id);
-  }
-
   async function handleSubmit(publish: boolean = false) {
     if(publish) {
       postData.status = PostStatus.Published;
     }
-
     if (!postData.id) {
       await createNewPost();
     } else {
       await editExistingPost();
-    }
-  }
-
-  function onPublishDateChange() {
-    if (postDateIsInFuture) {
-      if(postData.status === PostStatus.Published) {
-        postData.status = PostStatus.Scheduled;
-      }
-    } else {
-      if (postData.status === PostStatus.Scheduled) {
-        postData.status = PostStatus.Published;
-      }
     }
   }
 
@@ -203,71 +170,23 @@
         <div>
           <input class="classy-input" type="text" placeholder="Write your title here"
                  bind:value={postData.title}>
-
         </div>
       </div>
       <hr>
-
       {#if currentMode === 'editor'}
         <EditorJS bind:content={postData.content} />
       {:else}
         <AceEditor bind:code={postData.content} />
       {/if}
-
     </div>
-    <div class="post-editor-sidebar-container">
-      <PostEditorSidebarItem title="Options">
-        <div class="form-control mt-2">
-          <label class="form-label mt-3" for="">Publishing status</label>
-          <select bind:value={postData.status} class="form-select" aria-label="publish status">
-            <option value={PostStatus.Draft}>Draft</option>
-
-            {#if !postDateIsInFuture}
-              <option value={PostStatus.Published}>Published</option>
-            {:else}
-              <option value={PostStatus.Scheduled}>Scheduled</option>
-            {/if}
-          </select>
-          <div class="mt-4 mb-3">
-            <label class="form-label" for="publish-date">Publishing Date</label>
-            <HTML5DateTimeInput onchange={onPublishDateChange}
-                                bind:dateTime={postData.publishDate}></HTML5DateTimeInput>
-          </div>
-        </div>
-      </PostEditorSidebarItem>
-      <PostEditorSidebarItem cssClasses="featured-image-container" title="Featured image">
-        <button type="button" class="featured-image clear-button" onclick={openFeatureImageSelection}>
-          <img bind:this={featuredImageElement}
-               src={postData?.featuredImage?.relativeUrl ? `/${postData.featuredImage.relativeUrl}` : "/images/placeholder-image.png"}
-               alt="">
-        </button>
-
-      </PostEditorSidebarItem>
-
-      <PostEditorSidebarItem title="Description">
-        <textarea
-          bind:value={postData.description}
-          rows="3" class="form-control mt-2"
-          id="exampleInputEmail1"
-          placeholder="Short description about the post"
-          aria-describedby="emailHelp">
-
-        </textarea>
-      </PostEditorSidebarItem>
-
-    </div>
+    <PostEditorSidebar
+      bind:postStatus={postData.status}
+      bind:featuredImage={postData.featuredImage}
+      bind:featuredImageId={postData.featuredImageId}
+      bind:publishDate={postData.publishDate}
+      bind:description={postData.description}
+    />
   </div>
 </form>
 
-<Uploads bind:this={uploadsPanel} context="OneMediaSelection" />
 
-<style>
-  .featured-image {
-    margin-top: 10px;
-  }
-
-  .featured-image > img {
-    max-width: 100%;
-    border-radius: 5px;
-  }
-</style>

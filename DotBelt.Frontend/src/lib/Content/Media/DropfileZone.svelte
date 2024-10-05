@@ -88,7 +88,7 @@
 {#if uploadOverlayOpen}
   <div class="upload-overlay {filesInArea && uploadOverlayOpen ? 'drag-enter' : ''}">
     <div class="upload-overlay-header">
-      <button  class="icon-button" onclick={onCloseUploadOverlay}>
+      <button type="button" class="icon-button" onclick={onCloseUploadOverlay}>
         <CloseIcon/>
       </button>
     </div>
@@ -97,7 +97,7 @@
         Drag files to upload
       </div>
       <p>or</p>
-      <button class="btn btn-primary" onclick={() => inputFilesElement.click()}>Select files</button>
+      <button type="button" class="btn btn-primary" onclick={() => inputFilesElement.click()}>Select files</button>
       <input style="position: absolute; top: -500px;"  onchange={onInputFilesChange} hidden bind:this={inputFilesElement}  type="file" multiple name="uploads">
 
     </div>

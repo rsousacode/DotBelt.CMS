@@ -5,11 +5,12 @@
   import {slide} from "svelte/transition";
   import {menuState} from "$lib/Dashboard/MenuItems/MenuState.svelte";
   import { goto } from '$app/navigation';
+  import ArrowUpRounded from '$lib/Utilities/Icons/ArrowUpRounded.svelte';
+  import ArrowDownRounded from '$lib/Utilities/Icons/ArrowDownRounded.svelte';
 
   let { menu } : { menu: MenuItem} = $props();
 
   let nameElement : Element;
-
 
   async function onMenuClicked(e: InputEvent) {
 
@@ -34,9 +35,20 @@
           <svelte:component this={menu.icon}/>
         </span>
       {/if}
-      <a bind:this={nameElement} target={menu.openNewTab ? '_blank' : ''} href={menu.href} class="name" >
+      <div class="panel-item-name">
+        <a bind:this={nameElement} target={menu.openNewTab ? '_blank' : ''} href={menu.href} class="name" >
           {menu.name}
         </a>
+      </div>
+
+      {#if menu.items && menu.items.length && menu.items.length > 0}
+        {#if $menuState[menu.name]}
+          <ArrowUpRounded/>
+        {:else}
+          <ArrowDownRounded/>
+        {/if}
+      {/if}
+
     </div>
   </div>
   {#if menu.items && menu.items.length && menu.items.length > 0}
@@ -50,3 +62,13 @@
   {/if}
 
 </li>
+
+<style>
+  .dashboard-item-container {
+    display: flex;
+    align-items: center;
+  }
+  .panel-item-name {
+    min-width: 130px;
+  }
+</style>

@@ -106,16 +106,16 @@
   }
 
   async function onPreviousClicked() {
-    if (!upload || !thumbnails) return;
+    if (!upload || !thumbnails || !upload.id) return;
     const previousElement = getPreviousThumbnail(thumbnails, upload.id);
-    if(!previousElement) return;
+    if(!previousElement || !previousElement.id) return;
     await loadImage(previousElement.id);
   }
 
   async function onNextClicked() {
-    if (!upload || !thumbnails) return;
+    if (!upload || !thumbnails || !upload.id) return;
     const nextElement = getNextThumbnail(thumbnails, upload.id);
-    if(!nextElement) return;
+    if(!nextElement || !nextElement.id) return;
     await loadImage(nextElement.id);
   }
 
@@ -145,12 +145,12 @@
   <div class="overlay"></div>
   <div class="modal-container media-popup" >
       <div class="modal-header">
-        {#if upload && thumbnails}
+        {#if upload && upload.id && thumbnails}
           <div class="chevron-buttons">
-            <button disabled={!thumbnails || !getPreviousThumbnail(thumbnails, upload.id)} style="font-size: 24px;" class="dashboard-icon" onclick={onPreviousClicked}>
+            <button type="button" disabled={!thumbnails || !getPreviousThumbnail(thumbnails, upload.id)} style="font-size: 24px;" class="dashboard-icon" onclick={onPreviousClicked}>
               <ChevronLeft/>
             </button>
-            <button disabled={!thumbnails || !getNextThumbnail(thumbnails, upload.id)} style="font-size: 24px;" class="dashboard-icon" onclick={onNextClicked}>
+            <button type="button" disabled={!thumbnails || !getNextThumbnail(thumbnails, upload.id)} style="font-size: 24px;" class="dashboard-icon" onclick={onNextClicked}>
               <ChevronRight/>
             </button>
           </div>
@@ -158,7 +158,7 @@
 
         <span class="text-white modal-header-title"></span>
 
-        <button class="dashboard-icon" onclick={closePopup}>
+        <button type="button" class="dashboard-icon" onclick={closePopup}>
           <CloseIcon/>
         </button>
 
@@ -226,7 +226,7 @@
 
         {#if context === 'OneMediaSelection'}
           <div class="actions-buttons">
-            <button class="btn btn-primary" onclick={onImageSelected}>Select</button>
+            <button type="button" class="btn btn-primary" onclick={onImageSelected}>Select</button>
           </div>
         {/if}
       </div>

@@ -8,10 +8,13 @@
   const {onOutro, transitionTo, state} = statefulSwapSvelte("first")
 
   export function triggerComponent2(time = 1000) {
-    transitionTo("second")
-    return setTimeout(() => {
-      transitionTo("first")
-    }, time);
+    return new Promise(( resolve ) => {
+      transitionTo("second")
+      setTimeout( () => {
+        transitionTo('first');
+        resolve(undefined);
+      }, time )
+    })
   }
 
 </script>
