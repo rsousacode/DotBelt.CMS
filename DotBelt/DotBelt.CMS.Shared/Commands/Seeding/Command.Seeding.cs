@@ -53,6 +53,10 @@ public class Command_Seeding : Command
         await dbContext.SaveChangesAsync();
 
         tenant.Homepage = posts.FirstOrDefault(x => x.PostType == PostTypeEnum.Page);
+
+        var crops = SeedCrops.GetCrops();
+        
+        dbContext.Crops.AddRange(crops);
         
         await dbContext.SaveChangesAsync();
 

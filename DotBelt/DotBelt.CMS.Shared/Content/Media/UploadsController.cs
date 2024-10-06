@@ -202,48 +202,51 @@ public class UploadsController
                         imageMetaData["Width"] = width;
                         imageMetaData["Height"] = height;
                         imageMetaData["Size"] = size;
-                        
-                    }
-                }
-                stream.Seek(0, SeekOrigin.Begin);
-
                 
-                ExtractAdditionalMetadata(stream, imageMetaData);
-
-                upload.MetaData = JsonSerializer.Serialize(imageMetaData);
-
-                foreach (var cropSetting in CropsSettings.Internal)
-                {
-                    try
-                    {
-                        stream.Seek(0, SeekOrigin.Begin);
-                        var cropFileName = CropProcessor.CropImage(
-                            stream, 
-                            fileName, 
-                            cropSetting.Width, 
-                            cropSetting.Height, false, CropPositionX.Left, CropPositionY.Top);
-
-                        var crop = new Thumbnail()
-                        {
-                            Name = cropSetting.Name,
-         
-                            Upload = upload,
-                            FileName = cropFileName,
-                            MimeType = Mimes.WEBP,
-                            PublishDate = upload.PublishDate,
-                            RelativeUrl = GetRelativePath(cropFileName),
-                   
-                        };
+                        stream.Position = 0; 
                         
-                        upload.Thumbnails.Add(crop);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        throw;
-                    }
+                        ExtractAdditionalMetadata(stream, imageMetaData);
+
+                        upload.MetaData = JsonSerializer.Serialize(imageMetaData);
+                        
+                        foreach (var cropSetting in _context.Crops)
+                        {
+                            try
+                            {
+                                var cropFileName = CropProcessor.CropImage(
+                                    skImage, 
+                                    fileName, 
+                                    cropSetting.Width, 
+                                    cropSetting.Height, 
+                                    false, 
+                                    cropSetting.CropPositionX,
+                                    cropSetting.CropPositionY);
+
+                                var crop = new Thumbnail()
+                                {
+                                    Name = cropSetting.Name,
+         
+                                    Upload = upload,
+                                    FileName = cropFileName,
+                                    MimeType = Mimes.WEBP,
+                                    PublishDate = upload.PublishDate,
+                                    RelativeUrl = GetRelativePath(cropFileName),
+                   
+                                };
+                        
+                                upload.Thumbnails.Add(crop);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine(e);
+                                throw;
+                            }
                
+                        }
+                        
+                    }
                 }
+             
             }
         }
 

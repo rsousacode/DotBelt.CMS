@@ -1,8 +1,7 @@
 import {
     type DotBeltQuery,
-    type Maybe,
-    type UploadsConnection
-} from '$lib/API/GraphQL/generated'
+    type Maybe, type ThumbnailsConnection
+} from '$lib/API/GraphQL/generated';
 import type {ApolloClient, FetchPolicy, NormalizedCacheObject} from "@apollo/client/core/index.js";
 import {gql} from "@apollo/client/core/index.js";
 import type {PaginationQuery} from "$lib/API/GraphQL/PaginationQuery";
@@ -10,11 +9,11 @@ import type {PaginationQuery} from "$lib/API/GraphQL/PaginationQuery";
 
 export async function getUploads(
     client: ApolloClient<NormalizedCacheObject>,
-    pagination: PaginationQuery, fetchPolicy: FetchPolicy = 'cache-first'): Promise<Maybe<UploadsConnection | undefined>> {
+    pagination: PaginationQuery, fetchPolicy: FetchPolicy = 'cache-first'): Promise<Maybe<ThumbnailsConnection | undefined>> {
 
     const query = gql`
         query GetUploads($first: Int, $last: Int, $before: String, $after: String) {
-            uploads(first: $first,
+            thumbnails(first: $first,
                 last: $last,
                 order: { publishDate: DESC },
                 after: $after,
@@ -35,7 +34,7 @@ export async function getUploads(
         }
     `
 
-    const {data: {uploads}} = await client.query<DotBeltQuery>({
+    const {data: {thumbnails}} = await client.query<DotBeltQuery>({
         query: query,
         variables:
             {
@@ -47,5 +46,5 @@ export async function getUploads(
         fetchPolicy: fetchPolicy,
     });
 
-    return uploads;
+    return thumbnails;
 }

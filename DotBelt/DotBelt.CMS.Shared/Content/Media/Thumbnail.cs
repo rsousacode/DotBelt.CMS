@@ -13,6 +13,8 @@ public class Thumbnail
     
     public required string RelativeUrl { get; set; }
     
+    public ICollection<Crop>? Crops { get; set; }
+    
     
     public int Length { get; set; }
 

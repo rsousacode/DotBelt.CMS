@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    type DotBeltQuery,
     type InputMaybe,
     type Maybe,
     PostStatus,
@@ -10,6 +11,9 @@
   import HTML5DateTimeInput from '$lib/Utilities/HTML5DateTimeInput.svelte';
 
   import Uploads from '$lib/Content/Media/Uploads.svelte';
+  import { gql } from '@apollo/client/core';
+  import { apolloClientStore } from '$lib/API/GraphQL/apolloClientStore';
+  import { InternalCrops } from '$lib/API/InternalCrops';
 
   type Props = {
     postStatus: PostStatus,
@@ -38,10 +42,32 @@
 
   let postDateIsInFuture = $derived(postDate > currentDate);
 
-  function onFeaturedImageSelected(upload: UploadResponse) {
-    featuredImage = { ...upload };
+  async function onFeaturedImageSelected(upload: UploadResponse) {
     featuredImageId = upload.id;
-    featuredImageElement.src = `/${upload.relativeUrl}`;
+
+    const query = gql`
+    query getThumbnail($id: Int!, $cropName: String!) {
+      thumbnailByUploadId(uploadId: $id, cropName: $cropName) {
+        relativeUrl
+        uploadId
+      }
+    }
+`;
+
+    const client = apolloClientStore.getClient()
+
+    const {data: {thumbnailByUploadId}} = await client.query<DotBeltQuery>(
+      {
+        query: query,
+        variables: { cropName: InternalCrops.FeaturedImageCrop, id: upload.id }
+      }
+    )
+
+    const thumbnail = thumbnailByUploadId[0];
+
+    console.log(thumbnail);
+
+    featuredImageElement.src = `/${thumbnail.relativeUrl}`;
   }
 
   async function openFeatureImageSelection() {

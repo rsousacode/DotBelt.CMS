@@ -29,6 +29,18 @@ type CreatePostPayload {
   postResponse: PostResponse
 }
 
+type Crop {
+  id: Int!
+  internal: Boolean!
+  width: Int!
+  height: Int
+  name: String!
+  softCrop: Boolean!
+  cropPositionX: CropPositionX!
+  cropPositionY: CropPositionY!
+  thumbnails: [Thumbnail!]
+}
+
 type DeletePostPayload {
   deletedPostResult: DeletedPostResult
 }
@@ -61,7 +73,8 @@ type DotBeltQuery {
   users("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: UserResponseFilterInput order: [UserResponseSortInput!]): UsersConnection
   tenantById(id: Int!): [TenantResponse!]!
   session: SessionData!
-  uploads("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ThumbnailResponseFilterInput order: [ThumbnailResponseSortInput!]): UploadsConnection @authorize
+  thumbnails("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: ThumbnailResponseFilterInput order: [ThumbnailResponseSortInput!]): ThumbnailsConnection @authorize
+  thumbnailByUploadId(uploadId: Int! cropName: String!): [ThumbnailResponse!]! @authorize
   uploadById(id: Int!): [UploadResponse!]! @authorize
 }
 
@@ -236,6 +249,7 @@ type Thumbnail {
   mimeType: String!
   fileName: String!
   relativeUrl: String!
+  crops: [Crop!]
   length: Int!
 }
 
@@ -249,6 +263,24 @@ type ThumbnailResponse {
   fileName: String
   relativeUrl: String
   length: Int
+}
+
+"A connection to a list of items."
+type ThumbnailsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [ThumbnailsEdge!]
+  "A flattened list of the nodes."
+  nodes: [ThumbnailResponse!]
+}
+
+"An edge in a connection."
+type ThumbnailsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: ThumbnailResponse!
 }
 
 type Upload {
@@ -288,24 +320,6 @@ type UploadResponse {
   modifiedDate: DateTime
   metaData: String
   author: UserResponse
-}
-
-"A connection to a list of items."
-type UploadsConnection {
-  "Information to aid in pagination."
-  pageInfo: PageInfo!
-  "A list of edges."
-  edges: [UploadsEdge!]
-  "A flattened list of the nodes."
-  nodes: [ThumbnailResponse!]
-}
-
-"An edge in a connection."
-type UploadsEdge {
-  "A cursor for use in pagination."
-  cursor: String!
-  "The item at the end of the edge."
-  node: ThumbnailResponse!
 }
 
 type UserResponse {
@@ -391,6 +405,34 @@ input CreatePostInput {
   payload: PostResponseInput!
 }
 
+input CropFilterInput {
+  and: [CropFilterInput!]
+  or: [CropFilterInput!]
+  id: IntOperationFilterInput
+  internal: BooleanOperationFilterInput
+  width: IntOperationFilterInput
+  height: IntOperationFilterInput
+  name: StringOperationFilterInput
+  softCrop: BooleanOperationFilterInput
+  cropPositionX: CropPositionXOperationFilterInput
+  cropPositionY: CropPositionYOperationFilterInput
+  thumbnails: ListFilterInputTypeOfThumbnailFilterInput
+}
+
+input CropPositionXOperationFilterInput {
+  eq: CropPositionX
+  neq: CropPositionX
+  in: [CropPositionX!]
+  nin: [CropPositionX!]
+}
+
+input CropPositionYOperationFilterInput {
+  eq: CropPositionY
+  neq: CropPositionY
+  in: [CropPositionY!]
+  nin: [CropPositionY!]
+}
+
 input DateTimeOperationFilterInput {
   eq: DateTime
   neq: DateTime
@@ -436,6 +478,13 @@ input IntOperationFilterInput {
   nlt: Int
   lte: Int
   nlte: Int
+}
+
+input ListFilterInputTypeOfCropFilterInput {
+  all: CropFilterInput
+  none: CropFilterInput
+  some: CropFilterInput
+  any: Boolean
 }
 
 input ListFilterInputTypeOfPostFilterInput {
@@ -727,6 +776,7 @@ input ThumbnailFilterInput {
   mimeType: StringOperationFilterInput
   fileName: StringOperationFilterInput
   relativeUrl: StringOperationFilterInput
+  crops: ListFilterInputTypeOfCropFilterInput
   length: IntOperationFilterInput
 }
 
@@ -893,6 +943,18 @@ enum ApplyPolicy {
   BEFORE_RESOLVER
   AFTER_RESOLVER
   VALIDATION
+}
+
+enum CropPositionX {
+  LEFT
+  CENTER
+  RIGHT
+}
+
+enum CropPositionY {
+  TOP
+  CENTER
+  BOTTOM
 }
 
 enum PostStatus {

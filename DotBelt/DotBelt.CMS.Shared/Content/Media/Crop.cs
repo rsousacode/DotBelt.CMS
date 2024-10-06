@@ -2,15 +2,19 @@ namespace DotBelt.CMS.Shared.CMS.Media;
 
 public class Crop
 {
+    public int Id { get; set; }
+    public bool Internal { get; set; }
     public int Width { get; set; }
     public int? Height { get; set; }
     
-    public string Name { get; set; }
+    public required string Name { get; set; }
+    
+    public bool SoftCrop { get; set; }
+    
+    public CropPositionX CropPositionX { get; set; }
+    
+    public CropPositionY CropPositionY { get; set; }
+    
+    public ICollection<Thumbnail>? Thumbnails { get; set; }
 
-    public Crop (string name, int width, int? height = null)
-    {
-        Width = width;
-        Height = height;
-        Name = name;
-    }
 }

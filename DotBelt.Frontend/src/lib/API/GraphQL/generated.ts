@@ -103,6 +103,59 @@ export type CreatePostPayload = {
   postResponse?: Maybe<PostResponse>;
 };
 
+export type Crop = {
+  __typename?: 'Crop';
+  cropPositionX: CropPositionX;
+  cropPositionY: CropPositionY;
+  height?: Maybe<Scalars['Int']['output']>;
+  id: Scalars['Int']['output'];
+  internal: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  softCrop: Scalars['Boolean']['output'];
+  thumbnails?: Maybe<Array<Thumbnail>>;
+  width: Scalars['Int']['output'];
+};
+
+export type CropFilterInput = {
+  and?: InputMaybe<Array<CropFilterInput>>;
+  cropPositionX?: InputMaybe<CropPositionXOperationFilterInput>;
+  cropPositionY?: InputMaybe<CropPositionYOperationFilterInput>;
+  height?: InputMaybe<IntOperationFilterInput>;
+  id?: InputMaybe<IntOperationFilterInput>;
+  internal?: InputMaybe<BooleanOperationFilterInput>;
+  name?: InputMaybe<StringOperationFilterInput>;
+  or?: InputMaybe<Array<CropFilterInput>>;
+  softCrop?: InputMaybe<BooleanOperationFilterInput>;
+  thumbnails?: InputMaybe<ListFilterInputTypeOfThumbnailFilterInput>;
+  width?: InputMaybe<IntOperationFilterInput>;
+};
+
+export enum CropPositionX {
+  Center = 'CENTER',
+  Left = 'LEFT',
+  Right = 'RIGHT'
+}
+
+export type CropPositionXOperationFilterInput = {
+  eq?: InputMaybe<CropPositionX>;
+  in?: InputMaybe<Array<CropPositionX>>;
+  neq?: InputMaybe<CropPositionX>;
+  nin?: InputMaybe<Array<CropPositionX>>;
+};
+
+export enum CropPositionY {
+  Bottom = 'BOTTOM',
+  Center = 'CENTER',
+  Top = 'TOP'
+}
+
+export type CropPositionYOperationFilterInput = {
+  eq?: InputMaybe<CropPositionY>;
+  in?: InputMaybe<Array<CropPositionY>>;
+  neq?: InputMaybe<CropPositionY>;
+  nin?: InputMaybe<Array<CropPositionY>>;
+};
+
 export type DateTimeOperationFilterInput = {
   eq?: InputMaybe<Scalars['DateTime']['input']>;
   gt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -192,8 +245,9 @@ export type DotBeltQuery = {
   taxonomies?: Maybe<TaxonomiesConnection>;
   taxonomyById: Array<Taxonomy>;
   tenantById: Array<TenantResponse>;
+  thumbnailByUploadId: Array<ThumbnailResponse>;
+  thumbnails?: Maybe<ThumbnailsConnection>;
   uploadById: Array<UploadResponse>;
-  uploads?: Maybe<UploadsConnection>;
   users?: Maybe<UsersConnection>;
 };
 
@@ -238,18 +292,24 @@ export type DotBeltQueryTenantByIdArgs = {
 };
 
 
-export type DotBeltQueryUploadByIdArgs = {
-  id: Scalars['Int']['input'];
+export type DotBeltQueryThumbnailByUploadIdArgs = {
+  cropName: Scalars['String']['input'];
+  uploadId: Scalars['Int']['input'];
 };
 
 
-export type DotBeltQueryUploadsArgs = {
+export type DotBeltQueryThumbnailsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
   order?: InputMaybe<Array<ThumbnailResponseSortInput>>;
   where?: InputMaybe<ThumbnailResponseFilterInput>;
+};
+
+
+export type DotBeltQueryUploadByIdArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -294,6 +354,13 @@ export type IntOperationFilterInput = {
   nin?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   nlt?: InputMaybe<Scalars['Int']['input']>;
   nlte?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type ListFilterInputTypeOfCropFilterInput = {
+  all?: InputMaybe<CropFilterInput>;
+  any?: InputMaybe<Scalars['Boolean']['input']>;
+  none?: InputMaybe<CropFilterInput>;
+  some?: InputMaybe<CropFilterInput>;
 };
 
 export type ListFilterInputTypeOfPostFilterInput = {
@@ -767,6 +834,7 @@ export type TenantSortInput = {
 
 export type Thumbnail = {
   __typename?: 'Thumbnail';
+  crops?: Maybe<Array<Crop>>;
   fileName: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   length: Scalars['Int']['output'];
@@ -780,6 +848,7 @@ export type Thumbnail = {
 
 export type ThumbnailFilterInput = {
   and?: InputMaybe<Array<ThumbnailFilterInput>>;
+  crops?: InputMaybe<ListFilterInputTypeOfCropFilterInput>;
   fileName?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<IntOperationFilterInput>;
   length?: InputMaybe<IntOperationFilterInput>;
@@ -829,6 +898,26 @@ export type ThumbnailResponseSortInput = {
   relativeUrl?: InputMaybe<SortEnumType>;
   upload?: InputMaybe<UploadResponseSortInput>;
   uploadId?: InputMaybe<SortEnumType>;
+};
+
+/** A connection to a list of items. */
+export type ThumbnailsConnection = {
+  __typename?: 'ThumbnailsConnection';
+  /** A list of edges. */
+  edges?: Maybe<Array<ThumbnailsEdge>>;
+  /** A flattened list of the nodes. */
+  nodes?: Maybe<Array<ThumbnailResponse>>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+};
+
+/** An edge in a connection. */
+export type ThumbnailsEdge = {
+  __typename?: 'ThumbnailsEdge';
+  /** A cursor for use in pagination. */
+  cursor: Scalars['String']['output'];
+  /** The item at the end of the edge. */
+  node: ThumbnailResponse;
 };
 
 export type Upload = {
@@ -968,26 +1057,6 @@ export type UploadSortInput = {
   tenant?: InputMaybe<TenantSortInput>;
   tenantId?: InputMaybe<SortEnumType>;
   title?: InputMaybe<SortEnumType>;
-};
-
-/** A connection to a list of items. */
-export type UploadsConnection = {
-  __typename?: 'UploadsConnection';
-  /** A list of edges. */
-  edges?: Maybe<Array<UploadsEdge>>;
-  /** A flattened list of the nodes. */
-  nodes?: Maybe<Array<ThumbnailResponse>>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-};
-
-/** An edge in a connection. */
-export type UploadsEdge = {
-  __typename?: 'UploadsEdge';
-  /** A cursor for use in pagination. */
-  cursor: Scalars['String']['output'];
-  /** The item at the end of the edge. */
-  node: ThumbnailResponse;
 };
 
 export type UserResponse = {

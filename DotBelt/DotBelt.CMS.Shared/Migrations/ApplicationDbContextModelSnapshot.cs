@@ -23,6 +23,56 @@ namespace DotBelt.CMS.Shared.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "uuid-ossp");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("CropThumbnail", b =>
+                {
+                    b.Property<int>("CropsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ThumbnailsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CropsId", "ThumbnailsId");
+
+                    b.HasIndex("ThumbnailsId");
+
+                    b.ToTable("CropThumbnail");
+                });
+
+            modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Media.Crop", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CropPositionX")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CropPositionY")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("Height")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Internal")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("SoftCrop")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Crops");
+                });
+
             modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Media.Thumbnail", b =>
                 {
                     b.Property<int>("Id")
@@ -512,6 +562,21 @@ namespace DotBelt.CMS.Shared.Migrations
                     b.HasIndex("TaxonomiesId");
 
                     b.ToTable("PostTaxonomy");
+                });
+
+            modelBuilder.Entity("CropThumbnail", b =>
+                {
+                    b.HasOne("DotBelt.CMS.Shared.CMS.Media.Crop", null)
+                        .WithMany()
+                        .HasForeignKey("CropsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DotBelt.CMS.Shared.CMS.Media.Thumbnail", null)
+                        .WithMany()
+                        .HasForeignKey("ThumbnailsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DotBelt.CMS.Shared.CMS.Media.Thumbnail", b =>

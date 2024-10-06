@@ -6,22 +6,25 @@
 </script>
 
 <div class="repeater-settings">
-  <label class="number-posts-label">Number of posts</label>
-  <input class="number-posts-input" type="number" onchange={() => onNumberOfPostsChanged(numberOfPosts)} bind:value={numberOfPosts} />
+  <label class="number-posts-label">Count</label>
+  <input class="number-posts-input" type="number" onchange={() => numberOfPosts ? onNumberOfPostsChanged(numberOfPosts) : {}} bind:value={numberOfPosts} />
 </div>
 
 
 <style>
   .number-posts-input {
-    max-width: 50px;
+    max-width: 40px;
+    margin-right: 8px;
   }
   .number-posts-label {
     font-size: 14px;
     margin-right: 10px;
+    margin-left: 15px;
   }
+
   .repeater-settings {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
   }
 </style>

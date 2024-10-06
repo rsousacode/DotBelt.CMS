@@ -57,6 +57,25 @@ namespace DotBelt.CMS.Shared.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Crops",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Internal = table.Column<bool>(type: "boolean", nullable: false),
+                    Width = table.Column<int>(type: "integer", nullable: false),
+                    Height = table.Column<int>(type: "integer", nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    SoftCrop = table.Column<bool>(type: "boolean", nullable: false),
+                    CropPositionX = table.Column<int>(type: "integer", nullable: false),
+                    CropPositionY = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Crops", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ManualMigrations",
                 columns: table => new
                 {
@@ -171,6 +190,24 @@ namespace DotBelt.CMS.Shared.Migrations
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CropThumbnail",
+                columns: table => new
+                {
+                    CropsId = table.Column<int>(type: "integer", nullable: false),
+                    ThumbnailsId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CropThumbnail", x => new { x.CropsId, x.ThumbnailsId });
+                    table.ForeignKey(
+                        name: "FK_CropThumbnail_Crops_CropsId",
+                        column: x => x.CropsId,
+                        principalTable: "Crops",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -394,6 +431,11 @@ namespace DotBelt.CMS.Shared.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_CropThumbnail_ThumbnailsId",
+                table: "CropThumbnail",
+                column: "ThumbnailsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Posts_AuthorId",
                 table: "Posts",
                 column: "AuthorId");
@@ -456,6 +498,14 @@ namespace DotBelt.CMS.Shared.Migrations
                 column: "TenantId");
 
             migrationBuilder.AddForeignKey(
+                name: "FK_CropThumbnail_Thumbnails_ThumbnailsId",
+                table: "CropThumbnail",
+                column: "ThumbnailsId",
+                principalTable: "Thumbnails",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_Posts_Tenants_TenantId",
                 table: "Posts",
                 column: "TenantId",
@@ -506,16 +556,22 @@ namespace DotBelt.CMS.Shared.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CropThumbnail");
+
+            migrationBuilder.DropTable(
                 name: "ManualMigrations");
 
             migrationBuilder.DropTable(
                 name: "PostTaxonomy");
 
             migrationBuilder.DropTable(
-                name: "Thumbnails");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "Crops");
+
+            migrationBuilder.DropTable(
+                name: "Thumbnails");
 
             migrationBuilder.DropTable(
                 name: "Taxonomies");

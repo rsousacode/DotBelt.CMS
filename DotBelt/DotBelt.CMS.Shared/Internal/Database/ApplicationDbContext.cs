@@ -38,6 +38,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     
     public DbSet<Tenant> Tenants { get; set; }
     
+    public DbSet<Crop> Crops { get; set; }
+    
 
     
 }
