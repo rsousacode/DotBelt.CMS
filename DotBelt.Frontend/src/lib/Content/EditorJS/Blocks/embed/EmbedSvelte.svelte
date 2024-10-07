@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { EmbedSvelteProps, SupportedEmbed } from '$lib/Content/EditorJS/Blocks/embed/EmbedProps';
   import { onMount } from 'svelte';
+  import EmbedPublicBlock from '$lib/Content/EditorJS/Blocks/embed/EmbedPublicBlock.svelte';
 
   const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:(?:youtu\.be\/)|(?:youtube\.com)\/(?:v\/|u\/\w\/|embed\/|watch))(?:(?:\?v=)?([^#&?=]*))?((?:[?&]\w*=[\w%+]*))*/;
 
@@ -36,8 +37,6 @@
       embedType = 'vimeo';
     }
 
-    console.log('detectEmbedType', embedType);
-
   }
 
   // Function to extract video ID
@@ -54,7 +53,6 @@
     }
 
     const match = url.match(usedRegex);
-
 
     if (match) {
       return match[1];
@@ -73,9 +71,6 @@
     detectEmbedType(url);
     if (url) {
       relevantPart = extractVideoId(url);
-
-      console.log('updateRelevantPart', relevantPart);
-
       onPropsChange({ url: url, embedType: embedType });
     }
   }
@@ -109,28 +104,8 @@
               type="button" class="btn btn-primary embed-edit-button">Edit
       </button>
     {/if}
-    {#if embedType === 'youtube'}
-      <iframe
-        class={relevantPart ? "" : "hidden"}
-        width="500"
-        height="380"
-        src="https://www.youtube.com/embed/{relevantPart}"
-        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-    {:else if embedType === 'tiktok'}
-      <iframe
-        width="500"
-        height="380"
-        src="https://www.tiktok.com/player/v1/{relevantPart}?&music_info=1&description=1"
-        allow="fullscreen">
-      </iframe>
-      {:else if embedType === 'vimeo'}
-      <iframe
-        style="width: 500px; height: 380px"
-        width="500"
-        height="380"
-        src="https://player.vimeo.com/video/{relevantPart}?title=0&byline=0"
-        allow="fullscreen">
-      </iframe>
+    {#if embedType && relevantPart}
+      <EmbedPublicBlock embedType={embedType} relevantPart={relevantPart}/>
     {/if}
   </div>
 {/if}
