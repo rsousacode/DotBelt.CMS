@@ -6,28 +6,34 @@
 
   const tiktokRegex = /https:\/\/(?:www|m)?\.?(?:tiktok\.com)\/(?:@[\w.-]+\/video\/|embed\/|h5\/share\/usr\/|v\/|share\/user\/|trending\?shareId=)?(\d+)/;
 
-  let {url, onPropsChange} : EmbedSvelteProps = $props();
+  const vimeoRegex = /(?:http[s]?:\/\/)?(?:www.)?(?:player.)?vimeo\.co.+\/([^\/]\d+)(?:#t=\d+)?s?$/;
 
-  let embedType : SupportedEmbed | undefined = $state();
+  let { url, onPropsChange }: EmbedSvelteProps = $props();
 
-  let relevantPart : string | undefined = $state();
+  let embedType: SupportedEmbed | undefined = $state();
+
+  let relevantPart: string | undefined = $state();
 
   onMount(() => {
     detectEmbedType(url);
     updateRelevantPart();
-  })
+  });
 
   function detectEmbedType(url: string | undefined) {
-    if(!url) return;
+    if (!url) return;
 
     url = url.toLowerCase();
 
-    if (url.includes("youtube.com") || url.includes("youtu.be")) {
-      embedType = "youtube";
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      embedType = 'youtube';
     }
 
-    if (url.includes("tiktok")) {
-      embedType = "tiktok";
+    if (url.includes('tiktok')) {
+      embedType = 'tiktok';
+    }
+
+    if (url.includes('vimeo')) {
+      embedType = 'vimeo';
     }
 
     console.log('detectEmbedType', embedType);
@@ -37,10 +43,14 @@
   // Function to extract video ID
   function extractVideoId(url: string) {
 
-    let usedRegex : RegExp = youtubeRegex;
+    let usedRegex: RegExp = youtubeRegex;
 
-    if(embedType === 'tiktok') {
+    if (embedType === 'tiktok') {
       usedRegex = tiktokRegex;
+    }
+
+    if (embedType === 'vimeo') {
+      usedRegex = vimeoRegex;
     }
 
     const match = url.match(usedRegex);
@@ -54,19 +64,19 @@
   }
 
   function onUrlChange(e) {
-    if(typeof e.currentTarget.value !== 'string') return;
+    if (typeof e.currentTarget.value !== 'string') return;
     url = e.currentTarget.value;
     updateRelevantPart();
   }
 
   function updateRelevantPart() {
     detectEmbedType(url);
-    if(url) {
+    if (url) {
       relevantPart = extractVideoId(url);
 
       console.log('updateRelevantPart', relevantPart);
 
-      onPropsChange({ url: url, embedType: embedType});
+      onPropsChange({ url: url, embedType: embedType });
     }
   }
 
@@ -76,18 +86,18 @@
   }
 
   function onFrameContainerMouseOver() {
-    showEditButton = true
+    showEditButton = true;
   }
 
   function onFrameContainerMouseOut(e) {
     if (e.relatedTarget === editButtonElement) return;
-    showEditButton = false
+    showEditButton = false;
   }
 
-  let editButtonElement : HTMLElement | undefined = $state();
+  let editButtonElement: HTMLElement | undefined = $state();
 
-  let showEditButton : boolean = $state(false);
-  let editMode : boolean = $state(false);
+  let showEditButton: boolean = $state(false);
+  let editMode: boolean = $state(false);
 
 </script>
 
@@ -95,23 +105,33 @@
 {#if relevantPart && !editMode}
   <div class="embed-container" onmouseover={onFrameContainerMouseOver} onmouseout={onFrameContainerMouseOut}>
     {#if showEditButton}
-      <button bind:this={editButtonElement} onclick={() => editMode = true} onmouseover={onButtonMouseHover} type="button" class="btn btn-primary embed-edit-button">Edit</button>
+      <button bind:this={editButtonElement} onclick={() => editMode = true} onmouseover={onButtonMouseHover}
+              type="button" class="btn btn-primary embed-edit-button">Edit
+      </button>
     {/if}
     {#if embedType === 'youtube'}
       <iframe
         class={relevantPart ? "" : "hidden"}
-        title=""
         width="500"
         height="380"
         src="https://www.youtube.com/embed/{relevantPart}"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    {:else if embedType === 'tiktok'}
+      <iframe
+        width="500"
+        height="380"
+        src="https://www.tiktok.com/player/v1/{relevantPart}?&music_info=1&description=1"
+        allow="fullscreen">
       </iframe>
-      {:else if embedType === 'tiktok'}
-        <iframe height="300" width= "400" src="https://www.tiktok.com/player/v1/{relevantPart}?&music_info=1&description=1" allow="fullscreen" title="test"></iframe>
-      {/if}
+      {:else if embedType === 'vimeo'}
+      <iframe
+        style="width: 500px; height: 380px"
+        width="500"
+        height="380"
+        src="https://player.vimeo.com/video/{relevantPart}?title=0&byline=0"
+        allow="fullscreen">
+      </iframe>
+    {/if}
   </div>
 {/if}
 
@@ -119,7 +139,7 @@
   <div class="form-group embed-url-input">
     <label for="">Insert the URL</label>
     <div class="form-group d-flex">
-      <input value={url} class="form-control mx-2"  onchange={onUrlChange} type="text">
+      <input value={url} class="form-control mx-2" onchange={onUrlChange} type="text">
       {#if editMode}
         <button class="btn btn-primary " type="button" onclick={() => editMode = false}>Apply</button>
       {/if}
@@ -134,15 +154,18 @@
     margin-top: 20px;
     position: absolute;
   }
-  .hidden  {
+
+  .hidden {
     display: none !important;
   }
+
   .embed-url-input {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
+
   .embed-frame {
     height: 380px;
     width: 500px;

@@ -1,5 +1,5 @@
 
-export type SupportedEmbed = "youtube" | "tiktok"
+export type SupportedEmbed = "youtube" | "tiktok" | "vimeo"
 
 export type EmbedProps = {
   embedType: SupportedEmbed | undefined,
