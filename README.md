@@ -1,14 +1,18 @@
-# .Belt CMS
+# dotBelt CMS
 
 ## Overview
 
-Experimental Content Management System (CMS) boilerplate that heavily uses EditorJS for building content blocks.
+Experimental Content Management System (CMS) boilerplate that heavily uses EditorJS for building content blocks. 
 
 Current supported blocks:
 * Heading
 * Paragraph
 * List
-* Repeater (WIP)
+* Repeater
+* Embeds
+  * Youtube
+  * TikTok
+* Table
 
 ## Backend
 
@@ -17,7 +21,6 @@ The backend is a .NET project using Minimal API with Identity pre-configured.
 ## Frontend
 
 The frontend is built using the latest Svelte 5 framework.
-
 
 ## Development Setup
 
@@ -28,32 +31,34 @@ The frontend is built using the latest Svelte 5 framework.
     ```
 
 2. Run the following command to bring up the necessary Docker containers and services:
+    ```sh
+    just docker-up
+    ```
 
-```sh
-just docker-up
-```
+    This will:
+    - Instantiate a Postgres database
+    - Set up a reverse proxy
+        - Frontend will be available at: [boilerplate.com](http://boilerplate.com)
+        - API will be available at: [boilerplate.com/api](http://boilerplate.com/api)
 
-This will:
-- Instantiate a Postgres database
-- Set up a reverse proxy
-    - Frontend will be available at: [boilerplate.com](http://boilerplate.com)
-    - API will be available at: [boilerplate.com/api](http://boilerplate.com/api)
 
-# Getting started
+3. Initialize the Database and seed some data:
 
-1. Clone the repository.
-2. Navigate to the project directory.
-3. Run the required just commands as needed.
+   ```sh
+   just database-update
+   just seed
+   ```
+
+# Just commands
 
 For example, to bring up Docker containers and run the frontend, you can run:
-
 
 ```sh
 just docker-up
 just frontend
 ```
 
-4. Run the DotBelt.CMS.API project to run the Api
+In the DotBelt.CMS.API initiate the API by running `dotnet run`
 
 ## Justfile Overview
 
@@ -63,7 +68,7 @@ This project uses just for task management. Below are the available commands def
 
 - `just docker-up`: Bring up Docker containers with build.
 - `just docker-down`: Bring down Docker containers.
-- `docker-preview`: Preview all Docker containers in production mode.
+- `just docker-preview`: Preview all Docker containers in production mode.
 
 
 ### Frontend Commands
@@ -73,3 +78,4 @@ This project uses just for task management. Below are the available commands def
 - `just frontend-codegen`: Change directory to DotBelt.Frontend and run npm run codegen to generate TypeScript types for GraphQL.
 - `just graphql-update` Run both generate-schema and frontend-codegen to update the GraphQL schema and generate TypeScript types.
 
+Refer to the Justfile for more commands. 

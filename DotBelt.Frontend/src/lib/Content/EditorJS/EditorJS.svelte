@@ -2,6 +2,7 @@
 
   import { onDestroy, onMount, setContext } from 'svelte';
   import Repeater from '$lib/Content/EditorJS/Blocks/repeater/index.svelte.js';
+  import Embed from '$lib/Content/EditorJS/Blocks/embed/index.svelte';
 
   let { content = $bindable() } = $props();
 
@@ -31,8 +32,7 @@
     const Underline = (await import('@editorjs/underline')).default;
     const Table = (await import('@editorjs/table')).default;
 
-    // import AlignmentTune from 'editor-js-alignment-tune';
-    const AlignmentTune = (await import('editor-js-alignment-tune')).default;
+    console.log(Embed)
 
 
     editor = new EditorJS({
@@ -59,9 +59,17 @@
        * Pass Tool's class or Settings object for each Tool you want to use
        */
       tools: {
+        embed: {
+          class: Embed,
+          config: {
+            services: {
+              youtube: true,
+              coub: true
+            }
+          }
+        },
         paragraph: {
           class: Paragraph,
-          tunes: ['alignmentTune'],
           placeholder: 'Let`s write an awesome story!',
 
         },
@@ -79,14 +87,7 @@
           inlineToolbar: true,
           class: Header,
           shortcut: 'CMD+SHIFT+H',
-          tunes: ['alignmentTune']
         },
-        alignmentTune: {
-          class: AlignmentTune,
-          inlineToolbar: true,
-        },
-
-
       }
     });
   });
